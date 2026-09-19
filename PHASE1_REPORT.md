@@ -261,9 +261,10 @@ because inventions are typically found in a different but equivalent form
 `λx. translate (rotate90 x) 0`, whose type `grid → int → grid` equals the latent's).
 Type agreement alone (0.33–0.92) is far above behavioural recall and must not be
 read as recovery. Precision is low everywhere (0.04–0.45): even the best library
-contains three to five inventions per recovered latent, many of them instantiations
-of the same latent with the parameter baked in (B, instance 101:
-`translate (rotate90 x) 1 −1`, `translate (rotate90 x) 0`, …).
+(B at high reuse, 7.3 inventions for 3.3 recovered latents) carries about two
+inventions per recovered latent, and the medium- and low-reuse libraries carry
+5–20, many of them instantiations of the same latent with the parameter baked in
+(B, instance 101: `translate (rotate90 x) 1 −1`, `translate (rotate90 x) 0`, …).
 
 Exposure. Pooling the active latents of the three instances, latents whose final
 persistent frontiers structurally contain them in at least two training tasks are
