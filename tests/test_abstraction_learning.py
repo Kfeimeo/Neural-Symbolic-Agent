@@ -189,6 +189,14 @@ def test_recovery_handles_permuted_arguments_and_unrelated_inventions(kernel):
     assert empty['metrics']['behavioral']['precision'] is None and empty['metrics']['behavioral']['recall'] == 0
 
 
+def test_ragged_paired_bootstrap():
+    r = analysis.paired_bootstrap([[1., 1.], [1., 1., 1.], [1.]], draws=200)
+    assert r['mean'] == 1 and r['paired_bootstrap_95_ci'] == [1, 1] and r['tasks'] == [2, 3, 1]
+    r = analysis.paired_bootstrap([[0., 1.], [1., 0., 1.]], draws=500)
+    assert 0 < r['mean'] < 1 and r['paired_bootstrap_95_ci'][0] <= r['mean'] <= r['paired_bootstrap_95_ci'][1]
+    assert analysis.paired_bootstrap([[], []]) is None
+
+
 def test_analysis_statistics_helpers():
     assert analysis.ranks([3, 1, 2, 2]) == [4, 1, 2.5, 2.5]
     assert abs(analysis.pearson([1, 2, 3], [2, 4, 6]) - 1) < 1e-12
