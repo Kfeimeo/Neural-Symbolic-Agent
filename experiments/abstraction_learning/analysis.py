@@ -17,16 +17,15 @@ Outputs
     Markdown tables consumed by PHASE1_REPORT.md.
 
 All aggregate numbers are means and sample standard deviations over benchmark
-instances; contrasts use the two-way paired bootstrap of the earlier controlled
-study (instances and task positions resampled together; task positions align
-by generation stratum across instances).
+instances; contrasts use a two-way paired bootstrap (instances and, within each
+instance, its held-out tasks are resampled together).
 """
 import collections
 import math
 import statistics
 from pathlib import Path
 
-from faithful.python.controlled_metrics import paired_bootstrap
+import random
 from benchmarks.latent_abstraction import generator as bench
 from .learner import read_json, save_json, ROUNDS
 from .evaluation import BUDGETS, CRITERIA
@@ -95,6 +94,32 @@ def pearson(xs, ys):
 
 def spearman(xs, ys):
     return pearson(ranks(xs), ranks(ys)) if len(xs) >= 3 else None
+
+
+def paired_bootstrap(differences, seed=917, draws=2000):
+    """Two-way paired bootstrap over instances and tasks with ragged task sets.
+
+    ``differences`` holds one row per instance with that instance's per-task paired
+    differences (rows may differ in length because a few held-out cells could not
+    be populated).  Each draw resamples instances with replacement and, inside every
+    sampled instance, its tasks with replacement; the statistic is the mean over
+    instances of the per-instance mean difference.
+    """
+    rows = [row for row in differences if row]
+    if not rows:
+        return None
+    rng = random.Random(seed)
+    n = len(rows)
+    values = []
+    for _ in range(draws):
+        sampled = [rows[rng.randrange(n)] for _ in range(n)]
+        values.append(statistics.mean(statistics.mean(row[rng.randrange(len(row))] for _ in range(len(row))) for row in sampled))
+    values.sort()
+    means = [statistics.mean(row) for row in rows]
+    return {'mean': statistics.mean(means), 'seed_standard_deviation': statistics.stdev(means) if n > 1 else 0.,
+            'paired_bootstrap_95_ci': [values[int(.025 * draws)], values[int(.975 * draws)]],
+            'training_seeds': n, 'tasks': [len(row) for row in rows], 'draws': draws,
+            'scope': 'two-way paired resampling of benchmark instances and their held-out tasks; conditional on the generated instances'}
 
 
 def load_records(seeds):
@@ -353,8 +378,6 @@ def write_tables(seeds, by_cell, arms, cells, contrasts, rcells, recall_curves, 
     arms1 = [a for a in MAIN_ARMS if any((rg, a, final_iteration(a)) in cell for rg in REGIMES)]
     rows = [[regime] + [fmt(cell[(regime, a, final_iteration(a))]['solve_rate'][MAX_BUDGET]) if (regime, a, final_iteration(a)) in cell else 'n/a' for a in arms1] for regime in REGIMES]
     lines += [table(['Reuse'] + arms1, rows), '']
-    rows = [[regime] + [fmt(cell[(regime, a, final_iteration(a))]['solve_rate']['10000']) if (regime, a, final_iteration(a)) in cell else 'n/a' for a in arms1] for regime in REGIMES]
-    lines += ['Same at 10000 candidates:', '', table(['Reuse'] + arms1, rows), '']
     rows = [[regime] + [fmt(cell[(regime, a, final_iteration(a))]['probe_consistent_rate']) if (regime, a, final_iteration(a)) in cell else 'n/a' for a in arms1] for regime in REGIMES]
     lines += ['Probe-consistent solution rate (top-K solution reproduces the generator program on 40 independent probes):', '', table(['Reuse'] + arms1, rows), '']
     rows = []
@@ -437,7 +460,7 @@ def write_tables(seeds, by_cell, arms, cells, contrasts, rcells, recall_curves, 
             if c:
                 rows.append([regime, a, fmt(c['cumulative_delta_mdl'], 2), fmt(c['invention_count'], 1), fmt(c['mean_delta_L'], 2), fmt(c['fraction_shortened'], 2),
                              fmt(c['mean_true_delta_L'], 2), fmt(c['solve_rate_when_shortened']), fmt(c['solve_rate_when_not_shortened']), fmt(c['solve_rate_max'])])
-    lines += [table(['Reuse', 'Arm', 'Cumulative ΔMDL', 'Inventions', 'Mean ΔL (held-out)', 'Fraction shortened', 'Mean ΔL under true library', 'Solve rate | shortened', 'Solve rate | not shortened', 'Solve rate'], rows), '']
+    lines += [table(['Reuse', 'Arm', 'Cumulative ΔMDL', 'Inventions', 'Mean ΔL (held-out)', 'Fraction shortened', 'Mean ΔL under true library', 'Solve rate given shortened', 'Solve rate given not shortened', 'Solve rate'], rows), '']
     rows = [[scope, c['cells'], fmt(c['cumulative_delta_mdl_vs_solve_rate']['pearson']), fmt(c['cumulative_delta_mdl_vs_solve_rate']['spearman']),
              fmt(c['mean_delta_L_vs_solve_rate']['pearson']), fmt(c['mean_delta_L_vs_solve_rate']['spearman'])] for scope, c in correlations.items()]
     lines += ['Correlations across (learned arm x instance x iteration) cells:', '', table(['Scope', 'Cells', 'ΔMDL vs solve: Pearson', 'Spearman', 'ΔL vs solve: Pearson', 'Spearman'], rows), '']
