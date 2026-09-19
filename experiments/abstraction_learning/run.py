@@ -212,7 +212,7 @@ def evaluate_job(job):
         prefix, method = arm.split('_', 1)
         record = read_json(RESULTS / ('perfect_wake' if prefix == 'PW' else 'perfect_wake_shallow') / f'seed_{seed}' / regime / f'{method}.json.gz')
         if record.get('timed_out') or record.get('grammar') is None:
-            return job
+            return job, []
         grammars = [(1, record['grammar'], {'perfect_wake': True, 'corpus': prefix, 'solved': len(record['task_names']), 'inventions': record['inventions'],
                                             'mdl': record['mdl'], 'history': record['history'], 'frontiers': record['rewritten'],
                                             'invention_count': len(record['inventions']), 'library_size': len(record['grammar']['productions'])})]
