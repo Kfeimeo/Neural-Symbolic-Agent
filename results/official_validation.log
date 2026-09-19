@@ -1,0 +1,61 @@
+[ 1 of 11] Compiling Json             ( E:\dev\AI\ARC-AGI-3\faithful\haskell\Json.hs, E:\dev\AI\ARC-AGI-3\faithful\build\domain\Json.o )
+[ 2 of 11] Compiling Syntax           ( E:\dev\AI\ARC-AGI-3\faithful\haskell\Syntax.hs, E:\dev\AI\ARC-AGI-3\faithful\build\domain\Syntax.o )
+[ 3 of 11] Compiling Grammar          ( E:\dev\AI\ARC-AGI-3\faithful\haskell\Grammar.hs, E:\dev\AI\ARC-AGI-3\faithful\build\domain\Grammar.o )
+E:\dev\AI\ARC-AGI-3\faithful\haskell\Grammar.hs:70:76: warning: [GHC-63394] [-Wx-partial]
+    In the use of ��head��
+    (imported from Prelude, but defined in GHC.Internal.List):
+    "This is a partial function, it throws an error on empty lists. Use pattern matching, 'Data.List.uncons' or 'Data.Maybe.listToMaybe' instead. Consider refactoring to use "Data.List.NonEmpty"."
+   |
+70 |     | otherwise = [(l+al,c,p) | (l,c1,x)<-go (child original i g) ctx env (head ts) b d,
+   |                                                                            ^^^^
+
+E:\dev\AI\ARC-AGI-3\faithful\haskell\Grammar.hs:71:81: warning: [GHC-63394] [-Wx-partial]
+    In the use of ��tail��
+    (imported from Prelude, but defined in GHC.Internal.List):
+    "This is a partial function, it throws an error on empty lists. Replace it with 'drop' 1, or use pattern matching or 'GHC.Internal.Data.List.uncons' instead. Consider refactoring to use "Data.List.NonEmpty"."
+   |
+71 |                                 (al,c,p)<-args original (i+1) c1 env (App f x) (tail ts) (b+l) d]
+   |                                                                                 ^^^^
+
+E:\dev\AI\ARC-AGI-3\faithful\haskell\Grammar.hs:89:23: warning: [GHC-63394] [-Wx-partial]
+    In the use of ��head��
+    (imported from Prelude, but defined in GHC.Internal.List):
+    "This is a partial function, it throws an error on empty lists. Use pattern matching, 'Data.List.uncons' or 'Data.Maybe.listToMaybe' instead. Consider refactoring to use "Data.List.NonEmpty"."
+   |
+89 |           g'=Grammar (head ws) (zipWith (\p w->p{weight=w}) (productions g) (tail ws)) []
+   |                       ^^^^
+
+E:\dev\AI\ARC-AGI-3\faithful\haskell\Grammar.hs:89:78: warning: [GHC-63394] [-Wx-partial]
+    In the use of ��tail��
+    (imported from Prelude, but defined in GHC.Internal.List):
+    "This is a partial function, it throws an error on empty lists. Replace it with 'drop' 1, or use pattern matching or 'GHC.Internal.Data.List.uncons' instead. Consider refactoring to use "Data.List.NonEmpty"."
+   |
+89 |           g'=Grammar (head ws) (zipWith (\p w->p{weight=w}) (productions g) (tail ws)) []
+   |                                                                              ^^^^
+
+[ 4 of 11] Compiling Evaluation       ( E:\dev\AI\ARC-AGI-3\faithful\haskell\Evaluation.hs, E:\dev\AI\ARC-AGI-3\faithful\build\domain\Evaluation.o )
+E:\dev\AI\ARC-AGI-3\faithful\haskell\Evaluation.hs:66:84: warning: [GHC-63394] [-Wx-partial]
+    In the use of ��head��
+    (imported from Prelude, but defined in GHC.Internal.List):
+    "This is a partial function, it throws an error on empty lists. Use pattern matching, 'Data.List.uncons' or 'Data.Maybe.listToMaybe' instead. Consider refactoring to use "Data.List.NonEmpty"."
+   |
+66 |    ("translate",liftJSON 3 (\[g,dr,dc]->let rows=gridRows g;h=length rows;w=length(head rows);a=integer dr;b=integer dc
+   |                                                                                    ^^^^
+
+E:\dev\AI\ARC-AGI-3\faithful\haskell\Evaluation.hs:71:58: warning: [GHC-63394] [-Wx-partial]
+    In the use of ��head��
+    (imported from Prelude, but defined in GHC.Internal.List):
+    "This is a partial function, it throws an error on empty lists. Use pattern matching, 'Data.List.uncons' or 'Data.Maybe.listToMaybe' instead. Consider refactoring to use "Data.List.NonEmpty"."
+   |
+71 |    ("border",unaryGrid (\rows->let edge=replicate(length(head rows)+2)(Num 0) in edge:map(\r->Num 0:r++[Num 0])rows++[edge])),
+   |                                                          ^^^^
+
+[ 5 of 11] Compiling Compression      ( E:\dev\AI\ARC-AGI-3\faithful\haskell\Compression.hs, E:\dev\AI\ARC-AGI-3\faithful\build\domain\Compression.o )
+[ 6 of 11] Compiling Agenda           ( E:\dev\AI\ARC-AGI-3\faithful\haskell\Agenda.hs, E:\dev\AI\ARC-AGI-3\faithful\build\domain\Agenda.o )
+[ 7 of 11] Compiling Search           ( E:\dev\AI\ARC-AGI-3\faithful\haskell\Search.hs, E:\dev\AI\ARC-AGI-3\faithful\build\domain\Search.o )
+[ 8 of 11] Compiling Main             ( E:\dev\AI\ARC-AGI-3\faithful\haskell\Main.hs, E:\dev\AI\ARC-AGI-3\faithful\build\domain\Main.o )
+[ 9 of 11] Compiling Bridge           ( E:\dev\AI\ARC-AGI-3\faithful\compression\Bridge.hs, E:\dev\AI\ARC-AGI-3\faithful\build\domain\Bridge.o )
+[10 of 11] Compiling DomainMain       ( E:\dev\AI\ARC-AGI-3\faithful\domains\DomainMain.hs, E:\dev\AI\ARC-AGI-3\faithful\build\domain\DomainMain.o )
+[11 of 11] Linking E:\\dev\\AI\\ARC-AGI-3\\faithful\\build\\official_domain.exe
+arithmetic [3, 3, 3] [('add4', 'generative', 8), ('add4', 'recognition', 6)]
+list [3, 3, 3] [('map quadruple', 'generative', 136), ('map quadruple', 'recognition', 1285), ('map add 3', 'generative', None), ('map add 3', 'recognition', None)]

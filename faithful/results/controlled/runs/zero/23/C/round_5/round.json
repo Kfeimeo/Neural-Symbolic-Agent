@@ -1,0 +1,5244 @@
+{
+  "iteration": 5,
+  "label": "C",
+  "training_seed": 23,
+  "recognition_initialization_seed": 51023,
+  "grammar": {
+    "log_variable": 0.0,
+    "productions": [
+      {
+        "program": {
+          "primitive": "identity"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "grid",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": 0.0
+      },
+      {
+        "program": {
+          "primitive": "rotate90"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "grid",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": 0.0
+      },
+      {
+        "program": {
+          "primitive": "rotate180"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "grid",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": 0.0
+      },
+      {
+        "program": {
+          "primitive": "flipH"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "grid",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": 0.0
+      },
+      {
+        "program": {
+          "primitive": "flipV"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "grid",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": 0.0
+      },
+      {
+        "program": {
+          "primitive": "transpose"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "grid",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": 0.0
+      },
+      {
+        "program": {
+          "primitive": "trim"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "grid",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": 0.0
+      },
+      {
+        "program": {
+          "primitive": "invert"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "grid",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": 0.0
+      },
+      {
+        "program": {
+          "primitive": "recolor"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "->",
+              "arguments": [
+                {
+                  "constructor": "color",
+                  "arguments": []
+                },
+                {
+                  "constructor": "->",
+                  "arguments": [
+                    {
+                      "constructor": "color",
+                      "arguments": []
+                    },
+                    {
+                      "constructor": "grid",
+                      "arguments": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "log_weight": 0.0
+      },
+      {
+        "program": {
+          "primitive": "objects"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "objects",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": 0.0
+      },
+      {
+        "program": {
+          "primitive": "largest"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "objects",
+              "arguments": []
+            },
+            {
+              "constructor": "object",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": 0.0
+      },
+      {
+        "program": {
+          "primitive": "crop"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "object",
+              "arguments": []
+            },
+            {
+              "constructor": "grid",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": 0.0
+      },
+      {
+        "program": {
+          "primitive": "translate"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "->",
+              "arguments": [
+                {
+                  "constructor": "int",
+                  "arguments": []
+                },
+                {
+                  "constructor": "->",
+                  "arguments": [
+                    {
+                      "constructor": "int",
+                      "arguments": []
+                    },
+                    {
+                      "constructor": "grid",
+                      "arguments": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "log_weight": 0.0
+      },
+      {
+        "program": {
+          "primitive": "count"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "objects",
+              "arguments": []
+            },
+            {
+              "constructor": "int",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": 0.0
+      },
+      {
+        "program": {
+          "primitive": "is_empty"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "objects",
+              "arguments": []
+            },
+            {
+              "constructor": "bool",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": 0.0
+      },
+      {
+        "program": {
+          "primitive": "if_grid"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "bool",
+              "arguments": []
+            },
+            {
+              "constructor": "->",
+              "arguments": [
+                {
+                  "constructor": "grid",
+                  "arguments": []
+                },
+                {
+                  "constructor": "->",
+                  "arguments": [
+                    {
+                      "constructor": "grid",
+                      "arguments": []
+                    },
+                    {
+                      "constructor": "grid",
+                      "arguments": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "log_weight": 0.0
+      },
+      {
+        "program": {
+          "primitive": "border"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "grid",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": 0.0
+      },
+      {
+        "program": {
+          "primitive": "solid"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "->",
+              "arguments": [
+                {
+                  "constructor": "color",
+                  "arguments": []
+                },
+                {
+                  "constructor": "grid",
+                  "arguments": []
+                }
+              ]
+            }
+          ]
+        },
+        "log_weight": 0.0
+      },
+      {
+        "program": {
+          "primitive": "red"
+        },
+        "type": {
+          "constructor": "color",
+          "arguments": []
+        },
+        "log_weight": 0.0
+      },
+      {
+        "program": {
+          "primitive": "blue"
+        },
+        "type": {
+          "constructor": "color",
+          "arguments": []
+        },
+        "log_weight": 0.0
+      },
+      {
+        "program": {
+          "primitive": "green"
+        },
+        "type": {
+          "constructor": "color",
+          "arguments": []
+        },
+        "log_weight": 0.0
+      },
+      {
+        "program": {
+          "primitive": "zero"
+        },
+        "type": {
+          "constructor": "int",
+          "arguments": []
+        },
+        "log_weight": 0.0
+      },
+      {
+        "program": {
+          "primitive": "one"
+        },
+        "type": {
+          "constructor": "int",
+          "arguments": []
+        },
+        "log_weight": 0.0
+      },
+      {
+        "program": {
+          "primitive": "minus_one"
+        },
+        "type": {
+          "constructor": "int",
+          "arguments": []
+        },
+        "log_weight": 0.0
+      }
+    ]
+  },
+  "frontiers": [
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "primitive": "translate"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "one"
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "minus_one"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "translate"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "rotate90"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "minus_one"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "minus_one"
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "identity"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "rotate90"
+                    },
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "application": [
+                                {
+                                  "primitive": "translate"
+                                },
+                                {
+                                  "index": 0
+                                }
+                              ]
+                            },
+                            {
+                              "primitive": "one"
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "minus_one"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "transpose"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "trim"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "trim"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "transpose"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "identity"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "transpose"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "trim"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "translate"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "border"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "one"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "zero"
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "identity"
+                },
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "primitive": "translate"
+                            },
+                            {
+                              "application": [
+                                {
+                                  "primitive": "border"
+                                },
+                                {
+                                  "index": 0
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "one"
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "zero"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "translate"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "identity"
+                            },
+                            {
+                              "application": [
+                                {
+                                  "primitive": "border"
+                                },
+                                {
+                                  "index": 0
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "one"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "zero"
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "flipH"
+                },
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "primitive": "recolor"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "green"
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "red"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "recolor"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "flipH"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "green"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "red"
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "identity"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "flipH"
+                    },
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "application": [
+                                {
+                                  "primitive": "recolor"
+                                },
+                                {
+                                  "index": 0
+                                }
+                              ]
+                            },
+                            {
+                              "primitive": "green"
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "red"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "primitive": "translate"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "minus_one"
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "zero"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "translate"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "rotate90"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "zero"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "one"
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "identity"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "rotate90"
+                    },
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "application": [
+                                {
+                                  "primitive": "translate"
+                                },
+                                {
+                                  "index": 0
+                                }
+                              ]
+                            },
+                            {
+                              "primitive": "minus_one"
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "zero"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "flipH"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "trim"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "trim"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "flipH"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "identity"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "flipH"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "trim"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "invert"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "invert"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "rotate90"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "identity"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "rotate90"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "invert"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "border"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "rotate90"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "identity"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "rotate90"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "border"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "flipH"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "border"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "flipH"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate180"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "transpose"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "border"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "trim"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "invert"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "invert"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "trim"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "trim"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "rotate90"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "invert"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "invert"
+                    },
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "application": [
+                                {
+                                  "primitive": "recolor"
+                                },
+                                {
+                                  "index": 0
+                                }
+                              ]
+                            },
+                            {
+                              "primitive": "green"
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "blue"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "primitive": "recolor"
+                            },
+                            {
+                              "application": [
+                                {
+                                  "primitive": "invert"
+                                },
+                                {
+                                  "index": 0
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "red"
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "blue"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "invert"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "identity"
+                        },
+                        {
+                          "application": [
+                            {
+                              "application": [
+                                {
+                                  "application": [
+                                    {
+                                      "primitive": "recolor"
+                                    },
+                                    {
+                                      "index": 0
+                                    }
+                                  ]
+                                },
+                                {
+                                  "primitive": "green"
+                                }
+                              ]
+                            },
+                            {
+                              "primitive": "blue"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "border"
+                },
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "primitive": "recolor"
+                            },
+                            {
+                              "application": [
+                                {
+                                  "primitive": "border"
+                                },
+                                {
+                                  "index": 0
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "red"
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "green"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "invert"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "application": [
+                                {
+                                  "primitive": "recolor"
+                                },
+                                {
+                                  "application": [
+                                    {
+                                      "primitive": "border"
+                                    },
+                                    {
+                                      "index": 0
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "primitive": "green"
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "red"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "border"
+                },
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "primitive": "recolor"
+                            },
+                            {
+                              "application": [
+                                {
+                                  "primitive": "invert"
+                                },
+                                {
+                                  "application": [
+                                    {
+                                      "primitive": "border"
+                                    },
+                                    {
+                                      "index": 0
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "red"
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "green"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "flipH"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "invert"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "border"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "flipH"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "invert"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "invert"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "flipH"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "border"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "primitive": "recolor"
+                            },
+                            {
+                              "application": [
+                                {
+                                  "primitive": "border"
+                                },
+                                {
+                                  "index": 0
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "green"
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "blue"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "application": [
+                                {
+                                  "primitive": "recolor"
+                                },
+                                {
+                                  "index": 0
+                                }
+                              ]
+                            },
+                            {
+                              "primitive": "green"
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "blue"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "recolor"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "rotate90"
+                            },
+                            {
+                              "application": [
+                                {
+                                  "primitive": "border"
+                                },
+                                {
+                                  "index": 0
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "green"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "blue"
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "translate"
+                        },
+                        {
+                          "application": [
+                            {
+                              "application": [
+                                {
+                                  "application": [
+                                    {
+                                      "primitive": "recolor"
+                                    },
+                                    {
+                                      "application": [
+                                        {
+                                          "primitive": "border"
+                                        },
+                                        {
+                                          "index": 0
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "primitive": "red"
+                                }
+                              ]
+                            },
+                            {
+                              "primitive": "blue"
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "one"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "minus_one"
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "application": [
+                                {
+                                  "primitive": "translate"
+                                },
+                                {
+                                  "application": [
+                                    {
+                                      "primitive": "rotate180"
+                                    },
+                                    {
+                                      "index": 0
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "primitive": "one"
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "minus_one"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "invert"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "rotate180"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "border"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "rotate180"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "invert"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "border"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "rotate180"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "invert"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "flipH"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "border"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "border"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "flipH"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "flipH"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "border"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "border"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "primitive": "translate"
+                            },
+                            {
+                              "application": [
+                                {
+                                  "primitive": "invert"
+                                },
+                                {
+                                  "application": [
+                                    {
+                                      "primitive": "border"
+                                    },
+                                    {
+                                      "index": 0
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "minus_one"
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "one"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "translate"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "rotate90"
+                            },
+                            {
+                              "application": [
+                                {
+                                  "primitive": "invert"
+                                },
+                                {
+                                  "application": [
+                                    {
+                                      "primitive": "border"
+                                    },
+                                    {
+                                      "index": 0
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "one"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "one"
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "translate"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "invert"
+                            },
+                            {
+                              "application": [
+                                {
+                                  "primitive": "rotate90"
+                                },
+                                {
+                                  "application": [
+                                    {
+                                      "primitive": "border"
+                                    },
+                                    {
+                                      "index": 0
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "one"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "one"
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "translate"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "flipH"
+                            },
+                            {
+                              "application": [
+                                {
+                                  "primitive": "border"
+                                },
+                                {
+                                  "index": 0
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "minus_one"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "zero"
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "translate"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "border"
+                            },
+                            {
+                              "application": [
+                                {
+                                  "primitive": "flipH"
+                                },
+                                {
+                                  "index": 0
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "minus_one"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "zero"
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "flipH"
+                },
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "primitive": "translate"
+                            },
+                            {
+                              "application": [
+                                {
+                                  "primitive": "border"
+                                },
+                                {
+                                  "index": 0
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "minus_one"
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "zero"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "application": [
+                                {
+                                  "primitive": "recolor"
+                                },
+                                {
+                                  "application": [
+                                    {
+                                      "primitive": "rotate90"
+                                    },
+                                    {
+                                      "application": [
+                                        {
+                                          "primitive": "border"
+                                        },
+                                        {
+                                          "index": 0
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "primitive": "red"
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "blue"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "rotate90"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "border"
+                            },
+                            {
+                              "application": [
+                                {
+                                  "application": [
+                                    {
+                                      "application": [
+                                        {
+                                          "primitive": "recolor"
+                                        },
+                                        {
+                                          "index": 0
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "primitive": "red"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "primitive": "blue"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "rotate90"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "border"
+                        },
+                        {
+                          "application": [
+                            {
+                              "application": [
+                                {
+                                  "application": [
+                                    {
+                                      "primitive": "recolor"
+                                    },
+                                    {
+                                      "application": [
+                                        {
+                                          "primitive": "border"
+                                        },
+                                        {
+                                          "index": 0
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "primitive": "red"
+                                }
+                              ]
+                            },
+                            {
+                              "primitive": "blue"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "translate"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "rotate180"
+                            },
+                            {
+                              "application": [
+                                {
+                                  "primitive": "invert"
+                                },
+                                {
+                                  "application": [
+                                    {
+                                      "primitive": "trim"
+                                    },
+                                    {
+                                      "index": 0
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "minus_one"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "minus_one"
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "flipH"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "border"
+                            },
+                            {
+                              "application": [
+                                {
+                                  "application": [
+                                    {
+                                      "application": [
+                                        {
+                                          "primitive": "recolor"
+                                        },
+                                        {
+                                          "index": 0
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "primitive": "green"
+                                    }
+                                  ]
+                                },
+                                {
+                                  "primitive": "blue"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "flipH"
+                        },
+                        {
+                          "application": [
+                            {
+                              "application": [
+                                {
+                                  "application": [
+                                    {
+                                      "primitive": "recolor"
+                                    },
+                                    {
+                                      "application": [
+                                        {
+                                          "primitive": "border"
+                                        },
+                                        {
+                                          "index": 0
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "primitive": "green"
+                                }
+                              ]
+                            },
+                            {
+                              "primitive": "blue"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "application": [
+                                {
+                                  "primitive": "recolor"
+                                },
+                                {
+                                  "application": [
+                                    {
+                                      "primitive": "flipH"
+                                    },
+                                    {
+                                      "application": [
+                                        {
+                                          "primitive": "border"
+                                        },
+                                        {
+                                          "index": 0
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "primitive": "green"
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "blue"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "translate"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "rotate180"
+                            },
+                            {
+                              "application": [
+                                {
+                                  "primitive": "invert"
+                                },
+                                {
+                                  "application": [
+                                    {
+                                      "primitive": "border"
+                                    },
+                                    {
+                                      "index": 0
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "zero"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "one"
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "translate"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "identity"
+                            },
+                            {
+                              "application": [
+                                {
+                                  "primitive": "rotate180"
+                                },
+                                {
+                                  "application": [
+                                    {
+                                      "primitive": "invert"
+                                    },
+                                    {
+                                      "application": [
+                                        {
+                                          "primitive": "border"
+                                        },
+                                        {
+                                          "index": 0
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "zero"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "one"
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": []
+    }
+  ],
+  "task_names": [
+    "train-0000",
+    "train-0001",
+    "train-0002",
+    "train-0003",
+    "train-0004",
+    "train-0005",
+    "train-0006",
+    "train-0007",
+    "train-0008",
+    "train-0009",
+    "train-0010",
+    "train-0011",
+    "train-0012",
+    "train-0013",
+    "train-0014",
+    "train-0015",
+    "train-0016",
+    "train-0017",
+    "train-0018",
+    "train-0019",
+    "train-0020",
+    "train-0021",
+    "train-0022",
+    "train-0023",
+    "train-0024",
+    "train-0025",
+    "train-0026",
+    "train-0027",
+    "train-0028",
+    "train-0029",
+    "train-0030",
+    "train-0031",
+    "train-0032",
+    "train-0033",
+    "train-0034",
+    "train-0035",
+    "train-0036",
+    "train-0037",
+    "train-0038",
+    "train-0039",
+    "train-0040",
+    "train-0041",
+    "train-0042",
+    "train-0043",
+    "train-0044",
+    "train-0045",
+    "train-0046",
+    "train-0047",
+    "train-0048",
+    "train-0049",
+    "train-0050",
+    "train-0051",
+    "train-0052",
+    "train-0053",
+    "train-0054",
+    "train-0055"
+  ],
+  "compression_history": [],
+  "timings": {
+    "wake_seconds": 297.1482545999752,
+    "compression_or_prior_seconds": 1.800013706088066e-06,
+    "dream_seconds": 0.7594815000193194,
+    "recognition_seconds": 4.813591299986001
+  },
+  "recognition_losses": [
+    8.430288314819336,
+    2.6748692989349365,
+    10.686162948608398,
+    21.02095603942871,
+    19.453479766845703,
+    2.5927155017852783,
+    13.561641693115234,
+    16.729705810546875,
+    10.391119003295898,
+    18.737812042236328,
+    12.78816032409668,
+    2.5202081203460693,
+    20.361434936523438,
+    12.933967590332031,
+    12.868118286132812,
+    10.736787796020508,
+    183.7794952392578,
+    13.196878433227539,
+    123.56281280517578,
+    9.929176330566406,
+    18.453821182250977,
+    10.746068954467773,
+    10.707548141479492,
+    8.005569458007812,
+    19.616947174072266,
+    16.208900451660156,
+    10.347142219543457,
+    7.6660871505737305,
+    19.304452896118164,
+    14.131733894348145,
+    17.704540252685547,
+    33.698482513427734,
+    40.887840270996094,
+    9.436365127563477,
+    12.66167163848877,
+    13.900856018066406,
+    10.558210372924805,
+    2.455010414123535,
+    33.03984832763672,
+    7.752251625061035,
+    2.444737195968628,
+    11.110349655151367,
+    12.127692222595215,
+    2.4244894981384277,
+    15.380106925964355,
+    19.978609085083008,
+    10.691047668457031,
+    9.008387565612793,
+    10.027673721313477,
+    9.8072509765625,
+    8.009849548339844,
+    15.219225883483887,
+    17.802715301513672,
+    19.386451721191406,
+    12.558443069458008,
+    7.5659379959106445,
+    2.362725019454956,
+    19.84379005432129,
+    11.364288330078125,
+    7.266716003417969,
+    6.478906154632568,
+    8.95149040222168,
+    17.75788688659668,
+    2.341402292251587,
+    12.027632713317871,
+    9.485300064086914,
+    15.763015747070312,
+    8.967406272888184,
+    10.513675689697266,
+    13.854915618896484,
+    2.3101508617401123,
+    116.20664978027344,
+    10.281525611877441,
+    5.41118049621582,
+    15.167900085449219,
+    11.488408088684082,
+    29.726993560791016,
+    10.01728630065918,
+    11.446479797363281,
+    111.91397857666016,
+    29.00040626525879,
+    2.2822673320770264,
+    10.402876853942871,
+    2.2713866233825684,
+    2.2595999240875244,
+    11.986002922058105,
+    14.099764823913574,
+    11.894640922546387,
+    11.815025329589844,
+    7.046680450439453,
+    2.183008909225464,
+    8.525150299072266,
+    2.154953718185425,
+    30.949365615844727,
+    18.12002182006836,
+    16.79530143737793,
+    6.496462821960449,
+    13.375886917114258,
+    8.184781074523926,
+    9.358919143676758,
+    14.387504577636719,
+    13.851424217224121,
+    18.005125045776367,
+    29.96099853515625,
+    2.0460150241851807,
+    12.858172416687012,
+    174.76971435546875,
+    6.948355674743652,
+    5.161784648895264,
+    37.95785903930664,
+    8.598014831542969,
+    8.530293464660645,
+    6.238725662231445,
+    5.014073371887207,
+    1.995863676071167,
+    9.58238697052002,
+    17.238100051879883,
+    107.65071105957031,
+    10.814896583557129,
+    8.496367454528809,
+    12.778770446777344,
+    10.180025100708008,
+    1.980506181716919,
+    15.700418472290039,
+    13.057046890258789,
+    11.922496795654297,
+    8.05190658569336,
+    12.709178924560547,
+    11.690750122070312,
+    11.9891939163208,
+    12.747611999511719,
+    9.183952331542969,
+    7.808402061462402,
+    12.368000984191895,
+    15.164424896240234,
+    16.481876373291016,
+    59.096954345703125,
+    9.534452438354492,
+    10.427550315856934,
+    7.073868751525879,
+    103.9195556640625,
+    45.132266998291016,
+    15.945733070373535,
+    2.0702171325683594,
+    10.35611343383789,
+    7.474975109100342,
+    6.591179847717285,
+    10.747649192810059,
+    12.48363971710205,
+    15.493145942687988,
+    12.304557800292969,
+    6.862881660461426,
+    11.253780364990234,
+    166.97793579101562,
+    7.275332450866699,
+    56.20009231567383,
+    6.1407318115234375,
+    2.14831280708313,
+    6.518138885498047,
+    3.9414961338043213,
+    14.729047775268555,
+    6.136720657348633,
+    11.236441612243652,
+    7.616218090057373,
+    10.24133014678955,
+    20.342529296875,
+    6.00444221496582,
+    9.925470352172852,
+    7.681598663330078,
+    7.043278694152832,
+    2.2005257606506348,
+    2.197721481323242,
+    6.886869430541992,
+    9.297050476074219,
+    8.894779205322266,
+    2.16103458404541,
+    2.1462113857269287,
+    6.431503772735596,
+    9.605976104736328,
+    9.895465850830078,
+    12.464202880859375,
+    9.774558067321777,
+    2.053382158279419,
+    12.339298248291016,
+    2.0201456546783447,
+    104.3804702758789,
+    1.9749714136123657,
+    159.86460876464844,
+    158.93055725097656,
+    1.8972394466400146,
+    155.71469116210938,
+    41.29978942871094,
+    29.161428451538086,
+    7.289492130279541,
+    12.746870040893555,
+    11.816997528076172,
+    100.71685028076172,
+    1.7568625211715698,
+    12.453178405761719,
+    8.689762115478516,
+    8.645716667175293,
+    1.7128268480300903,
+    11.637511253356934,
+    1.6875213384628296,
+    6.460544109344482,
+    105.78823852539062,
+    11.676206588745117,
+    1.639655351638794,
+    5.844059467315674,
+    6.291853904724121,
+    6.306186199188232,
+    5.724120616912842,
+    141.09652709960938,
+    10.543731689453125,
+    139.73880004882812,
+    37.43423080444336,
+    11.091572761535645,
+    36.895050048828125,
+    6.9015960693359375,
+    1.6157164573669434,
+    1.6145126819610596,
+    6.484263896942139,
+    133.2265625,
+    11.382895469665527,
+    12.377056121826172,
+    9.66019344329834,
+    6.776581764221191,
+    10.366300582885742,
+    1.5977907180786133,
+    40.6180419921875,
+    18.28812599182129,
+    6.680999279022217,
+    5.987193584442139,
+    17.43694305419922,
+    1.5976125001907349,
+    6.342523574829102,
+    1.5902719497680664,
+    8.493202209472656,
+    1.572082757949829,
+    5.732485771179199,
+    11.164490699768066,
+    5.577676773071289,
+    10.902507781982422,
+    7.530210018157959,
+    3.800018787384033,
+    1.5209099054336548,
+    16.832975387573242,
+    9.250152587890625,
+    9.552613258361816,
+    5.444179058074951,
+    38.16782760620117,
+    7.996273994445801,
+    1.5115973949432373,
+    107.06796264648438,
+    10.532989501953125,
+    11.858589172363281,
+    127.92166137695312,
+    12.47350025177002,
+    9.360086441040039,
+    5.64462947845459,
+    8.74935245513916,
+    100.95155334472656,
+    5.6053571701049805,
+    1.565304160118103,
+    98.8392333984375,
+    11.542949676513672,
+    29.1011962890625,
+    8.386530876159668,
+    1.565532922744751,
+    7.331908226013184,
+    6.414175033569336,
+    4.519384860992432,
+    10.150532722473145,
+    10.284207344055176,
+    2.8684635162353516,
+    2.8398613929748535,
+    10.47327995300293,
+    7.246179103851318,
+    7.211934566497803,
+    21.953487396240234,
+    6.250424861907959,
+    7.880826950073242,
+    9.228028297424316,
+    18.06890296936035,
+    8.23950481414795,
+    15.970240592956543,
+    11.240296363830566,
+    132.81626892089844,
+    17.55265998840332,
+    101.51276397705078,
+    5.597597122192383,
+    1.7205804586410522,
+    1.7243058681488037,
+    11.619733810424805,
+    10.372855186462402,
+    35.9807243347168,
+    10.042494773864746,
+    31.952083587646484,
+    1.7128183841705322,
+    7.788995265960693,
+    7.821297645568848,
+    30.869338989257812,
+    8.024604797363281,
+    6.603329181671143,
+    96.91206359863281,
+    5.38997220993042,
+    9.585800170898438,
+    9.883576393127441,
+    9.709425926208496,
+    9.185807228088379,
+    6.270638465881348,
+    9.840639114379883,
+    6.216897487640381,
+    1.7617526054382324,
+    9.268282890319824,
+    9.286681175231934,
+    5.870645999908447,
+    13.517721176147461,
+    8.601387977600098,
+    7.581125736236572,
+    58.97832489013672,
+    8.33748722076416,
+    7.486782550811768,
+    29.382980346679688,
+    92.2410888671875,
+    9.38782024383545,
+    1.8021702766418457,
+    7.828139305114746,
+    1.7875629663467407,
+    26.338123321533203,
+    7.18297004699707,
+    8.737844467163086,
+    9.828128814697266,
+    15.603570938110352,
+    8.616049766540527,
+    8.201683044433594,
+    1.7328709363937378,
+    21.073532104492188,
+    5.3836212158203125,
+    7.443795204162598,
+    1.7070653438568115,
+    24.617382049560547,
+    7.391568660736084,
+    7.393276214599609,
+    1.6801847219467163,
+    7.13044548034668,
+    1.6615309715270996,
+    1.6982994079589844,
+    5.284018516540527,
+    9.13965129852295,
+    35.48158645629883,
+    6.891836166381836,
+    5.4104905128479,
+    1.5992639064788818,
+    20.095043182373047,
+    93.61097717285156,
+    34.65274429321289,
+    6.7344865798950195,
+    17.61414909362793,
+    5.581101894378662,
+    1.6409046649932861,
+    23.025074005126953,
+    6.671494007110596,
+    1.556869387626648,
+    7.891895771026611,
+    7.213541507720947,
+    10.820796966552734,
+    89.39547729492188,
+    1.5451335906982422,
+    9.476130485534668,
+    9.739531517028809,
+    16.27101707458496,
+    86.41571044921875,
+    5.455633640289307,
+    1.5389537811279297,
+    9.587681770324707,
+    13.054412841796875,
+    11.577269554138184,
+    5.341789722442627,
+    16.67852783203125,
+    11.035682678222656,
+    11.353569984436035,
+    6.204413414001465,
+    1.5303523540496826,
+    22.522546768188477,
+    6.667525291442871,
+    9.07204818725586,
+    7.081020832061768,
+    12.503607749938965,
+    1.5197842121124268,
+    21.690031051635742,
+    90.57186126708984,
+    14.986600875854492,
+    19.25645637512207,
+    5.367563724517822,
+    6.556400299072266,
+    5.857501029968262,
+    5.824516296386719,
+    16.944143295288086,
+    10.49814224243164,
+    1.4719693660736084,
+    6.772881507873535,
+    6.741510391235352,
+    1.454882025718689,
+    7.458075523376465,
+    5.144659996032715,
+    6.072845458984375,
+    1.4220486879348755,
+    4.982168197631836,
+    10.015881538391113,
+    1.3946229219436646,
+    8.672667503356934,
+    5.5406389236450195,
+    8.472293853759766,
+    18.287057876586914,
+    9.784069061279297,
+    8.863612174987793,
+    6.931201457977295,
+    9.524611473083496,
+    86.07299041748047,
+    5.150691986083984,
+    6.790041446685791,
+    19.524484634399414,
+    4.952218532562256,
+    4.923121929168701,
+    11.644131660461426,
+    11.468017578125,
+    7.572582721710205,
+    5.739015102386475,
+    5.25073766708374,
+    7.639318943023682,
+    17.342985153198242,
+    9.228650093078613,
+    6.747470855712891,
+    38.20658493041992,
+    81.80387878417969,
+    9.11674690246582,
+    7.804844379425049,
+    16.77874755859375,
+    36.97992706298828,
+    7.836496353149414,
+    6.132538795471191,
+    18.489788055419922,
+    10.549091339111328,
+    5.263459205627441,
+    155.98724365234375,
+    4.836665153503418,
+    78.47364044189453,
+    35.07133483886719,
+    1.5678373575210571,
+    10.405319213867188,
+    8.582131385803223,
+    5.625539779663086,
+    8.77965259552002,
+    8.329233169555664,
+    1.5716718435287476,
+    16.972028732299805,
+    9.012996673583984,
+    34.04070281982422,
+    8.501373291015625,
+    8.457404136657715,
+    5.295188903808594,
+    5.036680698394775,
+    5.072473526000977,
+    6.179603576660156,
+    7.073782444000244,
+    4.486272811889648,
+    146.6308135986328,
+    6.157161712646484,
+    5.102717399597168,
+    1.4937381744384766,
+    14.890413284301758,
+    8.463550567626953,
+    89.62223815917969,
+    89.04003143310547,
+    1.4126453399658203,
+    6.376462936401367,
+    7.690893173217773,
+    85.04722595214844,
+    1.737534999847412,
+    7.566762447357178,
+    6.586197376251221,
+    9.519882202148438,
+    16.908710479736328,
+    7.1108012199401855,
+    32.3366584777832,
+    33.809993743896484,
+    8.159552574157715,
+    9.385330200195312,
+    5.855437755584717,
+    7.373749256134033,
+    31.361194610595703,
+    80.4023208618164,
+    1.8240267038345337,
+    5.668186187744141,
+    31.353404998779297,
+    30.514963150024414,
+    5.186856269836426,
+    5.5221076011657715,
+    1.7665727138519287,
+    1.75212824344635,
+    146.74981689453125,
+    4.966030120849609,
+    1.6951313018798828,
+    8.69468879699707,
+    32.30289840698242,
+    58.38828659057617,
+    29.811124801635742,
+    5.061758995056152,
+    4.792051792144775,
+    4.890847206115723,
+    27.896007537841797,
+    11.992088317871094,
+    6.6402268409729,
+    9.349698066711426,
+    5.367282390594482,
+    5.316489219665527,
+    8.007111549377441,
+    16.58930778503418,
+    5.045382976531982,
+    7.421794414520264,
+    5.683627605438232,
+    1.5724546909332275,
+    4.660982131958008,
+    6.083860397338867,
+    15.994564056396484,
+    14.754024505615234,
+    6.583952903747559,
+    80.86714172363281,
+    7.274545669555664,
+    10.681463241577148,
+    8.693373680114746,
+    6.442934989929199,
+    7.1514692306518555,
+    22.11298179626465,
+    54.69148635864258,
+    8.207746505737305,
+    5.750080585479736,
+    8.793915748596191,
+    21.192461013793945,
+    13.78654956817627,
+    8.366336822509766,
+    5.593932628631592,
+    7.725831031799316,
+    5.391714096069336,
+    4.56488561630249,
+    6.799389839172363,
+    1.7240912914276123,
+    6.635183334350586,
+    1.7249784469604492,
+    12.696775436401367,
+    30.27944564819336,
+    7.541192054748535,
+    30.066808700561523,
+    27.010234832763672,
+    5.591723442077637,
+    12.007853507995605,
+    5.184117317199707,
+    29.222049713134766,
+    6.763362884521484,
+    17.640403747558594,
+    6.514175891876221,
+    26.187335968017578,
+    7.683833122253418,
+    51.25899887084961,
+    9.388854026794434,
+    25.29127311706543,
+    16.03308868408203,
+    5.594924449920654,
+    6.276985168457031,
+    49.75814437866211,
+    11.688125610351562,
+    10.869047164916992,
+    146.9684295654297,
+    1.710038423538208,
+    16.857330322265625,
+    1.6948676109313965,
+    47.43565368652344,
+    5.702226638793945,
+    4.8468122482299805,
+    5.553090572357178,
+    15.930251121520996,
+    82.02240753173828,
+    9.241965293884277,
+    18.556447982788086,
+    140.87977600097656,
+    44.660125732421875,
+    5.283771514892578,
+    28.1911563873291,
+    23.26055145263672,
+    11.531889915466309,
+    8.649262428283691,
+    1.66428804397583,
+    5.098992824554443,
+    18.007823944091797,
+    8.95579719543457,
+    4.977497100830078,
+    7.288172721862793,
+    22.774391174316406,
+    5.394637584686279
+  ],
+  "dream": {
+    "draws": 64,
+    "accepted": 34,
+    "resource_or_evaluation_rejections": 30
+  },
+  "solved_training_tasks": 24,
+  "library_objective": -312.638306528738,
+  "frontier_log_marginal": -288.614306528738,
+  "rng_state": [
+    3,
+    [
+      2123646138,
+      665080509,
+      134968184,
+      3371270862,
+      1676837670,
+      870038190,
+      191613942,
+      1988242680,
+      1489389372,
+      2390012675,
+      451668374,
+      3927006431,
+      341670670,
+      3463519141,
+      1276261672,
+      1276949367,
+      3176952869,
+      4288219758,
+      1180943095,
+      836699460,
+      3141196134,
+      805436338,
+      2721521955,
+      2168982462,
+      1549965643,
+      3454911275,
+      3461891605,
+      1720785791,
+      2133141077,
+      3987931917,
+      1559573673,
+      2393136163,
+      2501835091,
+      4126448279,
+      2121174652,
+      2879179154,
+      1379956199,
+      3184729847,
+      3984426473,
+      1019972336,
+      1786390975,
+      1123033058,
+      294848223,
+      2284094406,
+      401546441,
+      2160131266,
+      3128838774,
+      1429915059,
+      1693516626,
+      3945135582,
+      905316101,
+      3761689083,
+      2230837926,
+      2390002163,
+      3423891773,
+      1924002857,
+      599683996,
+      519447731,
+      3551329833,
+      3753437310,
+      1018600836,
+      1658401951,
+      407964162,
+      301927114,
+      2555683512,
+      2020804896,
+      1847164787,
+      321724447,
+      2868477743,
+      3485616391,
+      1969530716,
+      3325679854,
+      4076441666,
+      1161980601,
+      207580662,
+      1008676466,
+      1873823330,
+      149708255,
+      2761191168,
+      3966051524,
+      1721927017,
+      3161623268,
+      1420434973,
+      1866323628,
+      396961942,
+      2142992205,
+      3120775001,
+      4226846887,
+      2019164727,
+      1191946756,
+      2313626081,
+      2416872735,
+      1641926298,
+      1838737509,
+      135218052,
+      3676890198,
+      2064854526,
+      407843209,
+      3427141196,
+      2047376346,
+      1596244227,
+      1589517159,
+      566182446,
+      2214953805,
+      3572951911,
+      1169139258,
+      355736453,
+      2255591857,
+      2407552396,
+      3003283215,
+      3652540446,
+      1470319625,
+      996823074,
+      3564028507,
+      3618420832,
+      2406676692,
+      2336279107,
+      3151835745,
+      1683261949,
+      4142072714,
+      2609285691,
+      441045194,
+      434380151,
+      1337203283,
+      4230857946,
+      3169878672,
+      559546373,
+      1300030499,
+      1195404335,
+      1629061396,
+      3359855047,
+      2103606684,
+      3540169459,
+      449671349,
+      2203881485,
+      3083520725,
+      1319240490,
+      307848117,
+      386439953,
+      2774919472,
+      3410413037,
+      2720273803,
+      1560142970,
+      3949148887,
+      1573994519,
+      2059083847,
+      775643781,
+      2477103004,
+      2851420108,
+      3202202621,
+      3144264537,
+      2360896389,
+      478371061,
+      3907755658,
+      3715944294,
+      3875138009,
+      3790641951,
+      1901273374,
+      146576752,
+      4059020008,
+      2018051483,
+      3173195379,
+      3432936403,
+      1669309640,
+      3635711301,
+      1110212429,
+      3576366713,
+      1003386864,
+      2995179127,
+      3197459587,
+      2345636233,
+      1282301094,
+      2020774795,
+      3330636980,
+      819648808,
+      172510727,
+      2545717217,
+      2517420152,
+      3723584547,
+      3694523746,
+      2939335113,
+      2593019482,
+      214364442,
+      2941443913,
+      3286515508,
+      3021679756,
+      2068248058,
+      991225452,
+      2866003929,
+      2428170482,
+      2951883242,
+      558539365,
+      1119018580,
+      4255411100,
+      1817158935,
+      2991271046,
+      3832800716,
+      928806596,
+      3412211987,
+      2346008726,
+      1376281936,
+      2657025305,
+      1097509842,
+      2951040550,
+      1530968509,
+      3798288860,
+      1005064770,
+      3717111891,
+      72253334,
+      1720720295,
+      3352624703,
+      1075277807,
+      1959890868,
+      310630022,
+      2419268398,
+      4098217785,
+      559807856,
+      3445826721,
+      949925183,
+      1070090994,
+      3041527147,
+      1151816985,
+      3155782199,
+      251671638,
+      3723113928,
+      2121565595,
+      183732953,
+      4056096237,
+      3083682650,
+      705940086,
+      2137726735,
+      1101167850,
+      3713017012,
+      3463456042,
+      2984392699,
+      2917592039,
+      3835784603,
+      3810261508,
+      1540235534,
+      1019324216,
+      3110908721,
+      1859327295,
+      3621036346,
+      595599093,
+      3912326241,
+      1952761953,
+      3381023753,
+      2218021815,
+      2638511670,
+      3918735610,
+      1994458770,
+      1156419931,
+      3163095673,
+      911067409,
+      2338723321,
+      2956439561,
+      2117935598,
+      3864962662,
+      3058291031,
+      1741397036,
+      1014496570,
+      3563916554,
+      3951041243,
+      3120023630,
+      2380046238,
+      2903850324,
+      729634855,
+      999778933,
+      3857668190,
+      3941734685,
+      2376481520,
+      948468529,
+      3240619941,
+      263251585,
+      3812242519,
+      1279234860,
+      3829714815,
+      4025417500,
+      282456340,
+      3205725078,
+      1089204876,
+      3069204960,
+      2115880108,
+      1508752209,
+      2165681113,
+      2689125320,
+      4208007804,
+      3827425596,
+      366023069,
+      1084914316,
+      2425418412,
+      1984446326,
+      826346348,
+      459992293,
+      949068251,
+      645058377,
+      2600263640,
+      1680152293,
+      1173461656,
+      3892940118,
+      3411107063,
+      713958021,
+      3310382367,
+      356425441,
+      627616799,
+      4114043503,
+      2711004273,
+      97355,
+      2703963073,
+      1288778516,
+      1536960315,
+      1120837580,
+      3501849852,
+      3435871791,
+      216080442,
+      2477638726,
+      3799583436,
+      1370343152,
+      1158337054,
+      3460399400,
+      1520306238,
+      2140165405,
+      1738305550,
+      535231030,
+      1310237959,
+      1506519627,
+      1027478991,
+      4181693265,
+      514657092,
+      4186406986,
+      2396587171,
+      2465775981,
+      1348845290,
+      1130490529,
+      2946071385,
+      1978605116,
+      3340084056,
+      1461341241,
+      1968022893,
+      1495437062,
+      2561392517,
+      3211954082,
+      819796466,
+      1907718839,
+      2908571875,
+      4276256083,
+      2470419801,
+      3121102542,
+      1885317792,
+      2765357002,
+      372267800,
+      356236432,
+      2593824783,
+      1099098913,
+      1402118195,
+      2160819626,
+      3962101617,
+      3069970847,
+      169866141,
+      2431638076,
+      4222340139,
+      3206454272,
+      4049459502,
+      2743428935,
+      1682812690,
+      154476609,
+      1796229574,
+      3423296096,
+      3302504897,
+      1124913008,
+      1697546354,
+      4212142439,
+      1925527175,
+      2752801350,
+      1402173400,
+      435689354,
+      3961180719,
+      3849083103,
+      2670764112,
+      484190533,
+      2421423209,
+      634802241,
+      1008077477,
+      1563229140,
+      1851157088,
+      3241302808,
+      840193768,
+      1863224112,
+      3131410186,
+      2030761618,
+      1049304874,
+      3065936401,
+      1140705290,
+      1989576229,
+      951508421,
+      847537118,
+      4090900921,
+      164744935,
+      2864167623,
+      1247890767,
+      4214997841,
+      4136046235,
+      1457936988,
+      248618456,
+      3415533728,
+      223445950,
+      4077358407,
+      2754180388,
+      2925446068,
+      3734687678,
+      2531225199,
+      3669784441,
+      2503063259,
+      903289931,
+      3871354828,
+      2542567852,
+      260607007,
+      997839779,
+      3835984647,
+      4063104844,
+      3876311215,
+      1690223031,
+      335488397,
+      2772092426,
+      2381553477,
+      2841798260,
+      366839856,
+      1579112188,
+      1685314096,
+      2514286791,
+      1221336188,
+      327856966,
+      1464299039,
+      2756659151,
+      3138315346,
+      1565984749,
+      367814944,
+      230067221,
+      3775504296,
+      4221818214,
+      81949140,
+      3447693685,
+      1204047258,
+      2155998540,
+      1084082,
+      1000499085,
+      3946443177,
+      3961265959,
+      3332173151,
+      2648743393,
+      2495042140,
+      2573277406,
+      910758315,
+      1380251766,
+      2330547535,
+      4245589776,
+      628843910,
+      2624048063,
+      100455672,
+      2024902120,
+      3099604842,
+      2593438802,
+      2880920808,
+      4082714076,
+      899267264,
+      847979744,
+      2284048337,
+      4116210153,
+      2998603547,
+      1532607219,
+      4112346613,
+      2411852243,
+      232285945,
+      2708229369,
+      4256403578,
+      2826027944,
+      967897180,
+      3755418451,
+      1624098343,
+      4200446115,
+      2412370225,
+      2444064914,
+      3241520661,
+      3595701616,
+      26635382,
+      4285536337,
+      902006399,
+      3482414056,
+      353626474,
+      3368803198,
+      276004194,
+      3996056141,
+      3008977212,
+      3169327909,
+      1794109765,
+      2312066271,
+      3671529171,
+      2726465861,
+      3027026596,
+      3826085321,
+      2740177153,
+      2732137417,
+      2055131217,
+      2918615517,
+      4176382172,
+      129917441,
+      2458153978,
+      3058975092,
+      3776325576,
+      1750789414,
+      567059680,
+      332324357,
+      565679352,
+      1499539152,
+      985749007,
+      2655875728,
+      2548804490,
+      2682939980,
+      65627838,
+      3463834437,
+      2853899664,
+      2141391690,
+      1249170977,
+      2799200014,
+      2172943381,
+      555294217,
+      3265359680,
+      3799412961,
+      3685492984,
+      2986082652,
+      187922686,
+      4060183546,
+      2964232494,
+      1760498796,
+      1578061766,
+      854441170,
+      1834147760,
+      189665564,
+      1215489431,
+      360621339,
+      2790114741,
+      1333463487,
+      1782653755,
+      897943595,
+      1355034516,
+      122097271,
+      3965623378,
+      100671146,
+      2283466720,
+      1855755601,
+      2463037648,
+      1069901800,
+      2165228033,
+      2433487186,
+      2441031660,
+      3810986255,
+      3710930336,
+      3878810549,
+      3260394368,
+      799456995,
+      3874306412,
+      966985391,
+      2307357705,
+      2304938907,
+      1635492718,
+      4291376366,
+      2950002649,
+      3851521294,
+      3744173003,
+      92064631,
+      1683308612,
+      583827010,
+      1004539236,
+      3226341250,
+      2033547128,
+      3376688006,
+      3711026810,
+      2001146849,
+      2172282870,
+      1023135085,
+      4189267667,
+      3430656233,
+      4128832712,
+      370840121,
+      1287298827,
+      2886180253,
+      3594180204,
+      2661892020,
+      1403158740,
+      3440368229,
+      3576814079,
+      2209069367,
+      2681140108,
+      2258631243,
+      2914120827,
+      3303745306,
+      2272554810,
+      970016234,
+      1949364444,
+      2748089938,
+      304345085,
+      2329141287,
+      2894046807,
+      3779674076,
+      3034302759,
+      3650007797,
+      2490716641,
+      1058102643,
+      2537322727,
+      1645039916,
+      564732402,
+      1181869609,
+      3288078487,
+      843944155,
+      3420776608,
+      4203991653,
+      1608821473,
+      1068851990,
+      3211949354,
+      3530948855,
+      1301360641,
+      2088245093,
+      938480856,
+      3432780772,
+      176
+    ],
+    null
+  ],
+  "options": {
+    "max_states": 500000,
+    "max_size": 33,
+    "maximum_depth": 14,
+    "upper_bound": 100,
+    "top_k": 3,
+    "training_nodes": 3000,
+    "compression_arity": 1,
+    "compression_iterations": 3,
+    "recognition_steps": 600
+  }
+}

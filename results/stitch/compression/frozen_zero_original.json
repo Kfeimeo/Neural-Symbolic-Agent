@@ -1,0 +1,4639 @@
+{
+  "mode": "frozen",
+  "regime": "zero",
+  "backend": "original",
+  "seconds": 1.8617343000078108,
+  "invented_abstractions": [
+    {
+      "program": {
+        "invented": {
+          "abstraction": {
+            "application": [
+              {
+                "application": [
+                  {
+                    "primitive": "recolor"
+                  },
+                  {
+                    "index": 0
+                  }
+                ]
+              },
+              {
+                "primitive": "green"
+              }
+            ]
+          }
+        }
+      },
+      "type": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "->",
+            "arguments": [
+              {
+                "constructor": "color",
+                "arguments": []
+              },
+              {
+                "constructor": "grid",
+                "arguments": []
+              }
+            ]
+          }
+        ]
+      },
+      "log_weight": -2.2940283521116003
+    },
+    {
+      "program": {
+        "invented": {
+          "abstraction": {
+            "application": [
+              {
+                "primitive": "rotate90"
+              },
+              {
+                "application": [
+                  {
+                    "primitive": "invert"
+                  },
+                  {
+                    "index": 0
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "type": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "log_weight": -2.313562596321707
+    },
+    {
+      "program": {
+        "invented": {
+          "abstraction": {
+            "application": [
+              {
+                "primitive": "rotate90"
+              },
+              {
+                "application": [
+                  {
+                    "primitive": "border"
+                  },
+                  {
+                    "index": 0
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "type": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "log_weight": -2.3414585906421914
+    }
+  ],
+  "rewritten_programs": [
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "primitive": "translate"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "one"
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "minus_one"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "translate"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "rotate90"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "minus_one"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "minus_one"
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "transpose"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "trim"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "trim"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "transpose"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "identity"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "transpose"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "trim"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "translate"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "border"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "one"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "zero"
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "flipH"
+                },
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "invented": {
+                            "abstraction": {
+                              "application": [
+                                {
+                                  "application": [
+                                    {
+                                      "primitive": "recolor"
+                                    },
+                                    {
+                                      "index": 0
+                                    }
+                                  ]
+                                },
+                                {
+                                  "primitive": "green"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "red"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "invented": {
+                        "abstraction": {
+                          "application": [
+                            {
+                              "application": [
+                                {
+                                  "primitive": "recolor"
+                                },
+                                {
+                                  "index": 0
+                                }
+                              ]
+                            },
+                            {
+                              "primitive": "green"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "flipH"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "primitive": "red"
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "identity"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "flipH"
+                    },
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "invented": {
+                                "abstraction": {
+                                  "application": [
+                                    {
+                                      "application": [
+                                        {
+                                          "primitive": "recolor"
+                                        },
+                                        {
+                                          "index": 0
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "primitive": "green"
+                                    }
+                                  ]
+                                }
+                              }
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "red"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "primitive": "translate"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "minus_one"
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "zero"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "translate"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "rotate90"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "zero"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "one"
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "flipH"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "trim"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "trim"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "flipH"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "identity"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "flipH"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "trim"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "invented": {
+                    "abstraction": {
+                      "application": [
+                        {
+                          "primitive": "rotate90"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "invert"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "index": 0
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "invert"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "rotate90"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "identity"
+                },
+                {
+                  "application": [
+                    {
+                      "invented": {
+                        "abstraction": {
+                          "application": [
+                            {
+                              "primitive": "rotate90"
+                            },
+                            {
+                              "application": [
+                                {
+                                  "primitive": "invert"
+                                },
+                                {
+                                  "index": 0
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "invented": {
+                    "abstraction": {
+                      "application": [
+                        {
+                          "primitive": "rotate90"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "border"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "index": 0
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "border"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "rotate90"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "identity"
+                },
+                {
+                  "application": [
+                    {
+                      "invented": {
+                        "abstraction": {
+                          "application": [
+                            {
+                              "primitive": "rotate90"
+                            },
+                            {
+                              "application": [
+                                {
+                                  "primitive": "border"
+                                },
+                                {
+                                  "index": 0
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "flipH"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "border"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "invented": {
+                    "abstraction": {
+                      "application": [
+                        {
+                          "primitive": "rotate90"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "border"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "flipH"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate180"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "transpose"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "border"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "trim"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "invert"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "invented": {
+                    "abstraction": {
+                      "application": [
+                        {
+                          "primitive": "rotate90"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "invert"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "trim"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "trim"
+                },
+                {
+                  "application": [
+                    {
+                      "invented": {
+                        "abstraction": {
+                          "application": [
+                            {
+                              "primitive": "rotate90"
+                            },
+                            {
+                              "application": [
+                                {
+                                  "primitive": "invert"
+                                },
+                                {
+                                  "index": 0
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "invented": {
+                    "abstraction": {
+                      "application": [
+                        {
+                          "primitive": "rotate90"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "invert"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "invented": {
+                            "abstraction": {
+                              "application": [
+                                {
+                                  "application": [
+                                    {
+                                      "primitive": "recolor"
+                                    },
+                                    {
+                                      "index": 0
+                                    }
+                                  ]
+                                },
+                                {
+                                  "primitive": "green"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "blue"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "primitive": "recolor"
+                            },
+                            {
+                              "application": [
+                                {
+                                  "primitive": "invert"
+                                },
+                                {
+                                  "index": 0
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "red"
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "blue"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "flipH"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "invert"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "border"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "flipH"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "invert"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "invert"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "flipH"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "border"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "entries": [
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "invented": {
+                            "abstraction": {
+                              "application": [
+                                {
+                                  "application": [
+                                    {
+                                      "primitive": "recolor"
+                                    },
+                                    {
+                                      "index": 0
+                                    }
+                                  ]
+                                },
+                                {
+                                  "primitive": "green"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "border"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "blue"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        },
+        {
+          "program": {
+            "abstraction": {
+              "application": [
+                {
+                  "invented": {
+                    "abstraction": {
+                      "application": [
+                        {
+                          "primitive": "rotate90"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "border"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "invented": {
+                            "abstraction": {
+                              "application": [
+                                {
+                                  "application": [
+                                    {
+                                      "primitive": "recolor"
+                                    },
+                                    {
+                                      "index": 0
+                                    }
+                                  ]
+                                },
+                                {
+                                  "primitive": "green"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "blue"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "log_likelihood": 0
+        }
+      ]
+    }
+  ],
+  "mdl_accounting": {
+    "before": {
+      "mdl": 121.56413240885539,
+      "library_cost": 24.024,
+      "corpus_cost": 97.54013240885538
+    },
+    "after": {
+      "mdl": 117.10437489280919,
+      "library_cost": 27.033,
+      "corpus_cost": 90.07137489280919
+    },
+    "delta_mdl": 4.459757516046196,
+    "corpus_savings": 7.468757516046196,
+    "library_cost_increase": 3.0090000000000003
+  },
+  "grammar_updates": {
+    "log_variable": -1.0367095670803717,
+    "productions": [
+      {
+        "program": {
+          "primitive": "identity"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "grid",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": -3.50933670723831
+      },
+      {
+        "program": {
+          "primitive": "rotate90"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "grid",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": -2.4977766060969175
+      },
+      {
+        "program": {
+          "primitive": "rotate180"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "grid",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": -3.626976732526198
+      },
+      {
+        "program": {
+          "primitive": "flipH"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "grid",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": -2.0763793201150316
+      },
+      {
+        "program": {
+          "primitive": "flipV"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "grid",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": -3.67576689669563
+      },
+      {
+        "program": {
+          "primitive": "transpose"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "grid",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": -2.957927103545313
+      },
+      {
+        "program": {
+          "primitive": "trim"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "grid",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": -2.2894725355757393
+      },
+      {
+        "program": {
+          "primitive": "invert"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "grid",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": -2.93611366083947
+      },
+      {
+        "program": {
+          "primitive": "recolor"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "->",
+              "arguments": [
+                {
+                  "constructor": "color",
+                  "arguments": []
+                },
+                {
+                  "constructor": "->",
+                  "arguments": [
+                    {
+                      "constructor": "color",
+                      "arguments": []
+                    },
+                    {
+                      "constructor": "grid",
+                      "arguments": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "log_weight": -3.6577483911929516
+      },
+      {
+        "program": {
+          "primitive": "objects"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "objects",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": 0
+      },
+      {
+        "program": {
+          "primitive": "largest"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "objects",
+              "arguments": []
+            },
+            {
+              "constructor": "object",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": 0
+      },
+      {
+        "program": {
+          "primitive": "crop"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "object",
+              "arguments": []
+            },
+            {
+              "constructor": "grid",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": -3.67576689669563
+      },
+      {
+        "program": {
+          "primitive": "translate"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "->",
+              "arguments": [
+                {
+                  "constructor": "int",
+                  "arguments": []
+                },
+                {
+                  "constructor": "->",
+                  "arguments": [
+                    {
+                      "constructor": "int",
+                      "arguments": []
+                    },
+                    {
+                      "constructor": "grid",
+                      "arguments": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "log_weight": -2.2894725355757393
+      },
+      {
+        "program": {
+          "primitive": "count"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "objects",
+              "arguments": []
+            },
+            {
+              "constructor": "int",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": -1.9459101490553132
+      },
+      {
+        "program": {
+          "primitive": "is_empty"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "objects",
+              "arguments": []
+            },
+            {
+              "constructor": "bool",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": 0
+      },
+      {
+        "program": {
+          "primitive": "if_grid"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "bool",
+              "arguments": []
+            },
+            {
+              "constructor": "->",
+              "arguments": [
+                {
+                  "constructor": "grid",
+                  "arguments": []
+                },
+                {
+                  "constructor": "->",
+                  "arguments": [
+                    {
+                      "constructor": "grid",
+                      "arguments": []
+                    },
+                    {
+                      "constructor": "grid",
+                      "arguments": []
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        "log_weight": -3.67576689669563
+      },
+      {
+        "program": {
+          "primitive": "border"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "grid",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": -2.511794056428534
+      },
+      {
+        "program": {
+          "primitive": "solid"
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "->",
+              "arguments": [
+                {
+                  "constructor": "color",
+                  "arguments": []
+                },
+                {
+                  "constructor": "grid",
+                  "arguments": []
+                }
+              ]
+            }
+          ]
+        },
+        "log_weight": -3.67576689669563
+      },
+      {
+        "program": {
+          "primitive": "red"
+        },
+        "type": {
+          "constructor": "color",
+          "arguments": []
+        },
+        "log_weight": -0.6886325002054186
+      },
+      {
+        "program": {
+          "primitive": "blue"
+        },
+        "type": {
+          "constructor": "color",
+          "arguments": []
+        },
+        "log_weight": -0.2922172276171717
+      },
+      {
+        "program": {
+          "primitive": "green"
+        },
+        "type": {
+          "constructor": "color",
+          "arguments": []
+        },
+        "log_weight": -1.3908295162852815
+      },
+      {
+        "program": {
+          "primitive": "zero"
+        },
+        "type": {
+          "constructor": "int",
+          "arguments": []
+        },
+        "log_weight": -0.8472978603872034
+      },
+      {
+        "program": {
+          "primitive": "one"
+        },
+        "type": {
+          "constructor": "int",
+          "arguments": []
+        },
+        "log_weight": -0.8472978603872034
+      },
+      {
+        "program": {
+          "primitive": "minus_one"
+        },
+        "type": {
+          "constructor": "int",
+          "arguments": []
+        },
+        "log_weight": -0.8472978603872034
+      },
+      {
+        "program": {
+          "invented": {
+            "abstraction": {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "primitive": "recolor"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                },
+                {
+                  "primitive": "green"
+                }
+              ]
+            }
+          }
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "->",
+              "arguments": [
+                {
+                  "constructor": "color",
+                  "arguments": []
+                },
+                {
+                  "constructor": "grid",
+                  "arguments": []
+                }
+              ]
+            }
+          ]
+        },
+        "log_weight": -2.2940283521116003
+      },
+      {
+        "program": {
+          "invented": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "invert"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "grid",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": -2.313562596321707
+      },
+      {
+        "program": {
+          "invented": {
+            "abstraction": {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        "type": {
+          "constructor": "->",
+          "arguments": [
+            {
+              "constructor": "grid",
+              "arguments": []
+            },
+            {
+              "constructor": "grid",
+              "arguments": []
+            }
+          ]
+        },
+        "log_weight": -2.3414585906421914
+      }
+    ],
+    "contexts": {}
+  },
+  "statistics": {
+    "backend": "original",
+    "input_sha256": "b9b41f3d74304f9ea54d8fa4a0a9cefc2e54c7079cacd45bd091f006c51db3fb"
+  },
+  "history": [
+    {
+      "before": -121.56413240885539,
+      "after": -120.09602866883264,
+      "invented": {
+        "invented": {
+          "abstraction": {
+            "application": [
+              {
+                "application": [
+                  {
+                    "primitive": "recolor"
+                  },
+                  {
+                    "index": 0
+                  }
+                ]
+              },
+              {
+                "primitive": "green"
+              }
+            ]
+          }
+        }
+      },
+      "candidate_count": 34
+    },
+    {
+      "before": -119.56272028486562,
+      "after": -118.54746185833301,
+      "invented": {
+        "invented": {
+          "abstraction": {
+            "application": [
+              {
+                "primitive": "rotate90"
+              },
+              {
+                "application": [
+                  {
+                    "primitive": "invert"
+                  },
+                  {
+                    "index": 0
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "candidate_count": 25
+    },
+    {
+      "before": -118.13912158747827,
+      "after": -117.10437489280919,
+      "invented": {
+        "invented": {
+          "abstraction": {
+            "application": [
+              {
+                "primitive": "rotate90"
+              },
+              {
+                "application": [
+                  {
+                    "primitive": "border"
+                  },
+                  {
+                    "index": 0
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "candidate_count": 17
+    }
+  ],
+  "recovery": {
+    "learned_count": 3,
+    "active_latents": [],
+    "metrics": {
+      "syntactic": {
+        "precision": 0.0,
+        "recall": null,
+        "f1": null,
+        "weighted_recall": null,
+        "pairs": []
+      },
+      "canonical": {
+        "precision": 0.0,
+        "recall": null,
+        "f1": null,
+        "weighted_recall": null,
+        "pairs": []
+      },
+      "beta": {
+        "precision": 0.0,
+        "recall": null,
+        "f1": null,
+        "weighted_recall": null,
+        "pairs": []
+      },
+      "type": {
+        "precision": 0.0,
+        "recall": null,
+        "f1": null,
+        "weighted_recall": null,
+        "pairs": []
+      },
+      "behavioral": {
+        "precision": 0.0,
+        "recall": null,
+        "f1": null,
+        "weighted_recall": null,
+        "pairs": []
+      }
+    },
+    "type_note": "Type matching alone is not evidence of abstraction recovery.",
+    "behavior_note": "Finite independent probes and all configured parameter values; not a universal equivalence proof.",
+    "beta_by_exposure": {
+      "supported": {
+        "total": 0,
+        "recovered": 0,
+        "recall": null
+      },
+      "unsupported": {
+        "total": 0,
+        "recovered": 0,
+        "recall": null
+      },
+      "minimum_two_tasks": {
+        "total": 0,
+        "recovered": 0,
+        "recall": null
+      }
+    },
+    "behavioral_by_exposure": {
+      "supported": {
+        "total": 0,
+        "recovered": 0,
+        "recall": null
+      },
+      "unsupported": {
+        "total": 0,
+        "recovered": 0,
+        "recall": null
+      },
+      "minimum_two_tasks": {
+        "total": 0,
+        "recovered": 0,
+        "recall": null
+      }
+    }
+  },
+  "exposure": [],
+  "rewrites": [
+    {
+      "task": "train-0000",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "rotate90"
+            },
+            {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "translate"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "one"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "minus_one"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "rotate90"
+            },
+            {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "translate"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "one"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "minus_one"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 0,
+      "depth_reduction": 0,
+      "leaf_reduction": 0
+    },
+    {
+      "task": "train-0000",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "primitive": "translate"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "rotate90"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "primitive": "minus_one"
+                }
+              ]
+            },
+            {
+              "primitive": "minus_one"
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "primitive": "translate"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "rotate90"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "primitive": "minus_one"
+                }
+              ]
+            },
+            {
+              "primitive": "minus_one"
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 0,
+      "depth_reduction": 0,
+      "leaf_reduction": 0
+    },
+    {
+      "task": "train-0001",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "transpose"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "trim"
+                },
+                {
+                  "index": 0
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "transpose"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "trim"
+                },
+                {
+                  "index": 0
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 0,
+      "depth_reduction": 0,
+      "leaf_reduction": 0
+    },
+    {
+      "task": "train-0001",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "trim"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "transpose"
+                },
+                {
+                  "index": 0
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "trim"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "transpose"
+                },
+                {
+                  "index": 0
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 0,
+      "depth_reduction": 0,
+      "leaf_reduction": 0
+    },
+    {
+      "task": "train-0001",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "identity"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "transpose"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "trim"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "identity"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "transpose"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "trim"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 0,
+      "depth_reduction": 0,
+      "leaf_reduction": 0
+    },
+    {
+      "task": "train-0002",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "primitive": "translate"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "border"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "primitive": "one"
+                }
+              ]
+            },
+            {
+              "primitive": "zero"
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "primitive": "translate"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "border"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "primitive": "one"
+                }
+              ]
+            },
+            {
+              "primitive": "zero"
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 0,
+      "depth_reduction": 0,
+      "leaf_reduction": 0
+    },
+    {
+      "task": "train-0003",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "flipH"
+            },
+            {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "recolor"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "green"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "red"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "flipH"
+            },
+            {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "invented": {
+                        "abstraction": {
+                          "application": [
+                            {
+                              "application": [
+                                {
+                                  "primitive": "recolor"
+                                },
+                                {
+                                  "index": 0
+                                }
+                              ]
+                            },
+                            {
+                              "primitive": "green"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                },
+                {
+                  "primitive": "red"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 2,
+      "depth_reduction": 1,
+      "leaf_reduction": 1
+    },
+    {
+      "task": "train-0003",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "primitive": "recolor"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "flipH"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "primitive": "green"
+                }
+              ]
+            },
+            {
+              "primitive": "red"
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "application": [
+                {
+                  "invented": {
+                    "abstraction": {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "primitive": "recolor"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "green"
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "flipH"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "primitive": "red"
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 2,
+      "depth_reduction": 1,
+      "leaf_reduction": 1
+    },
+    {
+      "task": "train-0003",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "identity"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "flipH"
+                },
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "primitive": "recolor"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "green"
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "red"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "identity"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "flipH"
+                },
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "invented": {
+                            "abstraction": {
+                              "application": [
+                                {
+                                  "application": [
+                                    {
+                                      "primitive": "recolor"
+                                    },
+                                    {
+                                      "index": 0
+                                    }
+                                  ]
+                                },
+                                {
+                                  "primitive": "green"
+                                }
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "red"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 2,
+      "depth_reduction": 1,
+      "leaf_reduction": 1
+    },
+    {
+      "task": "train-0004",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "rotate90"
+            },
+            {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "translate"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "minus_one"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "zero"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "rotate90"
+            },
+            {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "translate"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "minus_one"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "zero"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 0,
+      "depth_reduction": 0,
+      "leaf_reduction": 0
+    },
+    {
+      "task": "train-0004",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "primitive": "translate"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "rotate90"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "primitive": "zero"
+                }
+              ]
+            },
+            {
+              "primitive": "one"
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "primitive": "translate"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "rotate90"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "primitive": "zero"
+                }
+              ]
+            },
+            {
+              "primitive": "one"
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 0,
+      "depth_reduction": 0,
+      "leaf_reduction": 0
+    },
+    {
+      "task": "train-0005",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "flipH"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "trim"
+                },
+                {
+                  "index": 0
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "flipH"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "trim"
+                },
+                {
+                  "index": 0
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 0,
+      "depth_reduction": 0,
+      "leaf_reduction": 0
+    },
+    {
+      "task": "train-0005",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "trim"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "flipH"
+                },
+                {
+                  "index": 0
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "trim"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "flipH"
+                },
+                {
+                  "index": 0
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 0,
+      "depth_reduction": 0,
+      "leaf_reduction": 0
+    },
+    {
+      "task": "train-0005",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "identity"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "flipH"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "trim"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "identity"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "flipH"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "trim"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 0,
+      "depth_reduction": 0,
+      "leaf_reduction": 0
+    },
+    {
+      "task": "train-0006",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "rotate90"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "invert"
+                },
+                {
+                  "index": 0
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "invented": {
+                "abstraction": {
+                  "application": [
+                    {
+                      "primitive": "rotate90"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "invert"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "index": 0
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 2,
+      "depth_reduction": 1,
+      "leaf_reduction": 1
+    },
+    {
+      "task": "train-0006",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "invert"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "index": 0
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "invert"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "index": 0
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 0,
+      "depth_reduction": 0,
+      "leaf_reduction": 0
+    },
+    {
+      "task": "train-0006",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "identity"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "invert"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "identity"
+            },
+            {
+              "application": [
+                {
+                  "invented": {
+                    "abstraction": {
+                      "application": [
+                        {
+                          "primitive": "rotate90"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "invert"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "index": 0
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 2,
+      "depth_reduction": 1,
+      "leaf_reduction": 1
+    },
+    {
+      "task": "train-0007",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "rotate90"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "border"
+                },
+                {
+                  "index": 0
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "invented": {
+                "abstraction": {
+                  "application": [
+                    {
+                      "primitive": "rotate90"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "border"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "index": 0
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 2,
+      "depth_reduction": 1,
+      "leaf_reduction": 1
+    },
+    {
+      "task": "train-0007",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "border"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "index": 0
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "border"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "index": 0
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 0,
+      "depth_reduction": 0,
+      "leaf_reduction": 0
+    },
+    {
+      "task": "train-0007",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "identity"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "identity"
+            },
+            {
+              "application": [
+                {
+                  "invented": {
+                    "abstraction": {
+                      "application": [
+                        {
+                          "primitive": "rotate90"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "border"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "index": 0
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 2,
+      "depth_reduction": 1,
+      "leaf_reduction": 1
+    },
+    {
+      "task": "train-0008",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "rotate90"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "flipH"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "rotate90"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "flipH"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 0,
+      "depth_reduction": 0,
+      "leaf_reduction": 0
+    },
+    {
+      "task": "train-0008",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "rotate90"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "border"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "flipH"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "invented": {
+                "abstraction": {
+                  "application": [
+                    {
+                      "primitive": "rotate90"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "border"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "application": [
+                {
+                  "primitive": "flipH"
+                },
+                {
+                  "index": 0
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 2,
+      "depth_reduction": 1,
+      "leaf_reduction": 1
+    },
+    {
+      "task": "train-0008",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "rotate180"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "transpose"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "rotate180"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "transpose"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 0,
+      "depth_reduction": 0,
+      "leaf_reduction": 0
+    },
+    {
+      "task": "train-0009",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "rotate90"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "trim"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "invert"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "rotate90"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "trim"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "invert"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 0,
+      "depth_reduction": 0,
+      "leaf_reduction": 0
+    },
+    {
+      "task": "train-0009",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "rotate90"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "invert"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "trim"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "invented": {
+                "abstraction": {
+                  "application": [
+                    {
+                      "primitive": "rotate90"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "invert"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "application": [
+                {
+                  "primitive": "trim"
+                },
+                {
+                  "index": 0
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 2,
+      "depth_reduction": 1,
+      "leaf_reduction": 1
+    },
+    {
+      "task": "train-0009",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "trim"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "rotate90"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "invert"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "trim"
+            },
+            {
+              "application": [
+                {
+                  "invented": {
+                    "abstraction": {
+                      "application": [
+                        {
+                          "primitive": "rotate90"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "invert"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                },
+                {
+                  "index": 0
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 2,
+      "depth_reduction": 1,
+      "leaf_reduction": 1
+    },
+    {
+      "task": "train-0010",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "rotate90"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "invert"
+                },
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "primitive": "recolor"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "green"
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "blue"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "invented": {
+                "abstraction": {
+                  "application": [
+                    {
+                      "primitive": "rotate90"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "invert"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "invented": {
+                        "abstraction": {
+                          "application": [
+                            {
+                              "application": [
+                                {
+                                  "primitive": "recolor"
+                                },
+                                {
+                                  "index": 0
+                                }
+                              ]
+                            },
+                            {
+                              "primitive": "green"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                },
+                {
+                  "primitive": "blue"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 4,
+      "depth_reduction": 2,
+      "leaf_reduction": 2
+    },
+    {
+      "task": "train-0010",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "rotate90"
+            },
+            {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "recolor"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "invert"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "red"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "blue"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "rotate90"
+            },
+            {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "recolor"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "invert"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "red"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "blue"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 0,
+      "depth_reduction": 0,
+      "leaf_reduction": 0
+    },
+    {
+      "task": "train-0013",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "flipH"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "invert"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "flipH"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "invert"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 0,
+      "depth_reduction": 0,
+      "leaf_reduction": 0
+    },
+    {
+      "task": "train-0013",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "flipH"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "border"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "invert"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "flipH"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "border"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "invert"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 0,
+      "depth_reduction": 0,
+      "leaf_reduction": 0
+    },
+    {
+      "task": "train-0013",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "invert"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "flipH"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "invert"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "flipH"
+                },
+                {
+                  "application": [
+                    {
+                      "primitive": "border"
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 0,
+      "depth_reduction": 0,
+      "leaf_reduction": 0
+    },
+    {
+      "task": "train-0014",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "rotate90"
+            },
+            {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "primitive": "recolor"
+                        },
+                        {
+                          "application": [
+                            {
+                              "primitive": "border"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "green"
+                    }
+                  ]
+                },
+                {
+                  "primitive": "blue"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "rotate90"
+            },
+            {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "invented": {
+                        "abstraction": {
+                          "application": [
+                            {
+                              "application": [
+                                {
+                                  "primitive": "recolor"
+                                },
+                                {
+                                  "index": 0
+                                }
+                              ]
+                            },
+                            {
+                              "primitive": "green"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "border"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "primitive": "blue"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 2,
+      "depth_reduction": 1,
+      "leaf_reduction": 1
+    },
+    {
+      "task": "train-0014",
+      "before": {
+        "abstraction": {
+          "application": [
+            {
+              "primitive": "rotate90"
+            },
+            {
+              "application": [
+                {
+                  "primitive": "border"
+                },
+                {
+                  "application": [
+                    {
+                      "application": [
+                        {
+                          "application": [
+                            {
+                              "primitive": "recolor"
+                            },
+                            {
+                              "index": 0
+                            }
+                          ]
+                        },
+                        {
+                          "primitive": "green"
+                        }
+                      ]
+                    },
+                    {
+                      "primitive": "blue"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "after": {
+        "abstraction": {
+          "application": [
+            {
+              "invented": {
+                "abstraction": {
+                  "application": [
+                    {
+                      "primitive": "rotate90"
+                    },
+                    {
+                      "application": [
+                        {
+                          "primitive": "border"
+                        },
+                        {
+                          "index": 0
+                        }
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "application": [
+                {
+                  "application": [
+                    {
+                      "invented": {
+                        "abstraction": {
+                          "application": [
+                            {
+                              "application": [
+                                {
+                                  "primitive": "recolor"
+                                },
+                                {
+                                  "index": 0
+                                }
+                              ]
+                            },
+                            {
+                              "primitive": "green"
+                            }
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "index": 0
+                    }
+                  ]
+                },
+                {
+                  "primitive": "blue"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "ast_size_reduction": 4,
+      "depth_reduction": 2,
+      "leaf_reduction": 2
+    }
+  ],
+  "tasks_affected": 7,
+  "ast_size_reduction": 30,
+  "depth_reduction": 15,
+  "inventions": [
+    {
+      "program": {
+        "invented": {
+          "abstraction": {
+            "application": [
+              {
+                "application": [
+                  {
+                    "primitive": "recolor"
+                  },
+                  {
+                    "index": 0
+                  }
+                ]
+              },
+              {
+                "primitive": "green"
+              }
+            ]
+          }
+        }
+      },
+      "type": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "->",
+            "arguments": [
+              {
+                "constructor": "color",
+                "arguments": []
+              },
+              {
+                "constructor": "grid",
+                "arguments": []
+              }
+            ]
+          }
+        ]
+      },
+      "log_weight": -2.2940283521116003,
+      "parameter_count": 2
+    },
+    {
+      "program": {
+        "invented": {
+          "abstraction": {
+            "application": [
+              {
+                "primitive": "rotate90"
+              },
+              {
+                "application": [
+                  {
+                    "primitive": "invert"
+                  },
+                  {
+                    "index": 0
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "type": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "log_weight": -2.313562596321707,
+      "parameter_count": 1
+    },
+    {
+      "program": {
+        "invented": {
+          "abstraction": {
+            "application": [
+              {
+                "primitive": "rotate90"
+              },
+              {
+                "application": [
+                  {
+                    "primitive": "border"
+                  },
+                  {
+                    "index": 0
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      },
+      "type": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "grid",
+            "arguments": []
+          },
+          {
+            "constructor": "grid",
+            "arguments": []
+          }
+        ]
+      },
+      "log_weight": -2.3414585906421914,
+      "parameter_count": 1
+    }
+  ]
+}

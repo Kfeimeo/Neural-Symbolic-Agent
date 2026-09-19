@@ -1,0 +1,2521 @@
+{
+  "seed": 7,
+  "train_tasks": 36,
+  "heldout_tasks": 24,
+  "search_options": {
+    "top_k": 3,
+    "max_nodes": 1500,
+    "max_size": 7
+  },
+  "dream_count": 600,
+  "replay_count": 108,
+  "recognition_losses": [
+    {
+      "initial": 2.705921457524885,
+      "final": 1.8107529602552714
+    },
+    {
+      "initial": 2.817537202333149,
+      "final": 1.9225235754983467
+    }
+  ],
+  "training_wake": {
+    "solve_rate": 1.0,
+    "mean_enumerated_nodes": 131.33333333333334,
+    "median_enumerated_nodes": 128.0,
+    "mean_expanded_states": 997.3333333333334,
+    "mean_search_seconds": 0.2919003416657991,
+    "mean_first_solution_nodes": 47.333333333333336,
+    "first_solution_sample_count": 36,
+    "mean_censored_first_solution_nodes": 47.333333333333336,
+    "exact_program_recovery_rate": 1.0,
+    "expanded_ast_recovery_rate": 1.0,
+    "behavioral_recovery_rate": 1.0,
+    "budget_exhausted": 0,
+    "budget_exhaustion_rate": 0.0
+  },
+  "compression": {
+    "added": {
+      "learned_0": "rotate90(trim($input))"
+    },
+    "mdl_before": 108,
+    "mdl_after": 100
+  },
+  "configurations": {
+    "A": {
+      "solve_rate": 1.0,
+      "mean_enumerated_nodes": 131.33333333333334,
+      "median_enumerated_nodes": 128.0,
+      "mean_expanded_states": 997.3333333333334,
+      "mean_search_seconds": 0.29412977083726827,
+      "mean_first_solution_nodes": 47.333333333333336,
+      "first_solution_sample_count": 24,
+      "mean_censored_first_solution_nodes": 47.333333333333336,
+      "exact_program_recovery_rate": 1.0,
+      "expanded_ast_recovery_rate": 1.0,
+      "behavioral_recovery_rate": 1.0,
+      "budget_exhausted": 0,
+      "budget_exhaustion_rate": 0.0
+    },
+    "B": {
+      "solve_rate": 1.0,
+      "mean_enumerated_nodes": 19.666666666666668,
+      "median_enumerated_nodes": 23.0,
+      "mean_expanded_states": 44.333333333333336,
+      "mean_search_seconds": 0.0048239958329456085,
+      "mean_first_solution_nodes": 6.666666666666667,
+      "first_solution_sample_count": 24,
+      "mean_censored_first_solution_nodes": 6.666666666666667,
+      "exact_program_recovery_rate": 0.6666666666666666,
+      "expanded_ast_recovery_rate": 1.0,
+      "behavioral_recovery_rate": 1.0,
+      "budget_exhausted": 0,
+      "budget_exhaustion_rate": 0.0
+    },
+    "C": {
+      "solve_rate": 1.0,
+      "mean_enumerated_nodes": 12.041666666666666,
+      "median_enumerated_nodes": 10.0,
+      "mean_expanded_states": 25.666666666666668,
+      "mean_search_seconds": 0.002994029169106701,
+      "mean_first_solution_nodes": 5.75,
+      "first_solution_sample_count": 24,
+      "mean_censored_first_solution_nodes": 5.75,
+      "exact_program_recovery_rate": 1.0,
+      "expanded_ast_recovery_rate": 1.0,
+      "behavioral_recovery_rate": 1.0,
+      "budget_exhausted": 0,
+      "budget_exhaustion_rate": 0.0
+    },
+    "D": {
+      "solve_rate": 1.0,
+      "mean_enumerated_nodes": 10.958333333333334,
+      "median_enumerated_nodes": 10.0,
+      "mean_expanded_states": 22.916666666666668,
+      "mean_search_seconds": 0.002522195832474002,
+      "mean_first_solution_nodes": 4.791666666666667,
+      "first_solution_sample_count": 24,
+      "mean_censored_first_solution_nodes": 4.791666666666667,
+      "exact_program_recovery_rate": 0.6666666666666666,
+      "expanded_ast_recovery_rate": 1.0,
+      "behavioral_recovery_rate": 1.0,
+      "budget_exhausted": 0,
+      "budget_exhaustion_rate": 0.0
+    }
+  },
+  "frontiers": {
+    "A": [
+      {
+        "task": "heldout_0",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "rotate90(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(rotate90($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(rotate90(trim($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 110,
+        "expanded_states": 976,
+        "seconds": 0.2603129999770317,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_1",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(flipH(trim($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 128,
+        "expanded_states": 994,
+        "seconds": 0.36091609997674823,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_2",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(trim(invert($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 156,
+        "expanded_states": 1022,
+        "seconds": 0.28041159998974763,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_3",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "rotate90(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(rotate90($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(rotate90(trim($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 110,
+        "expanded_states": 976,
+        "seconds": 0.2632730999903288,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_4",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(flipH(trim($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 128,
+        "expanded_states": 994,
+        "seconds": 0.3958779000095092,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_5",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(trim(invert($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 156,
+        "expanded_states": 1022,
+        "seconds": 0.27062300001853146,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_6",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "rotate90(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(rotate90($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(rotate90(trim($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 110,
+        "expanded_states": 976,
+        "seconds": 0.26276209999923594,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_7",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(flipH(trim($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 128,
+        "expanded_states": 994,
+        "seconds": 0.25203220002003945,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_8",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(trim(invert($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 156,
+        "expanded_states": 1022,
+        "seconds": 0.27334240000345744,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_9",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "rotate90(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(rotate90($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(rotate90(trim($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 110,
+        "expanded_states": 976,
+        "seconds": 0.36983690000488423,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_10",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(flipH(trim($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 128,
+        "expanded_states": 994,
+        "seconds": 0.30044059999636374,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_11",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(trim(invert($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 156,
+        "expanded_states": 1022,
+        "seconds": 0.265460599999642,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_12",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "rotate90(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(rotate90($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(rotate90(trim($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 110,
+        "expanded_states": 976,
+        "seconds": 0.2919077999831643,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_13",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(flipH(trim($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 128,
+        "expanded_states": 994,
+        "seconds": 0.3650152000191156,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_14",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(trim(invert($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 156,
+        "expanded_states": 1022,
+        "seconds": 0.27029300000867806,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_15",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "rotate90(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(rotate90($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(rotate90(trim($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 110,
+        "expanded_states": 976,
+        "seconds": 0.2678477000154089,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_16",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(flipH(trim($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 128,
+        "expanded_states": 994,
+        "seconds": 0.2478395000216551,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_17",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(trim(invert($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 156,
+        "expanded_states": 1022,
+        "seconds": 0.36587110001710244,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_18",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "rotate90(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(rotate90($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(rotate90(trim($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 110,
+        "expanded_states": 976,
+        "seconds": 0.26682289998279884,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_19",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(flipH(trim($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 128,
+        "expanded_states": 994,
+        "seconds": 0.26327200001105666,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_20",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(trim(invert($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 156,
+        "expanded_states": 1022,
+        "seconds": 0.25165459999698214,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_21",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "rotate90(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(rotate90($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(rotate90(trim($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 110,
+        "expanded_states": 976,
+        "seconds": 0.3690175000228919,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_22",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(flipH(trim($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 128,
+        "expanded_states": 994,
+        "seconds": 0.2797236000187695,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_23",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -6.3561076606958915,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(trim(invert($input)))",
+            "log_prior": -9.534161491043838,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 156,
+        "expanded_states": 1022,
+        "seconds": 0.2645601000112947,
+        "budget_exhausted": false
+      }
+    ],
+    "B": [
+      {
+        "task": "heldout_0",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "learned_0($input)",
+            "log_prior": -1.87770189902878,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "learned_0(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(learned_0($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 12,
+        "expanded_states": 24,
+        "seconds": 0.002649799978826195,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_1",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(flipH($input)))",
+            "log_prior": -4.325252762273012,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 23,
+        "expanded_states": 54,
+        "seconds": 0.005734000005759299,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_2",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(invert($input)))",
+            "log_prior": -4.325252762273012,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 24,
+        "expanded_states": 55,
+        "seconds": 0.005236400000285357,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_3",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "learned_0($input)",
+            "log_prior": -1.87770189902878,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "learned_0(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(learned_0($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 12,
+        "expanded_states": 24,
+        "seconds": 0.0021844999864697456,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_4",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(flipH($input)))",
+            "log_prior": -4.325252762273012,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 23,
+        "expanded_states": 54,
+        "seconds": 0.005889499996555969,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_5",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(invert($input)))",
+            "log_prior": -4.325252762273012,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 24,
+        "expanded_states": 55,
+        "seconds": 0.006296400009887293,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_6",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "learned_0($input)",
+            "log_prior": -1.87770189902878,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "learned_0(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(learned_0($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 12,
+        "expanded_states": 24,
+        "seconds": 0.0028762999863829464,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_7",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(flipH($input)))",
+            "log_prior": -4.325252762273012,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 23,
+        "expanded_states": 54,
+        "seconds": 0.006840199988801032,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_8",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(invert($input)))",
+            "log_prior": -4.325252762273012,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 24,
+        "expanded_states": 55,
+        "seconds": 0.005844500003149733,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_9",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "learned_0($input)",
+            "log_prior": -1.87770189902878,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "learned_0(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(learned_0($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 12,
+        "expanded_states": 24,
+        "seconds": 0.00287279998883605,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_10",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(flipH($input)))",
+            "log_prior": -4.325252762273012,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 23,
+        "expanded_states": 54,
+        "seconds": 0.006739100004779175,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_11",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(invert($input)))",
+            "log_prior": -4.325252762273012,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 24,
+        "expanded_states": 55,
+        "seconds": 0.005539000005228445,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_12",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "learned_0($input)",
+            "log_prior": -1.87770189902878,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "learned_0(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(learned_0($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 12,
+        "expanded_states": 24,
+        "seconds": 0.0022732999932486564,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_13",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(flipH($input)))",
+            "log_prior": -4.325252762273012,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 23,
+        "expanded_states": 54,
+        "seconds": 0.006432700000004843,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_14",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(invert($input)))",
+            "log_prior": -4.325252762273012,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 24,
+        "expanded_states": 55,
+        "seconds": 0.0057366999972146004,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_15",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "learned_0($input)",
+            "log_prior": -1.87770189902878,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "learned_0(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(learned_0($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 12,
+        "expanded_states": 24,
+        "seconds": 0.0021063000021968037,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_16",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(flipH($input)))",
+            "log_prior": -4.325252762273012,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 23,
+        "expanded_states": 54,
+        "seconds": 0.005396799999289215,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_17",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(invert($input)))",
+            "log_prior": -4.325252762273012,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 24,
+        "expanded_states": 55,
+        "seconds": 0.006116500007919967,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_18",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "learned_0($input)",
+            "log_prior": -1.87770189902878,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "learned_0(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(learned_0($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 12,
+        "expanded_states": 24,
+        "seconds": 0.002547500014770776,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_19",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(flipH($input)))",
+            "log_prior": -4.325252762273012,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 23,
+        "expanded_states": 54,
+        "seconds": 0.005795700009912252,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_20",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(invert($input)))",
+            "log_prior": -4.325252762273012,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 24,
+        "expanded_states": 55,
+        "seconds": 0.0061083000036887825,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_21",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "learned_0($input)",
+            "log_prior": -1.87770189902878,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "learned_0(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(learned_0($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 12,
+        "expanded_states": 24,
+        "seconds": 0.002832700003637001,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_22",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(flipH($input)))",
+            "log_prior": -4.325252762273012,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 23,
+        "expanded_states": 54,
+        "seconds": 0.005615700007183477,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_23",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -3.101477330650896,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(invert($input)))",
+            "log_prior": -4.325252762273012,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 24,
+        "expanded_states": 55,
+        "seconds": 0.006111199996666983,
+        "budget_exhausted": false
+      }
+    ],
+    "C": [
+      {
+        "task": "heldout_0",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "rotate90(trim($input))",
+            "log_prior": -3.075911625416209,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(rotate90($input))",
+            "log_prior": -3.075911625416209,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "rotate90(identity(trim($input)))",
+            "log_prior": -4.190396911850713,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 27,
+        "expanded_states": 55,
+        "seconds": 0.005693199986126274,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_1",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -2.7700901789066537,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -2.7700901789066537,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH(flipH(flipH($input))))",
+            "log_prior": -3.4885871552362158,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 17,
+        "expanded_states": 35,
+        "seconds": 0.004150300024775788,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_2",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -1.9788504526565016,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -1.9788504526565016,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "invert(trim(trim($input)))",
+            "log_prior": -3.179456317651187,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 13,
+        "expanded_states": 28,
+        "seconds": 0.0030734000029042363,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_3",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "rotate90(trim($input))",
+            "log_prior": -1.9189647994127015,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(rotate90($input))",
+            "log_prior": -1.9189647994127015,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(rotate90($input)))",
+            "log_prior": -2.849118226661396,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 9,
+        "expanded_states": 20,
+        "seconds": 0.0022142000088933855,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_4",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -2.488116423712273,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -2.488116423712273,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "flipH(flipH(flipH(trim($input))))",
+            "log_prior": -3.425875733309912,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 17,
+        "expanded_states": 37,
+        "seconds": 0.004796399996848777,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_5",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -2.4134627472413808,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -2.4134627472413808,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "invert(trim(trim($input)))",
+            "log_prior": -3.7754061140833093,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 17,
+        "expanded_states": 36,
+        "seconds": 0.0033010000188369304,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_6",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "rotate90(trim($input))",
+            "log_prior": -2.1599494698517065,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(rotate90($input))",
+            "log_prior": -2.1599494698517065,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(rotate90($input)))",
+            "log_prior": -2.760922051788935,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 9,
+        "expanded_states": 20,
+        "seconds": 0.0021884999878238887,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_7",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -2.4847304057655,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -2.4847304057655,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(flipH($input)))",
+            "log_prior": -3.1097714996986214,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 12,
+        "expanded_states": 25,
+        "seconds": 0.002359099977184087,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_8",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -2.1828178445997706,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -2.1828178445997706,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "invert(trim(trim($input)))",
+            "log_prior": -3.29473682197483,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 13,
+        "expanded_states": 28,
+        "seconds": 0.0028439000016078353,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_9",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "rotate90(trim($input))",
+            "log_prior": -1.9288093162220965,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(rotate90($input))",
+            "log_prior": -1.9288093162220965,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(rotate90($input)))",
+            "log_prior": -2.8125688082435287,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 9,
+        "expanded_states": 20,
+        "seconds": 0.0041843999933917075,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_10",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -2.0808490504021115,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -2.0808490504021115,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(flipH($input)))",
+            "log_prior": -2.818786911558795,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 10,
+        "expanded_states": 22,
+        "seconds": 0.0047041000216268,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_11",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -2.247545082298878,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -2.247545082298878,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "invert(trim(trim($input)))",
+            "log_prior": -3.0102418142502145,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 10,
+        "expanded_states": 20,
+        "seconds": 0.003632600011769682,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_12",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "rotate90(trim($input))",
+            "log_prior": -1.961198593934963,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(rotate90($input))",
+            "log_prior": -1.961198593934963,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(rotate90($input)))",
+            "log_prior": -2.9120317313543094,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 9,
+        "expanded_states": 20,
+        "seconds": 0.002850299992132932,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_13",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -2.291931670464102,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -2.291931670464102,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(flipH($input)))",
+            "log_prior": -3.1153119338188215,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 10,
+        "expanded_states": 22,
+        "seconds": 0.0020515999931376427,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_14",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -2.108993196422727,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -2.108993196422727,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "invert(trim(trim($input)))",
+            "log_prior": -2.87505333118844,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 10,
+        "expanded_states": 20,
+        "seconds": 0.0018577000009827316,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_15",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "rotate90(trim($input))",
+            "log_prior": -2.102273504142286,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(rotate90($input))",
+            "log_prior": -2.102273504142286,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(rotate90($input)))",
+            "log_prior": -2.7947292019320593,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 9,
+        "expanded_states": 20,
+        "seconds": 0.0021345000131987035,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_16",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -1.9610113518259555,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -1.9610113518259555,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "flipH(trim(trim($input)))",
+            "log_prior": -3.110990762970515,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 13,
+        "expanded_states": 26,
+        "seconds": 0.0030423000280279666,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_17",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -2.110067295020083,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -2.110067295020083,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(invert($input)))",
+            "log_prior": -3.0782230585551886,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 10,
+        "expanded_states": 22,
+        "seconds": 0.002130100008798763,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_18",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "rotate90(trim($input))",
+            "log_prior": -2.0031472794241445,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(rotate90($input))",
+            "log_prior": -2.0031472794241445,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "rotate90(trim(trim($input)))",
+            "log_prior": -2.8344168933569787,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 9,
+        "expanded_states": 18,
+        "seconds": 0.0019469000108074397,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_19",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -2.060633162411647,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -2.060633162411647,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(flipH($input)))",
+            "log_prior": -2.8601996708395103,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 9,
+        "expanded_states": 19,
+        "seconds": 0.001893899985589087,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_20",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -2.062127602994936,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -2.062127602994936,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "invert(invert(invert(trim($input))))",
+            "log_prior": -3.2882484620766386,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 15,
+        "expanded_states": 33,
+        "seconds": 0.0033048999903257936,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_21",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "rotate90(trim($input))",
+            "log_prior": -2.0147862553493137,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(rotate90($input))",
+            "log_prior": -2.0147862553493137,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(rotate90($input)))",
+            "log_prior": -2.8942139878117104,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 10,
+        "expanded_states": 22,
+        "seconds": 0.002698900003451854,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_22",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -2.1551224637396778,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -2.1551224637396778,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(flipH($input)))",
+            "log_prior": -3.0670351465599994,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 10,
+        "expanded_states": 22,
+        "seconds": 0.0021930999937467277,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_23",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -1.9013936305072403,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -1.9013936305072403,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "invert(trim(trim($input)))",
+            "log_prior": -2.9588200737634702,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 12,
+        "expanded_states": 26,
+        "seconds": 0.0026114000065717846,
+        "budget_exhausted": false
+      }
+    ],
+    "D": [
+      {
+        "task": "heldout_0",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "learned_0($input)",
+            "log_prior": -1.7421388041261991,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "identity(learned_0($input))",
+            "log_prior": -2.7930294377327614,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "learned_0(identity($input))",
+            "log_prior": -2.7930294377327614,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 10,
+        "expanded_states": 20,
+        "seconds": 0.0018125000060535967,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_1",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -2.6054912242188633,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -2.6054912242188633,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH(flipH(flipH($input))))",
+            "log_prior": -3.1897105791645157,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 15,
+        "expanded_states": 30,
+        "seconds": 0.002980799996294081,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_2",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -1.8227824092588922,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -1.8227824092588922,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "invert(trim(trim($input)))",
+            "log_prior": -2.6222604715939033,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 9,
+        "expanded_states": 18,
+        "seconds": 0.0018210000125691295,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_3",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "learned_0($input)",
+            "log_prior": -0.7203952431259142,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "learned_0(trim($input))",
+            "log_prior": -2.4526179974891704,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(learned_0($input))",
+            "log_prior": -2.4526179974891704,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 8,
+        "expanded_states": 16,
+        "seconds": 0.0016611999890301377,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_4",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -2.454266222114329,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -2.454266222114329,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "flipH(flipH(flipH(trim($input))))",
+            "log_prior": -3.480268070689508,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 17,
+        "expanded_states": 37,
+        "seconds": 0.0037465000059455633,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_5",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -2.255160759156637,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -2.255160759156637,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "invert(invert(invert(trim($input))))",
+            "log_prior": -3.714204563882969,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 18,
+        "expanded_states": 38,
+        "seconds": 0.004566800023894757,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_6",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "learned_0($input)",
+            "log_prior": -1.0433676355128276,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "learned_0(trim($input))",
+            "log_prior": -1.9995054647499144,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(learned_0($input))",
+            "log_prior": -1.9995054647499144,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 6,
+        "expanded_states": 12,
+        "seconds": 0.001886499987449497,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_7",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -2.720311974188178,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -2.720311974188178,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(flipH($input)))",
+            "log_prior": -3.875188507953465,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 19,
+        "expanded_states": 39,
+        "seconds": 0.004240799986291677,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_8",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -1.9825006298074055,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -1.9825006298074055,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "invert(trim(trim($input)))",
+            "log_prior": -3.2131486096741106,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 14,
+        "expanded_states": 30,
+        "seconds": 0.0030595000134781003,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_9",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "learned_0($input)",
+            "log_prior": -1.0115813302185446,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "learned_0(trim($input))",
+            "log_prior": -2.446629122938208,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(learned_0($input))",
+            "log_prior": -2.446629122938208,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 7,
+        "expanded_states": 14,
+        "seconds": 0.0017713999841362238,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_10",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -2.0785140246790066,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -2.0785140246790066,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(flipH($input)))",
+            "log_prior": -2.803801847924989,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 10,
+        "expanded_states": 22,
+        "seconds": 0.00222389999544248,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_11",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -2.2183164401886883,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -2.2183164401886883,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "invert(trim(trim($input)))",
+            "log_prior": -3.0776442879243326,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 10,
+        "expanded_states": 20,
+        "seconds": 0.0019453999993856996,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_12",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "learned_0($input)",
+            "log_prior": -0.8017464873390431,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "learned_0(trim($input))",
+            "log_prior": -2.4871764867426736,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(learned_0($input))",
+            "log_prior": -2.4871764867426736,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 7,
+        "expanded_states": 14,
+        "seconds": 0.0017479999805800617,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_13",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -2.216780673369332,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -2.216780673369332,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(flipH($input)))",
+            "log_prior": -2.9407995415804424,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 10,
+        "expanded_states": 22,
+        "seconds": 0.002335600001970306,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_14",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -2.0620880548321674,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -2.0620880548321674,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(invert($input)))",
+            "log_prior": -2.748350615493036,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 10,
+        "expanded_states": 22,
+        "seconds": 0.0032876000041142106,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_15",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "learned_0($input)",
+            "log_prior": -0.9074839335976952,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "learned_0(trim($input))",
+            "log_prior": -2.403393855182429,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(learned_0($input))",
+            "log_prior": -2.403393855182429,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 6,
+        "expanded_states": 12,
+        "seconds": 0.001406800001859665,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_16",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -2.1620403378970714,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -2.1620403378970714,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(flipH($input)))",
+            "log_prior": -3.023674598730336,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 12,
+        "expanded_states": 26,
+        "seconds": 0.0023509999737143517,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_17",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -1.9476386490149418,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -1.9476386490149418,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(trim(invert($input)))",
+            "log_prior": -2.7115325973481306,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 10,
+        "expanded_states": 22,
+        "seconds": 0.002224500000011176,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_18",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "learned_0($input)",
+            "log_prior": -0.7725938330010642,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "learned_0(trim($input))",
+            "log_prior": -2.358832345799409,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(learned_0($input))",
+            "log_prior": -2.358832345799409,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 7,
+        "expanded_states": 14,
+        "seconds": 0.0017701000033412129,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_19",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -2.067954040379976,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -2.067954040379976,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "flipH(trim(trim($input)))",
+            "log_prior": -2.7063877982005673,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 9,
+        "expanded_states": 18,
+        "seconds": 0.0024298000207636505,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_20",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -2.0441973810201524,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -2.0441973810201524,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "invert(invert(invert(trim($input))))",
+            "log_prior": -3.1842205141052284,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 15,
+        "expanded_states": 32,
+        "seconds": 0.003625200013630092,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_21",
+        "ground_truth": "rotate90(trim($input))",
+        "solutions": [
+          {
+            "program": "learned_0($input)",
+            "log_prior": -1.1150733489706122,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "learned_0(trim($input))",
+            "log_prior": -2.1051443755923236,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(learned_0($input))",
+            "log_prior": -2.1051443755923236,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 6,
+        "expanded_states": 12,
+        "seconds": 0.0016344999894499779,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_22",
+        "ground_truth": "flipH(trim($input))",
+        "solutions": [
+          {
+            "program": "flipH(trim($input))",
+            "log_prior": -2.258565196768794,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(flipH($input))",
+            "log_prior": -2.258565196768794,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "flipH(trim(trim($input)))",
+            "log_prior": -3.404195181461896,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 16,
+        "expanded_states": 34,
+        "seconds": 0.0032173999934457242,
+        "budget_exhausted": false
+      },
+      {
+        "task": "heldout_23",
+        "ground_truth": "invert(trim($input))",
+        "solutions": [
+          {
+            "program": "invert(trim($input))",
+            "log_prior": -1.7228228757314423,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "trim(invert($input))",
+            "log_prior": -1.7228228757314423,
+            "log_likelihood": 0.0
+          },
+          {
+            "program": "invert(trim(trim($input)))",
+            "log_prior": -2.612001684965614,
+            "log_likelihood": 0.0
+          }
+        ],
+        "enumerated_nodes": 12,
+        "expanded_states": 26,
+        "seconds": 0.0027858999965246767,
+        "budget_exhausted": false
+      }
+    ]
+  },
+  "recognition_improves_nodes": true,
+  "runtime": {
+    "torch": "2.12.1+cu132",
+    "epochs": 100
+  }
+}

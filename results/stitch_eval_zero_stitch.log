@@ -1,0 +1,22 @@
+compression_bridge.exe: getMBlocks: VirtualAlloc MEM_COMMIT failed: ҳ���ļ�̫С���޷���ɲ�����
+
+Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+  File "E:\dev\AI\ARC-AGI-3\faithful\compression\study.py", line 139, in evaluate_job
+    rr,_=search(k,[t],g,sg,dict(learner.SEARCH,limit=max(BUDGETS)))
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\dev\AI\ARC-AGI-3\faithful\python\toy.py", line 41, in search
+    r=k.call('search_tasks',grammar=g,search_grammar=sg,request=REQUEST,tasks=[wire(t) for t in tasks],**options)
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\dev\AI\ARC-AGI-3\faithful\python\kernel.py", line 24, in call
+    response = json.loads(self.process.stdout.readline())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\anaconda3\envs\py312\Lib\json\__init__.py", line 346, in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\anaconda3\envs\py312\Lib\json\decoder.py", line 338, in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "E:\anaconda3\envs\py312\Lib\json\decoder.py", line 356, in raw_decode
+    raise JSONDecodeError("Expecting value", s, err.value) from None
+json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
