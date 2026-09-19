@@ -338,13 +338,15 @@ def write_tables(seeds, by_cell, arms, cells, contrasts, rcells, recall_curves, 
                          fmt(statistics.mean(tests), 1) if tests else 'n/a', stats['incidental_uses'][regime], len(stats['nested_training_pairs'][regime])])
     lines += [table(['Instance', 'Reuse', 'Train tasks', 'Test tasks', 'Pool size', 'Active latents', 'Mean deliberate train uses / latent', 'Range', 'Mean test uses / latent', 'Incidental uses', 'Nested train pairs'], rows), '']
     rows = []
+    calibration_budgets = []
     for seed in seeds:
         cal = bench.read(bench.DATA / f'seed_{seed}' / 'calibration.json')
+        calibration_budgets = cal['budgets']
         for r in cal['depth_budget_rates']:
             if r['split'] == 'test':
                 rows.append([seed, r['regime'], r['depth'], r['count']] + [fmt(r['rates'][str(n)], 2) for n in cal['budgets']])
     lines += ['A0 calibration (uniform base grammar, held-out tasks, solve rate by depth and candidate budget; inspected before freezing):', '',
-              table(['Instance', 'Reuse', 'Depth', 'Tasks'] + [str(n) for n in BUDGETS], rows), '']
+              table(['Instance', 'Reuse', 'Depth', 'Tasks'] + [str(n) for n in calibration_budgets], rows), '']
 
     # experiment 1
     lines += ['## Experiment 1: effect of reuse (final iteration, solve rate at 10000 candidates)', '']
@@ -392,7 +394,7 @@ def write_tables(seeds, by_cell, arms, cells, contrasts, rcells, recall_curves, 
     lines += [table(['Reuse', 'Arm', 'Inventions', 'Canonical recall', 'Beta recall', 'Type recall (perm.)', 'Behav. precision', 'Behav. recall', 'Behav. F1', 'Weighted behav. recall'], rows), '']
     lines += ['Behavioral recall by EC iteration (mean over instances):', '']
     for regime in REGIMES:
-        if regime == 'zero' or regime not in recall_curves:
+        if regime == 'zero' or not recall_curves.get(regime):
             continue
         rows = []
         for a, curve in recall_curves[regime].items():
