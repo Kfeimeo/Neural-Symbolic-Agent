@@ -223,16 +223,30 @@ def evaluate_job(job):
                                                      'invention_count': record['invention_count'], 'library_size': record['library_size'],
                                                      'wake_seconds': record['wake']['seconds'], 'compression_seconds': record['compression']['seconds']}))
     pending = [(it, g, tr) for it, g, tr in grammars if not evaluation_path(seed, regime, arm, it).exists()]
+    failures = []
     if not pending:
-        return job
-    with BridgeKernel() as k:
+        return job, failures
+    k = BridgeKernel()
+    try:
         truth = {t.name: k.call('evaluate_batch', program=meta[t.name]['ground_truth'], input_sets=[[x] for x in probes])['values'] for t in tasks}
         for iteration, g, training in pending:
             final = 1 if arm.startswith('PW') else ROUNDS
             limit = max(BUDGETS) if iteration in (0, final) else INTERMEDIATE_BUDGET
-            per_task, batch = evaluate_grammar(k, g, tasks, meta, probes, cache, truth, limit)
-            rec = recovery(k, g, latents, regime, probes)
-            exposure = frontier_support(k, training['frontiers'], train_names, active) if training and 'frontiers' in training else None
+            try:
+                per_task, batch = evaluate_grammar(k, g, tasks, meta, probes, cache, truth, limit)
+                rec = recovery(k, g, latents, regime, probes)
+                exposure = frontier_support(k, training['frontiers'], train_names, active) if training and 'frontiers' in training else None
+            except (json.JSONDecodeError, BrokenPipeError, OSError, ValueError) as exc:
+                # A dead kernel (typically the memory cgroup killing a large search) must not
+                # abort the other grammars of this arm: record the failure and restart the kernel.
+                failures.append({'seed': seed, 'regime': regime, 'arm': arm, 'iteration': iteration, 'error': f'{type(exc).__name__}: {exc}'})
+                print(f'FAILED {seed}/{regime}/{arm}@{iteration}: {type(exc).__name__}', flush=True)
+                try:
+                    k.process.kill()
+                except Exception:
+                    pass
+                k = BridgeKernel()
+                continue
             if training:
                 training = {key: v for key, v in training.items() if key != 'frontiers'}
             record = {'seed': seed, 'regime': regime, 'arm': arm, 'method': ARMS[arm]['method'] if arm in ARMS else arm,
@@ -245,14 +259,28 @@ def evaluate_job(job):
             timing = 'cached' if batch['cached'] else f"{batch['seconds']:.0f}s"
             print(f"evaluated {seed}/{regime}/{arm}@{iteration}: solve@max={solve_rate:.3f} "
                   f"recall={rec['metrics']['behavioral']['recall']} {timing}", flush=True)
-    return job
+    finally:
+        try:
+            k.process.kill()
+        except Exception:
+            pass
+    return job, failures
+
+
+def run_evaluation_jobs(jobs, workers):
+    failures = []
+    with concurrent.futures.ProcessPoolExecutor(max_workers=workers) as pool:
+        for job, fails in pool.map(evaluate_job, jobs):
+            failures.extend(fails)
+    return failures
 
 
 def evaluate(seeds, workers, arms=None):
-    jobs = [(seed, regime, arm) for seed in seeds for regime in REGIMES for arm in STATIC]
-    with concurrent.futures.ProcessPoolExecutor(max_workers=workers) as pool:
-        for job in pool.map(evaluate_job, jobs):
-            pass
+    """Static grammars first and one at a time (uniform oracle grammars need up to ~9 GB per
+    search), then every trained arm with ``workers`` processes; failed searches are retried
+    once serially and any remaining failure is written to ``evaluation_failures.json``."""
+    static_jobs = [(seed, regime, arm) for seed in seeds for regime in REGIMES for arm in STATIC]
+    failures = run_evaluation_jobs(static_jobs, 1)
     pw_arms = [f'{prefix}_{m}' for prefix in PERFECT_WAKE_CORPORA for m in PERFECT_WAKE_METHODS]
     jobs = [(seed, regime, arm) for arm in (arms or list(ARMS) + pw_arms) for seed in seeds for regime in REGIMES]
 
@@ -263,9 +291,12 @@ def evaluate(seeds, workers, arms=None):
         return (RESULTS / 'runs' / f'seed_{seed}' / regime / arm / 'complete.json').exists()
     jobs = [j for j in jobs if available(*j)]
     print(f'{len(jobs)} evaluation jobs, {workers} workers', flush=True)
-    with concurrent.futures.ProcessPoolExecutor(max_workers=workers) as pool:
-        for job in pool.map(evaluate_job, jobs):
-            pass
+    failures += run_evaluation_jobs(jobs, workers)
+    if failures:
+        retry = sorted({(f['seed'], f['regime'], f['arm']) for f in failures})
+        print(f'retrying {len(retry)} arms serially after {len(failures)} failed searches', flush=True)
+        remaining = run_evaluation_jobs(retry, 1)
+        save_json(RESULTS / 'evaluation_failures.json', {'first_pass': failures, 'after_serial_retry': remaining}, compact=False)
     for seed in seeds:
         bench.verify(instance_dir(seed))
 

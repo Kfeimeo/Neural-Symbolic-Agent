@@ -30,9 +30,11 @@ from faithful.python.toy import search, wire
 from faithful.python.controlled_metrics import best_rewrite, canonical_ast
 from .learner import sha, save_json, read_json
 
-# 30000 candidates would need ~1M agenda states and ~10 GB of kernel memory per search on
-# this machine (measured with the oracle grammar); 20000 needs ~290k states and ~4 GB.
-BUDGETS = [100, 300, 1000, 3000, 10000, 20000]
+# Memory of one search grows with the agenda: 30000 candidates need ~1M states and ~10 GB
+# with the high-cohort oracle grammar, and the 36-production low-cohort oracle grammar
+# (uniform weights) already needs ~580k states and ~9 GB for 10000 candidates. The
+# maximum budget is therefore 10000 candidates, as in the earlier controlled study.
+BUDGETS = [100, 300, 1000, 3000, 10000]
 EVAL_SEARCH = dict(max_states=3000000, max_size=33, maximum_depth=14, upper_bound=100, top_k=3)
 VALUE = {'red': 1, 'blue': 2, 'green': 3, 'zero': 0, 'one': 1, 'minus_one': -1}
 CRITERIA = ['syntactic', 'canonical', 'beta', 'type', 'type_permuted', 'behavioral']

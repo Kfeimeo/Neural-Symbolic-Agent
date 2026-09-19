@@ -148,7 +148,7 @@ def analyze(seeds):
             common = sorted(set(by_cell[kx]) & set(by_cell[ky]))
             if not common:
                 continue
-            for budget in ['10000', MAX_BUDGET]:
+            for budget in sorted({'10000', MAX_BUDGET}):
                 matrix = []
                 for seed in common:
                     a = {t['name']: t for t in by_cell[kx][seed]['per_task']}
@@ -347,7 +347,7 @@ def write_tables(seeds, by_cell, arms, cells, contrasts, rcells, recall_curves, 
               table(['Instance', 'Reuse', 'Depth', 'Tasks'] + [str(n) for n in BUDGETS], rows), '']
 
     # experiment 1
-    lines += ['## Experiment 1: effect of reuse (final iteration, solve rate at 20000 candidates)', '']
+    lines += ['## Experiment 1: effect of reuse (final iteration, solve rate at 10000 candidates)', '']
     arms1 = [a for a in MAIN_ARMS if any((rg, a, final_iteration(a)) in cell for rg in REGIMES)]
     rows = [[regime] + [fmt(cell[(regime, a, final_iteration(a))]['solve_rate'][MAX_BUDGET]) if (regime, a, final_iteration(a)) in cell else 'n/a' for a in arms1] for regime in REGIMES]
     lines += [table(['Reuse'] + arms1, rows), '']
@@ -361,16 +361,16 @@ def write_tables(seeds, by_cell, arms, cells, contrasts, rcells, recall_curves, 
             c = con.get((regime, f'{x}-{y}', int(MAX_BUDGET)))
             if c and 'mean' in c:
                 rows.append([regime, f'{x}-{y}', fmt(c['mean']), fmt(c['seed_standard_deviation']), f"[{c['paired_bootstrap_95_ci'][0]:.3f}, {c['paired_bootstrap_95_ci'][1]:.3f}]", c['training_seeds']])
-    lines += ['Paired contrasts at 20000 candidates (mean difference in solve rate; two-way bootstrap over instances and task positions):', '',
+    lines += ['Paired contrasts at 10000 candidates (mean difference in solve rate; two-way bootstrap over instances and task positions):', '',
               table(['Reuse', 'Contrast', 'Mean diff', 'Instance SD', '95% CI', 'Instances'], rows), '']
 
     # experiment 2
-    lines += ['## Experiment 2: effect of complexity (solve rate at 20000 by depth, final iteration)', '']
+    lines += ['## Experiment 2: effect of complexity (solve rate at 10000 by depth, final iteration)', '']
     for regime in REGIMES:
         depths = sorted({d for a in arms1 if (regime, a, final_iteration(a)) in cell for d in cell[(regime, a, final_iteration(a))]['by_depth']}, key=int)
         rows = [[a] + [fmt(cell[(regime, a, final_iteration(a))]['by_depth'].get(d, {}).get(MAX_BUDGET), 2) for d in depths] for a in arms1 if (regime, a, final_iteration(a)) in cell]
         lines += [f'Reuse = {regime}:', '', table(['Arm'] + [f'd={d}' for d in depths], rows), '']
-    lines += ['Solve rate at 20000 by held-out transfer type (final iteration):', '']
+    lines += ['Solve rate at 10000 by held-out transfer type (final iteration):', '']
     for regime in REGIMES:
         transfers = sorted({t for a in arms1 if (regime, a, final_iteration(a)) in cell for t in cell[(regime, a, final_iteration(a))]['by_transfer']})
         rows = [[a] + [fmt(cell[(regime, a, final_iteration(a))]['by_transfer'].get(t, {}).get(MAX_BUDGET), 2) for t in transfers] for a in arms1 if (regime, a, final_iteration(a)) in cell]
@@ -459,7 +459,7 @@ def write_tables(seeds, by_cell, arms, cells, contrasts, rcells, recall_curves, 
             if c:
                 rows.append([regime, a, fmt(c['solve_rate'][MAX_BUDGET]), fmt(c['probe_consistent_rate']), fmt(r['metrics']['behavioral']['recall']) if r else 'n/a',
                              fmt(k['mean_delta_L'], 2) if k else 'n/a', fmt(c['mean_first_solution_nodes_solved'], 0)])
-    lines += [table(['Reuse', 'Arm', 'Solve rate @20000', 'Probe-consistent', 'Behav. recall', 'Mean ΔL', 'Mean first-solution rank (solved)'], rows), '']
+    lines += [table(['Reuse', 'Arm', 'Solve rate @10000', 'Probe-consistent', 'Behav. recall', 'Mean ΔL', 'Mean first-solution rank (solved)'], rows), '']
     rows = []
     for regime in REGIMES:
         for x, y in CONTRASTS:
@@ -468,12 +468,12 @@ def write_tables(seeds, by_cell, arms, cells, contrasts, rcells, recall_curves, 
             c = con.get((regime, f'{x}-{y}', int(MAX_BUDGET)))
             if c and 'mean' in c:
                 rows.append([regime, f'{x}-{y}', fmt(c['mean']), f"[{c['paired_bootstrap_95_ci'][0]:.3f}, {c['paired_bootstrap_95_ci'][1]:.3f}]"])
-    lines += ['Oracle and perfect-Wake contrasts at 20000 candidates:', '', table(['Reuse', 'Contrast', 'Mean diff', '95% CI'], rows), '']
+    lines += ['Oracle and perfect-Wake contrasts at 10000 candidates:', '', table(['Reuse', 'Contrast', 'Mean diff', '95% CI'], rows), '']
     rows = []
     for p in perfect:
         rows.append([p['regime'], p['arm'], fmt(p['inventions'], 1), fmt(p['delta_mdl'], 1), fmt(p['canonical_recall']), fmt(p['behavioral_precision']), fmt(p['behavioral_recall']), fmt(p['behavioral_weighted_recall']), fmt(p['mean_delta_L'], 2), fmt(p['solve_rate_max'])])
     lines += ['Perfect-Wake diagnostic (PW: ground-truth programs of all 56 training tasks; PWS: training tasks of depth <= 4; up to 12 inventions; a missing row means the compressor timed out):', '',
-              table(['Reuse', 'Arm', 'Inventions', 'ΔMDL', 'Canonical recall', 'Behav. precision', 'Behav. recall', 'Weighted recall', 'Mean ΔL', 'Solve rate @20000'], rows), '']
+              table(['Reuse', 'Arm', 'Inventions', 'ΔMDL', 'Canonical recall', 'Behav. precision', 'Behav. recall', 'Weighted recall', 'Mean ΔL', 'Solve rate @10000'], rows), '']
 
     # exposure arms
     lines += ['## Search exposure: Wake budget', '']
@@ -485,7 +485,7 @@ def write_tables(seeds, by_cell, arms, cells, contrasts, rcells, recall_curves, 
             k = ccell.get((regime, a, ROUNDS))
             if c:
                 rows.append([regime, a, fmt(k['training_solved'], 1), fmt(c['solve_rate'][MAX_BUDGET]), fmt(r['metrics']['behavioral']['recall']), fmt(r['metrics']['behavioral']['weighted_recall']), fmt(k['mean_delta_L'], 2), fmt(c['invention_count'], 1)])
-    lines += [table(['Reuse', 'Arm', 'Training solved (final)', 'Solve rate @20000', 'Behav. recall', 'Weighted recall', 'Mean ΔL', 'Inventions'], rows), '']
+    lines += [table(['Reuse', 'Arm', 'Training solved (final)', 'Solve rate @10000', 'Behav. recall', 'Weighted recall', 'Mean ΔL', 'Inventions'], rows), '']
     rows = []
     for regime in REGIMES:
         for x, y in [('B_wake10000', 'B'), ('B_wake30000', 'B'), ('D_wake10000', 'D'), ('D_wake30000', 'D')]:
