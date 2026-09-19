@@ -48,7 +48,11 @@ STATIC = ['A0', 'O_uniform']
 INTERMEDIATE_BUDGET = 10000   # rounds 1..ROUNDS-1 are searched to 10000 candidates; final, static and perfect-Wake grammars to 30000
 PERFECT_WAKE_METHODS = ['B', 'C', 'D', 'E']
 PERFECT_WAKE_ITERATIONS = 12
-PERFECT_WAKE_TIMEOUT = 1200      # seconds per compressor call; a timeout is recorded as an outcome, never hidden
+# Per-corpus wall-clock limit per compressor call; a timeout is recorded as an outcome, never hidden.
+# On the full corpus the DreamCoder-proposal compressors (B, E) exceeded 1200 s on the first two
+# cohorts while the Stitch-proposal ones finish within a minute, so the full-corpus limit was
+# lowered to 120 s for the remaining cohorts (the 1200 s records are kept as they are).
+PERFECT_WAKE_TIMEOUT = {'PW': 120, 'PWS': 1200}
 PERFECT_WAKE_CORPORA = {'PW': None, 'PWS': 4}   # full corpus, and the shallow corpus of training tasks with depth <= 4
 
 
@@ -136,7 +140,7 @@ def perfect_wake_job(job):
 
     ``prefix`` selects the corpus: ``PW`` = every training task, ``PWS`` = training
     tasks of operator depth <= 4.  Each compressor call is bounded by
-    ``PERFECT_WAKE_TIMEOUT`` seconds of wall-clock time; a timeout is recorded.
+    ``PERFECT_WAKE_TIMEOUT[prefix]`` seconds of wall-clock time; a timeout is recorded.
     """
     import signal
     seed, regime, method, prefix = job
@@ -155,7 +159,7 @@ def perfect_wake_job(job):
     signal.signal(signal.SIGALRM, alarm)
     k = BridgeKernel()
     start = time.perf_counter()
-    signal.alarm(PERFECT_WAKE_TIMEOUT)
+    signal.alarm(PERFECT_WAKE_TIMEOUT[prefix])
     try:
         result = make_compressor(method, k, iterations=PERFECT_WAKE_ITERATIONS).compress(frontiers, grammar())
         signal.alarm(0)
@@ -167,7 +171,7 @@ def perfect_wake_job(job):
     except PerfectWakeTimeout:
         record = {'seed': seed, 'regime': regime, 'method': method, 'corpus': prefix, 'max_depth': max_depth,
                   'iterations': PERFECT_WAKE_ITERATIONS, 'seconds': time.perf_counter() - start, 'timed_out': True,
-                  'timeout_seconds': PERFECT_WAKE_TIMEOUT, 'task_names': names, 'grammar': None, 'inventions': [],
+                  'timeout_seconds': PERFECT_WAKE_TIMEOUT[prefix], 'task_names': names, 'grammar': None, 'inventions': [],
                   'note': 'the compressor did not finish within the wall-clock limit on this corpus'}
     finally:
         signal.alarm(0)
