@@ -25,7 +25,8 @@ MAX = str(max(BUDGETS))
 
 
 def base_arm(arm):
-    arm = arm.replace('PW_', '')
+    if arm.startswith('PW'):
+        arm = arm.split('_', 1)[1]
     return arm.split('_wake')[0]
 
 
@@ -34,7 +35,7 @@ def color(arm):
 
 
 def style(arm):
-    return STYLE['_wake' + arm.split('_wake')[1]] if '_wake' in arm else ('--' if arm.startswith('PW_') else '-')
+    return STYLE['_wake' + arm.split('_wake')[1]] if '_wake' in arm else ('--' if arm.startswith('PW') else '-')
 
 
 def read(name):
@@ -145,7 +146,7 @@ def compression_vs_generalization(compression):
             ax = axes[i, j]
             for c in compression['cells']:
                 arm = c['arm']
-                if c['regime'] != regime or base_arm(arm) not in markers or arm.startswith('PW_') or c['iteration'] == 0:
+                if c['regime'] != regime or base_arm(arm) not in markers or arm.startswith('PW') or c['iteration'] == 0:
                     continue
                 x, y = value(c[key]), value(c['solve_rate_10000'])
                 if x is None or y is None:
@@ -173,7 +174,7 @@ def compression_vs_generalization(compression):
 def oracle_gap(solve):
     cells = {(c['regime'], c['arm'], c['iteration']): c for c in solve['cells']}
     rounds = solve['rounds']
-    arms = ['A0', 'A', 'B', 'C', 'D', 'E', 'PW_B', 'PW_C', 'PW_D', 'PW_E', 'O', 'O_uniform']
+    arms = ['A0', 'A', 'B', 'C', 'D', 'E', 'PW_B', 'PW_C', 'PW_D', 'PW_E', 'PWS_B', 'PWS_C', 'PWS_D', 'PWS_E', 'O', 'O_uniform']
     fig, axes = setup(1, 4, width=16, height=3.6)
     for ax, regime in zip(axes.flat, REGIMES):
         ys, labels = [], []
@@ -183,7 +184,7 @@ def oracle_gap(solve):
             if not c:
                 continue
             m = c['solve_rate'][MAX]
-            ax.errorbar([value(m)], [len(labels)], xerr=[error(m)], color=color(arm), fmt='o' if not arm.startswith('PW_') else 'D', markersize=6, capsize=2)
+            ax.errorbar([value(m)], [len(labels)], xerr=[error(m)], color=color(arm), fmt='o' if not arm.startswith('PW') else 'D', markersize=6, capsize=2)
             labels.append(arm)
         ax.set_yticks(range(len(labels)))
         ax.set_yticklabels(labels, fontsize=8, color=INK)

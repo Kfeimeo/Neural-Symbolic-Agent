@@ -48,6 +48,8 @@ STATIC = ['A0', 'O_uniform']
 INTERMEDIATE_BUDGET = 10000   # rounds 1..ROUNDS-1 are searched to 10000 candidates; final, static and perfect-Wake grammars to 30000
 PERFECT_WAKE_METHODS = ['B', 'C', 'D', 'E']
 PERFECT_WAKE_ITERATIONS = 12
+PERFECT_WAKE_TIMEOUT = 1200      # seconds per compressor call; a timeout is recorded as an outcome, never hidden
+PERFECT_WAKE_CORPORA = {'PW': None, 'PWS': 4}   # full corpus, and the shallow corpus of training tasks with depth <= 4
 
 
 def instance_dir(seed):
@@ -92,7 +94,8 @@ def write_protocol(seeds):
                 'evaluation_budgets': BUDGETS, 'intermediate_round_budget': INTERMEDIATE_BUDGET, 'evaluation_search': EVAL_SEARCH,
                 'recognition': 'off in every arm',
                 'stitch': {'configs': STITCH_CONFIGS, 'iterations_per_config': STITCH_ITERATIONS, 'version': '0.1.29'},
-                'perfect_wake': {'methods': PERFECT_WAKE_METHODS, 'iterations': PERFECT_WAKE_ITERATIONS},
+                'perfect_wake': {'methods': PERFECT_WAKE_METHODS, 'iterations': PERFECT_WAKE_ITERATIONS, 'timeout_seconds': PERFECT_WAKE_TIMEOUT,
+                                 'corpora': PERFECT_WAKE_CORPORA},
                 'benchmark_manifests': {str(seed): bench.read(instance_dir(seed) / 'manifest.json')['sha256'] for seed in seeds},
                 'policy': ['Protocol fixed before any arm was run; benchmark instances frozen and hash-verified before and after every stage.',
                            'No arm, budget, seed or benchmark parameter is changed after observing results.'],
@@ -124,32 +127,61 @@ def train(seeds, workers, arms=None):
         bench.verify(instance_dir(seed))
 
 
+class PerfectWakeTimeout(Exception):
+    pass
+
+
 def perfect_wake_job(job):
-    """Compression diagnostic with perfect exposure: frontiers are the ground-truth training programs."""
-    seed, regime, method = job
-    path = RESULTS / 'perfect_wake' / f'seed_{seed}' / regime / f'{method}.json.gz'
+    """Compression diagnostic with perfect exposure: frontiers are the ground-truth training programs.
+
+    ``prefix`` selects the corpus: ``PW`` = every training task, ``PWS`` = training
+    tasks of operator depth <= 4.  Each compressor call is bounded by
+    ``PERFECT_WAKE_TIMEOUT`` seconds of wall-clock time; a timeout is recorded.
+    """
+    import signal
+    seed, regime, method, prefix = job
+    max_depth = PERFECT_WAKE_CORPORA[prefix]
+    folder = RESULTS / ('perfect_wake' if prefix == 'PW' else 'perfect_wake_shallow')
+    path = folder / f'seed_{seed}' / regime / f'{method}.json.gz'
     if path.exists():
         return job
     data = instance_dir(seed)
-    private = bench.read(data / 'private.json')
-    meta = private['tasks']
-    names = [n for n, m in meta.items() if m['split'] == 'train' and m['regime'] == regime]
+    meta = bench.read(data / 'private.json')['tasks']
+    names = [n for n, m in meta.items() if m['split'] == 'train' and m['regime'] == regime and (max_depth is None or m['depth'] <= max_depth)]
     frontiers = [{'request': REQUEST, 'entries': [{'program': meta[n]['ground_truth'], 'log_likelihood': 0.}]} for n in names]
-    with BridgeKernel() as k:
-        start = time.perf_counter()
+
+    def alarm(signum, frame):
+        raise PerfectWakeTimeout()
+    signal.signal(signal.SIGALRM, alarm)
+    k = BridgeKernel()
+    start = time.perf_counter()
+    signal.alarm(PERFECT_WAKE_TIMEOUT)
+    try:
         result = make_compressor(method, k, iterations=PERFECT_WAKE_ITERATIONS).compress(frontiers, grammar())
-        seconds = time.perf_counter() - start
-        record = {'seed': seed, 'regime': regime, 'method': method, 'iterations': PERFECT_WAKE_ITERATIONS, 'seconds': seconds,
+        signal.alarm(0)
+        record = {'seed': seed, 'regime': regime, 'method': method, 'corpus': prefix, 'max_depth': max_depth,
+                  'iterations': PERFECT_WAKE_ITERATIONS, 'seconds': time.perf_counter() - start, 'timed_out': False,
                   'task_names': names, 'grammar': result.grammar_updates, 'inventions': result.invented_abstractions,
                   'mdl': result.mdl_accounting, 'history': result.history, 'statistics': result.statistics,
-                  'rewritten': result.rewritten_programs,
-                  'note': 'Diagnostic only: every training task is given its generating program, so exposure is perfect and only the compressor is tested.'}
+                  'rewritten': result.rewritten_programs}
+    except PerfectWakeTimeout:
+        record = {'seed': seed, 'regime': regime, 'method': method, 'corpus': prefix, 'max_depth': max_depth,
+                  'iterations': PERFECT_WAKE_ITERATIONS, 'seconds': time.perf_counter() - start, 'timed_out': True,
+                  'timeout_seconds': PERFECT_WAKE_TIMEOUT, 'task_names': names, 'grammar': None, 'inventions': [],
+                  'note': 'the compressor did not finish within the wall-clock limit on this corpus'}
+    finally:
+        signal.alarm(0)
+        try:
+            k.process.kill()
+        except Exception:
+            pass
+    record['note'] = record.get('note', '') + ' Diagnostic only: every task is given its generating program, so exposure is perfect and only the compressor is tested.'
     save_json(path, record)
     return job
 
 
 def perfect_wake(seeds, workers):
-    jobs = [(seed, regime, method) for seed in seeds for regime in REGIMES for method in PERFECT_WAKE_METHODS]
+    jobs = [(seed, regime, method, prefix) for prefix in PERFECT_WAKE_CORPORA for seed in seeds for regime in REGIMES for method in PERFECT_WAKE_METHODS]
     with concurrent.futures.ProcessPoolExecutor(max_workers=workers) as pool:
         for job in pool.map(perfect_wake_job, jobs):
             print('perfect-wake', job, flush=True)
@@ -172,9 +204,12 @@ def evaluate_job(job):
     cache = RESULTS / 'search_cache'
     if arm in STATIC:
         grammars = [(0, grammar() if arm == 'A0' else oracle_grammar(seed, regime), None)]
-    elif arm.startswith('PW_'):
-        record = read_json(RESULTS / 'perfect_wake' / f'seed_{seed}' / regime / f'{arm[3:]}.json.gz')
-        grammars = [(1, record['grammar'], {'perfect_wake': True, 'solved': len(record['task_names']), 'inventions': record['inventions'],
+    elif arm.startswith('PW'):
+        prefix, method = arm.split('_', 1)
+        record = read_json(RESULTS / ('perfect_wake' if prefix == 'PW' else 'perfect_wake_shallow') / f'seed_{seed}' / regime / f'{method}.json.gz')
+        if record.get('timed_out') or record.get('grammar') is None:
+            return job
+        grammars = [(1, record['grammar'], {'perfect_wake': True, 'corpus': prefix, 'solved': len(record['task_names']), 'inventions': record['inventions'],
                                             'mdl': record['mdl'], 'history': record['history'], 'frontiers': record['rewritten'],
                                             'invention_count': len(record['inventions']), 'library_size': len(record['grammar']['productions'])})]
     else:
@@ -193,7 +228,7 @@ def evaluate_job(job):
     with BridgeKernel() as k:
         truth = {t.name: k.call('evaluate_batch', program=meta[t.name]['ground_truth'], input_sets=[[x] for x in probes])['values'] for t in tasks}
         for iteration, g, training in pending:
-            final = 1 if arm.startswith('PW_') else ROUNDS
+            final = 1 if arm.startswith('PW') else ROUNDS
             limit = max(BUDGETS) if iteration in (0, final) else INTERMEDIATE_BUDGET
             per_task, batch = evaluate_grammar(k, g, tasks, meta, probes, cache, truth, limit)
             rec = recovery(k, g, latents, regime, probes)
@@ -218,9 +253,15 @@ def evaluate(seeds, workers, arms=None):
     with concurrent.futures.ProcessPoolExecutor(max_workers=workers) as pool:
         for job in pool.map(evaluate_job, jobs):
             pass
-    jobs = [(seed, regime, arm) for arm in (arms or list(ARMS) + [f'PW_{m}' for m in PERFECT_WAKE_METHODS]) for seed in seeds for regime in REGIMES]
-    jobs = [j for j in jobs if not j[2].startswith('PW_') or (RESULTS / 'perfect_wake' / f'seed_{j[0]}' / j[1] / f'{j[2][3:]}.json.gz').exists()]
-    jobs = [j for j in jobs if j[2].startswith('PW_') or (RESULTS / 'runs' / f'seed_{j[0]}' / j[1] / j[2] / 'complete.json').exists()]
+    pw_arms = [f'{prefix}_{m}' for prefix in PERFECT_WAKE_CORPORA for m in PERFECT_WAKE_METHODS]
+    jobs = [(seed, regime, arm) for arm in (arms or list(ARMS) + pw_arms) for seed in seeds for regime in REGIMES]
+
+    def available(seed, regime, arm):
+        if arm.startswith('PW'):
+            prefix, method = arm.split('_', 1)
+            return (RESULTS / ('perfect_wake' if prefix == 'PW' else 'perfect_wake_shallow') / f'seed_{seed}' / regime / f'{method}.json.gz').exists()
+        return (RESULTS / 'runs' / f'seed_{seed}' / regime / arm / 'complete.json').exists()
+    jobs = [j for j in jobs if available(*j)]
     print(f'{len(jobs)} evaluation jobs, {workers} workers', flush=True)
     with concurrent.futures.ProcessPoolExecutor(max_workers=workers) as pool:
         for job in pool.map(evaluate_job, jobs):

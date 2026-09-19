@@ -37,18 +37,19 @@ RESULTS = ROOT / 'results' / 'abstraction_learning'
 REGIMES = bench.REGIMES
 MAIN_ARMS = ['A0', 'A', 'B', 'C', 'D', 'E', 'O', 'O_uniform']
 EXPOSURE_ARMS = ['B', 'B_wake10000', 'B_wake30000', 'D', 'D_wake10000', 'D_wake30000']
-PW_ARMS = ['PW_B', 'PW_C', 'PW_D', 'PW_E']
+PW_ARMS = ['PW_B', 'PW_C', 'PW_D', 'PW_E', 'PWS_B', 'PWS_C', 'PWS_D', 'PWS_E']
 CONTRASTS = [('B', 'A'), ('C', 'A'), ('D', 'A'), ('E', 'A'), ('A', 'A0'), ('D', 'B'), ('C', 'B'), ('E', 'B'), ('D', 'C'),
              ('O', 'A'), ('O', 'B'), ('O', 'D'), ('O', 'O_uniform'), ('O_uniform', 'A0'),
              ('B_wake10000', 'B'), ('B_wake30000', 'B'), ('D_wake10000', 'D'), ('D_wake30000', 'D'),
-             ('PW_B', 'B'), ('PW_D', 'D'), ('PW_C', 'C'), ('PW_E', 'E'), ('O', 'PW_B'), ('O', 'PW_D')]
+             ('PW_B', 'B'), ('PW_D', 'D'), ('PW_C', 'C'), ('PW_E', 'E'), ('O', 'PW_B'), ('O', 'PW_D'),
+             ('PWS_B', 'B'), ('PWS_D', 'D'), ('PWS_C', 'C'), ('PWS_E', 'E'), ('O', 'PWS_B'), ('O', 'PWS_D')]
 MAX_BUDGET = str(max(BUDGETS))
 
 
 def final_iteration(arm):
     if arm in ('A0', 'O_uniform'):
         return 0
-    if arm.startswith('PW_'):
+    if arm.startswith('PW'):
         return 1
     return ROUNDS
 
@@ -160,9 +161,9 @@ def analyze(seeds):
                 contrasts.append({'regime': regime, 'contrast': f'{x}-{y}', 'budget': int(budget), 'iteration_x': final_iteration(x),
                                   'iteration_y': final_iteration(y), 'seeds': common, **(stats or {})})
     save_json(ROOT / 'results' / 'solve_curves.json',
-              {'budgets': BUDGETS, 'rounds': ROUNDS, 'arms': {a: DESCRIPTIONS.get(a.split('_wake')[0] if '_wake' in a else a.replace('PW_', ''), a) for a in arms},
+              {'budgets': BUDGETS, 'rounds': ROUNDS, 'arms': {a: DESCRIPTIONS.get(a.split('_wake')[0] if '_wake' in a else a.split('_', 1)[1] if a.startswith('PW') else a, a) for a in arms},
                'arm_notes': {'B_wake10000': 'B with Wake budget 10000', 'D_wake10000': 'D with Wake budget 10000', 'B_wake30000': 'B with Wake budget 30000',
-                             'D_wake30000': 'D with Wake budget 30000', 'PW_*': 'compressor applied to the ground-truth training programs (perfect exposure)'},
+                             'D_wake30000': 'D with Wake budget 30000', 'PW_*': 'compressor applied to the ground-truth programs of all training tasks (perfect exposure)', 'PWS_*': 'compressor applied to the ground-truth programs of training tasks with depth <= 4'},
                'cells': cells, 'contrasts': contrasts,
                'notes': ['Solve rate at budget N = fraction of held-out tasks whose first enumerated solution has rank <= N under the arm grammar (prefix-exact).',
                          'Means/std over benchmark instances; contrasts use a two-way paired bootstrap over instances and task positions.',
@@ -247,7 +248,7 @@ def analyze(seeds):
                        'solve_rate_when_not_shortened': mstd([r['summary']['solve_rate_when_not_shortened'] for r in recs]),
                        'solve_rate_max': mstd([r['summary']['curve'].get(MAX_BUDGET) for r in recs]),
                        'solve_rate_10000': mstd([r['summary']['curve']['10000'] for r in recs])})
-    learned_arms = [a for a in arms if a not in ('A0', 'A', 'O', 'O_uniform') and not a.startswith('PW_')]
+    learned_arms = [a for a in arms if a not in ('A0', 'A', 'O', 'O_uniform') and not a.startswith('PW')]
     correlations = {}
     for scope in REGIMES + ['all']:
         xs_mdl, xs_L, ys = [], [], []
@@ -401,7 +402,7 @@ def write_tables(seeds, by_cell, arms, cells, contrasts, rcells, recall_curves, 
     for regime in REGIMES:
         rows = []
         for a in arms:
-            if a in ('A0', 'O_uniform') or a.startswith('PW_'):
+            if a in ('A0', 'O_uniform') or a.startswith('PW'):
                 continue
             pts = [ccell.get((regime, a, it)) for it in range(1, ROUNDS + 1)]
             if all(p is None for p in pts):
@@ -451,7 +452,7 @@ def write_tables(seeds, by_cell, arms, cells, contrasts, rcells, recall_curves, 
     lines += ['## Experiment 5: oracle gap', '']
     rows = []
     for regime in REGIMES:
-        for a in ['A', 'B', 'D', 'C', 'E', 'PW_B', 'PW_D', 'PW_C', 'PW_E', 'O', 'O_uniform']:
+        for a in ['A', 'B', 'D', 'C', 'E', 'PW_B', 'PW_D', 'PW_C', 'PW_E', 'PWS_B', 'PWS_D', 'PWS_C', 'PWS_E', 'O', 'O_uniform']:
             c = cell.get((regime, a, final_iteration(a)))
             r = rcell.get((regime, a, final_iteration(a)))
             k = ccell.get((regime, a, final_iteration(a)))
@@ -462,7 +463,7 @@ def write_tables(seeds, by_cell, arms, cells, contrasts, rcells, recall_curves, 
     rows = []
     for regime in REGIMES:
         for x, y in CONTRASTS:
-            if x not in ('O', 'O_uniform', 'PW_B', 'PW_D', 'PW_C', 'PW_E'):
+            if x not in ('O', 'O_uniform') and not x.startswith('PW'):
                 continue
             c = con.get((regime, f'{x}-{y}', int(MAX_BUDGET)))
             if c and 'mean' in c:
@@ -471,7 +472,7 @@ def write_tables(seeds, by_cell, arms, cells, contrasts, rcells, recall_curves, 
     rows = []
     for p in perfect:
         rows.append([p['regime'], p['arm'], fmt(p['inventions'], 1), fmt(p['delta_mdl'], 1), fmt(p['canonical_recall']), fmt(p['behavioral_precision']), fmt(p['behavioral_recall']), fmt(p['behavioral_weighted_recall']), fmt(p['mean_delta_L'], 2), fmt(p['solve_rate_max'])])
-    lines += ['Perfect-Wake diagnostic (compressor applied to the ground-truth programs of all 56 training tasks, up to 12 inventions):', '',
+    lines += ['Perfect-Wake diagnostic (PW: ground-truth programs of all 56 training tasks; PWS: training tasks of depth <= 4; up to 12 inventions; a missing row means the compressor timed out):', '',
               table(['Reuse', 'Arm', 'Inventions', 'ΔMDL', 'Canonical recall', 'Behav. precision', 'Behav. recall', 'Weighted recall', 'Mean ΔL', 'Solve rate @20000'], rows), '']
 
     # exposure arms
@@ -503,7 +504,7 @@ def write_tables(seeds, by_cell, arms, cells, contrasts, rcells, recall_curves, 
     for regime in REGIMES:
         rows = []
         for a in arms:
-            if a in ('A0', 'O_uniform') or a.startswith('PW_'):
+            if a in ('A0', 'O_uniform') or a.startswith('PW'):
                 continue
             pts = [cell.get((regime, a, it)) for it in range(1, ROUNDS + 1)]
             if all(p is None for p in pts):
