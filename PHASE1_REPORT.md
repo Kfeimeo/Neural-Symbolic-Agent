@@ -321,18 +321,36 @@ library matches the true library (O − B = −5.7 points, interval [−0.143, 0
 its held-out rank profile is similar (mean first-solution rank 2068 versus 1546). The
 zero-reuse "oracle" is the base grammar and has no latents, so O = A there.
 
-Perfect-Wake diagnostic (compressors applied to ground-truth programs). On the full
-56-program corpus the Stitch-proposal compressors finish in 3–35 s: C accepts 12
-inventions but recovers none of the low-reuse latents (they occur once or twice, so
-the 12 accepted abstractions are other repeated fragments) and D accepts nothing (no
-Stitch proposal improves the DreamCoder objective on a corpus of 56 single-program
-frontiers). The DreamCoder-proposal compressors B and E did not finish within 1200 s
-on the zero and low cohorts of instance 101: the inverse-β version space of a depth-8
-program is combinatorially large, so DreamCoder's candidate generation, which is fast
-on the short programs Wake actually finds, does not scale to deep corpora. The
-remaining full-corpus and shallow-corpus (depth ≤ 4) runs are reported in
-`results/compression_results.json` (`perfect_wake`) and `tables.md`; see §7 for the
-run status.
+Perfect-Wake diagnostic (compressors applied to ground-truth programs; behavioural
+recall / held-out solve rate at 10000, means over instances):
+
+| Reuse | PW_B | PW_C | PW_D | PW_E | PWS_B | PWS_C | PWS_D | PWS_E | B (Wake) | O |
+|---|---|---|---|---|---|---|---|---|---|---|
+| low | timeout | 0.00 / 0.20 | 0 inventions / 0.19 | timeout | 0.03 / 0.17 | 0.00 / 0.14 | 0.00 / 0.17 | 0.00 / 0.14 | 0.03 / 0.12 | 1.00 / 0.40 |
+| medium | timeout | 0.22 / 0.33 | 0.17 / 0.27 | timeout | 0.33 / 0.43 | 0.17 / 0.34 | 0.33 / 0.35 | 0.17 / 0.34 | 0.11 / 0.27 | 1.00 / 0.46 |
+| high | timeout | 1.00 / 0.38 | 1.00 / 0.41 | timeout | 0.92 / 0.41 | 0.83 / 0.36 | 0.75 / 0.35 | 0.92 / 0.39 | 0.83 / 0.46 | 1.00 / 0.40 |
+
+On the full 56-program corpus (`PW`) the DreamCoder-proposal compressors B and E did
+not finish within the wall-clock limit in any cohort (1200 s on the first two
+cohorts, 120 s afterwards): the inverse-β version space of a depth-8 program is
+combinatorially large, so DreamCoder's candidate generation, which is fast on the
+short programs Wake actually finds, does not scale to deep corpora. The
+Stitch-proposal compressors finish in 3–53 s; with the DreamCoder objective (`PW_D`)
+they recover every high-reuse latent with precision 0.89, one in six medium-reuse
+latents and nothing at low reuse (no proposal improves the objective on a corpus of
+single-program frontiers), and with the Stitch objective (`PW_C`) they accept 12
+inventions everywhere, with *negative* DreamCoder ΔMDL at zero and low reuse.
+
+On the shallow corpus (`PWS`, the 24 training programs of depth ≤ 4) every compressor
+finishes in 1–33 s. With perfect exposure of the shallow tasks, DreamCoder's
+compressor recovers 92% of the high-reuse latents and 33% of the medium-reuse
+latents, and its held-out solve rate at medium reuse rises from 0.27 (B with real
+Wake) to 0.43 (`PWS_B − B` = +0.159 [0.055, 0.264]), statistically indistinguishable
+from the oracle library (`O − PWS_B` = +0.023 [−0.046, 0.092]). At low reuse perfect
+exposure changes nothing (`PWS_B` recall 0.03, solve 0.17 versus O 0.40): with one or
+two occurrences per latent no objective, Bayesian or leaf-cost, can justify an
+invention. At high reuse perfect exposure is unnecessary (`PWS_B − B` = −0.047, the
+Wake-found library is already as good as the true one).
 
 ### 4.6 Search exposure: Wake budget
 
@@ -385,12 +403,16 @@ abstractions would have been worth 29 points there.
 
 3. **Is current DreamCoder compression the bottleneck?** Not at high reuse: the
 learned library is as good as the true one, so the remaining failures (solve rate
-0.46) are search failures shared with the oracle. At low and medium reuse the
-bottleneck is upstream of compression: 30 of 36 low-reuse latents never appear in
-any found frontier, and larger Wake budgets add solved tasks without adding the
-missing evidence. Where a latent *is* exposed in two or more tasks, DreamCoder
-recovers it in 5/6 (high) but only 2/5 (medium) and 0/2 (low) cases, so a
-selection/objective limitation also exists but is second-order.
+0.46) are search failures shared with the oracle. At medium reuse the bottleneck is
+upstream of compression: given the ground-truth programs of the shallow training
+tasks, the unchanged compressor triples its recall (0.11 → 0.33) and reaches the
+oracle's held-out solve rate (0.43 versus 0.46), while larger Wake budgets add
+solved tasks without adding the missing evidence. At low reuse compression *and*
+exposure are both insufficient: 30 of 36 latents never appear in a found frontier,
+and even with perfect exposure of the shallow tasks no compressor recovers latents
+that occur once or twice. Where a latent is exposed in two or more found frontiers,
+DreamCoder recovers it in 5/6 (high) but only 2/5 (medium) cases, so a
+selection/objective limitation exists but is second-order.
 
 4. **Does Stitch improve abstraction discovery?** No, on this benchmark. Stitch
 proposals with the DreamCoder objective (D) and Stitch's own objective (C) recover
@@ -402,12 +424,17 @@ corpora but not for the short programs Wake actually finds.
 
 5. **Is the remaining gap due to search exposure, abstraction proposal, the
 compression objective, or DSL limitations?**
-   * Search exposure is the dominant cause at low and medium reuse: the unrecovered
-     latents are not in any frontier, and the prior-fit-only arm already accounts
-     for most of the gain over the untrained grammar.
+   * Search exposure is the dominant cause at medium reuse: the unrecovered latents
+     are not in any frontier, and perfect exposure of the shallow training tasks
+     alone closes the oracle gap (`PWS_B` 0.43 versus `O` 0.46). At low reuse the
+     cause is the reuse count itself: with one or two occurrences per latent neither
+     objective accepts an invention even under perfect exposure, so the 29-point
+     oracle gap there is not closable by any compressor in this family.
    * Abstraction proposal is not the cause: DreamCoder's proposals dominate Stitch's
      under the same objective (B > D) and the same proposals under the Stitch
-     objective do worse (E ≤ B).
+     objective do worse (E ≤ B). Proposal *cost* is a real limitation of DreamCoder
+     only on deep corpora (timeouts on the full perfect-Wake corpus), which Wake
+     never produces here.
    * The compression objective contributes a second-order loss: exposed latents at
      medium reuse are recovered only 2/5 of the time and every arm has low precision.
    * DSL limitations do not explain the gap on this benchmark (latents are
@@ -465,7 +492,8 @@ re-hashing with CRLF). Benchmark manifests and the fixed-core hashes were verifi
 before and after every stage. Environment: Python 3.11, GHC 9.4.7, PyTorch 2.14
 (CPU), stitch-core 0.1.29, four CPU cores, 16 GB RAM.
 
-Run status: training (96 runs), the static and trained-arm evaluations (604 grammars)
-and the analysis are complete; the perfect-Wake diagnostic and its held-out
-evaluation are reported for the cohorts that had finished when this report was
-written (see `results/compression_results.json` → `perfect_wake` for the final list).
+Run status: every stage is complete: training (96 runs), the perfect-Wake diagnostic
+(96 compressor calls, 24 of them timeouts of B and E on the full corpus), the held-out
+evaluation of 672 grammars (24 static, 576 trained-arm rounds, 72 perfect-Wake
+libraries), the analysis and the figures. No evaluation search failed after the
+budget cap (`results/abstraction_learning/evaluation_failures.json` does not exist).

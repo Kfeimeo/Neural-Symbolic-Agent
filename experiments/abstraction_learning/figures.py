@@ -179,7 +179,7 @@ def oracle_gap(solve):
     for ax, regime in zip(axes.flat, REGIMES):
         ys, labels = [], []
         for k, arm in enumerate(arms):
-            it = 0 if arm in ('A0', 'O_uniform') else 1 if arm.startswith('PW_') else rounds
+            it = 0 if arm in ('A0', 'O_uniform') else 1 if arm.startswith('PW') else rounds
             c = cells.get((regime, arm, it))
             if not c:
                 continue
