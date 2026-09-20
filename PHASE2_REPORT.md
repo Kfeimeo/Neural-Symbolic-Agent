@@ -183,7 +183,42 @@ permuted translation offsets, or instantiations through earlier inventions). The
 same happens at low reuse (0.50 → 0.33) while at high reuse, where most latents are
 already exposed, the fraction is stable (0.39 → 0.42).
 
-BEHAVIOURAL_EXPOSURE_PLACEHOLDER
+To separate "the task is solved in another form" from "the task is solved by a
+different decomposition", a behavioural exposure diagnostic was added
+(`experiments/full_dreamcoder/exposure.py`; `behavioural_exposure.json`): a frontier
+behaviourally exposes latent `F` when it contains a subexpression `s` and a strict
+sub-subexpression `t` (possibly the task input) with `s(x) = F(t(x), v)` on the 40
+recovery probes for some valid parameter value `v`, in any syntactic form, and with
+`F` acting non-trivially on `t`. Final round, pooled over instances:
+
+| Reuse | Arm | Behav. ER@1 | Behav. ER@2 (syntactic ER@2) | Mean behav. support (syntactic) | Solved pairs | Behav. supported | Syntactic supported | Latents behav. ≥ 2 (syntactic ≥ 2) |
+|---|---|---|---|---|---|---|---|---|
+| low | B | 0.44 | 0.14 (0.06) | 0.78 (0.36) | 10 | 8 | 5 | 5/36 (2/36) |
+| low | FullDC | 0.69 | 0.39 (0.14) | 1.58 (0.50) | 18 | 11 | 6 | 14/36 (5/36) |
+| low | B_wake10000 | 0.56 | 0.31 (0.14) | 1.56 (0.64) | 16 | 11 | 7 | 11/36 (5/36) |
+| low | PWS_B | 0.64 | 0.17 (0.08) | 0.83 (0.67) | 18 | 18 | 18 | 6/36 (3/36) |
+| medium | B | 0.94 | 0.56 (0.28) | 2.83 (1.39) | 25 | 23 | 15 | 10/18 (5/18) |
+| medium | FullDC | 0.94 | 0.78 (0.39) | 4.33 (1.78) | 41 | 34 | 14 | 14/18 (7/18) |
+| medium | FullDC_t2 | 1.00 | 0.89 | 4.06 | 43 | 35 | | 16/18 |
+| medium | FullDC_t3 | 0.94 | 0.89 | 4.89 | 41 | 34 | | 16/18 |
+| medium | B_wake10000 | 0.94 | 0.78 (0.33) | 4.50 (2.06) | 44 | 39 | 23 | 14/18 (6/18) |
+| medium | PWS_B | 1.00 | 1.00 (1.00) | 2.44 (2.22) | 37 | 37 | 37 | 18/18 (18/18) |
+| high | B | 1.00 | 1.00 (0.50) | 11.58 (4.67) | 99 | 90 | 39 | 12/12 (6/12) |
+| high | FullDC | 1.00 | 1.00 (0.50) | 16.75 (6.58) | 123 | 114 | 52 | 12/12 (6/12) |
+
+Behaviourally, recognition *does* bring the latents into the Wake frontiers: at
+medium reuse the fraction of active latents computed inside at least two solved
+frontiers rises from 0.56 (B) to 0.78 (0.89 for both replication seeds), at low
+reuse from 0.14 to 0.39, and 83–93% of the solved latent-bearing tasks contain the
+latent behaviourally under every arm. The syntactic criterion that the frozen
+compressor's candidate generation actually relies on sees a third of this (0.39 and
+0.14). The perfect-Wake reference is the only arm where behavioural and syntactic
+exposure coincide (its frontiers *are* the generating programs), and it is also the
+only arm whose compressor recovers a third of the medium-reuse latents. The Wake
+exposure bottleneck of Phase 1 is therefore relieved in the sense that matters for
+search (the latent-bearing tasks are solved and the latents are present as
+computations) but not in the sense that matters for DreamCoder's compressor, which
+proposes inventions only from syntactically identical inverse-β fragments.
 
 ### 4.3 Behavioural abstraction recovery: one more latent at medium reuse
 
@@ -435,9 +470,12 @@ abstraction discovery.
 
 **Where is the remaining bottleneck?** At the link between *solving a latent-bearing
 task* and *the latent appearing in the frontier in a form the compressor can
-propose from*. Recognition brings the tasks into the solved set, but the found
-programs contain the latent only behaviourally (commuted stages, permuted offsets,
-baked-in parameters); the inverse-β candidate generator needs the same syntactic
+propose from*. Recognition brings the tasks into the solved set and the latents
+into the frontiers as computations (behavioural ER@2 at medium reuse 0.56 → 0.78–0.89,
+at low reuse 0.14 → 0.39; 83–93% of solved latent-bearing tasks contain the latent
+behaviourally), but the found programs contain them in other syntactic forms
+(commuted stages, permuted offsets, baked-in parameters), so the syntactic ER@2
+stays at 0.39 / 0.14; the inverse-β candidate generator needs the same syntactic
 fragment in two tasks and never sees it, and where it does (support 2–3) the MDL
 objective still does not accept the latent (0/3). The evidence for a next-stage
 algorithm therefore points to (i) candidate generation that is closed under the

@@ -217,6 +217,37 @@ def recovery_by_support_figure(per_latent):
     plt.close(fig)
 
 
+def behavioural_vs_syntactic(per_latent, cells):
+    """ER@2 under the Phase 1 syntactic criterion versus the behavioural criterion, final iteration."""
+    rows = per_latent.get('behavioural_exposure') or []
+    if not rows:
+        return
+    cell = cells_index(cells)
+    regimes = [r for r in REGIMES if any(x['regime'] == r for x in rows)]
+    fig, axes = setup(1, len(regimes), width=4 * len(regimes))
+    arms = ['B', ARM, 'B_wake10000', 'PWS_B']
+    for ax, regime in zip(axes.flat, regimes):
+        labels = [l for l in arms if any(x['regime'] == regime and x['label'] == l for x in rows)]
+        width = 0.36
+        for i, l in enumerate(labels):
+            b = next(x for x in rows if x['regime'] == regime and x['label'] == l)
+            syn = cell.get((regime, l, final(l)))
+            s = value(syn['metrics']['er2']) if syn else None
+            ax.bar(i - width / 2, s or 0., width, color=COLOR.get(l, INK2), edgecolor=INK, linewidth=0.5, hatch='//')
+            ax.bar(i + width / 2, value(b['behavioural_er2']) or 0., width, color=COLOR.get(l, INK2), edgecolor=INK, linewidth=0.5)
+            ax.text(i - width / 2, (s or 0.) + 0.02, f'{s:.2f}' if s is not None else 'n/a', ha='center', fontsize=7, color=INK)
+            ax.text(i + width / 2, (value(b['behavioural_er2']) or 0.) + 0.02, f"{value(b['behavioural_er2']):.2f}", ha='center', fontsize=7, color=INK)
+        ax.set_xticks(range(len(labels)))
+        ax.set_xticklabels(labels, fontsize=8)
+        ax.set_ylim(0, 1.15)
+        ax.set_ylabel('ER@2', color=INK2, fontsize=9)
+        ax.set_title(f'reuse = {regime}  (hatched: syntactic, solid: behavioural)', color=INK, fontsize=9)
+    fig.suptitle('Latent exposure in final frontiers: Phase 1 syntactic criterion versus behavioural criterion', color=INK, fontsize=11)
+    fig.tight_layout()
+    fig.savefig(FIGURES / 'exposure_behavioural_vs_syntactic.png', dpi=150, facecolor=SURFACE)
+    plt.close(fig)
+
+
 def main():
     FIGURES.mkdir(parents=True, exist_ok=True)
     cells = read('cells.json')
@@ -235,6 +266,7 @@ def main():
     rank_ecdf(cells)
     chain_figure(chain)
     recovery_by_support_figure(per_latent)
+    behavioural_vs_syntactic(per_latent, cells)
     print(f'figures written to {FIGURES}')
 
 
