@@ -177,3 +177,23 @@ python -m experiments.abstraction_learning.run evaluate --workers 4
 python -m experiments.abstraction_learning.run analyze
 python -m pytest tests/test_abstraction_learning.py -q
 ```
+
+## Phase 2: full faithful DreamCoder (recognition ON)
+
+`experiments/full_dreamcoder/` re-runs the Phase 1 B arm with the recognition
+pathway enabled (Dream + Replay + task-conditioned AST-bigram recognition, guided
+Wake) on the same frozen benchmark, compressor, objective, budgets and evaluation
+protocol; nothing else changes. It measures whether recognition relieves the Wake
+exposure bottleneck found in Phase 1 (training solve rate, latent frontier support,
+ER@1/ER@2, behavioural recovery, held-out solve curves, first-solution ranks, gap
+closure against B / perfect-Wake / oracle). Results are in `results/full_dreamcoder/`
+and the report `PHASE2_REPORT.md`.
+
+```bash
+python -m experiments.full_dreamcoder.run train --workers 4
+python -m experiments.full_dreamcoder.run evaluate --workers 4
+python -m experiments.full_dreamcoder.run parity
+python -m experiments.full_dreamcoder.run analyze
+python -m experiments.full_dreamcoder.run figures
+python -m pytest tests/test_full_dreamcoder.py -q
+```
