@@ -315,7 +315,8 @@ Paired contrasts at 10000 candidates (mean difference, two-way bootstrap 95% CI)
 
 Findings. (i) The Full-DC *library* alone improves held-out solving at every reuse
 level, significantly so at low reuse (+13.9 points, interval excluding zero) and
-nominally at medium (+4.6) and high (+5.3). The low-reuse gain is not an
+nominally at medium (+4.6 with the primary seed; +8.7 [0.026, 0.154] pooled over
+three seeds, §4.6b) and high (+5.3). The low-reuse gain is not an
 abstraction-recovery effect (recall stays at 0.03): the library has 13 inventions
 instead of 5, more solved training tasks feed the prior fit, and the depth profile
 (d = 4–7: 0.42 / 0.22 / 0.23 / 0.17 versus B 0.17 / 0.11 / 0.07 / 0.00) shows a
@@ -428,11 +429,51 @@ the shallow generating programs once, recovers five of these latents that Full-D
 does not, confirming that the missing ingredient is the syntactic form in which
 the latent enters the frontier, not the number of solved tasks.
 
-REPLICATION_PLACEHOLDER
+### 4.6b Medium reuse: replication over training seeds
+
+The medium-reuse cohorts were re-run with two further training seeds (Dream draws,
+network initialisation, replay sampling); `FullDC_pool` averages the three seeds
+within each instance before averaging over instances (final round):
+
+| Quantity | B | FullDC (seed 1) | seed 2 | seed 3 | pooled |
+|---|---|---|---|---|---|
+| Training solve rate | 0.280 | 0.411 | 0.435 | 0.411 | 0.419 |
+| ER@1 | 0.56 | 0.61 | 0.61 | 0.72 | 0.65 |
+| ER@2 (syntactic) | 0.28 | 0.39 | 0.44 | 0.61 | 0.48 |
+| ER@2 (behavioural) | 0.56 | 0.78 | 0.89 | 0.89 | – |
+| Mean support | 1.39 | 1.78 | 1.83 | 2.11 | 1.91 |
+| Inventions | 6.3 | 11.0 | 12.0 | 11.7 | 11.6 |
+| Behav. recall | 0.111 | 0.167 | 0.167 | 0.167 | 0.167 |
+| Behav. precision | 0.117 | 0.095 | 0.079 | 0.088 | 0.087 |
+| P(recovered given support ≥ 2) | 2/5 | 2/7 | 3/8 | 3/11 | 8/26 = 0.31 |
+| P(recovered given support < 2) | 0/13 | 1/11 | 0/10 | 0/7 | 1/28 = 0.04 |
+| Latents newly exposed (B < 2, FullDC ≥ 2): recovered | – | 0/3 | 1/4 | 0/7 | 1/14 |
+| Held-out S(10000), library | 0.274 | 0.320 | 0.387 | 0.375 | 0.361 |
+| Held-out S(10000), recognition | – | 0.388 | 0.376 | 0.399 | 0.388 |
+| S(10000) contrast with B, library | – | +0.046 [−0.057, 0.184] | +0.113 [0.011, 0.205] | +0.102 [0.011, 0.192] | +0.087 [0.026, 0.154] |
+| S(10000) contrast with B, recognition | – | +0.115 [−0.010, 0.253] | +0.102 [−0.013, 0.230] | +0.126 [0.011, 0.240] | +0.114 [0.020, 0.207] |
+| O − FullDC (library) | – | +0.136 [0.011, 0.264] | | | +0.095 [−0.000, 0.195] |
+| PWS_B − FullDC (library) | – | +0.113 [−0.034, 0.253] | | | +0.072 [−0.011, 0.171] |
+
+The replication sharpens rather than changes the picture. The training-solve gain,
+the one-latent recall gain (0.167 for every seed) and the held-out gain of the
+library are stable across seeds; pooled over seeds the library gain of +8.7 points
+has an interval that excludes zero, and the recognition-guided full system reaches
+0.388 (+11.4 [0.020, 0.207]). Syntactic exposure varies more between seeds
+(ER@2 0.39–0.61, pooled 0.48, closing 28% of the exposure gap; behavioural ER@2
+0.78–0.89), but its increase still does not propagate: pooled over seeds, latents
+that recognition newly exposed in two or more frontiers are recovered in 1 of 14
+cases, whereas latents exposed under both arms are recovered in 7 of 12, and the
+pooled recovery closure stays at 25% of the gap to `PWS_B` (6% of the gap to the
+oracle). Pooled gap closure at medium reuse: exposure 28%, recovery 25% / 6%,
+oracle gap 48% (library) / 63% (recognition), with a remaining exposure gap of 0.52
+in ER@2, a remaining recovery gap of 0.83 in recall and a remaining oracle gap of
++0.10 (library) / +0.07 (recognition) in solve rate.
+
 
 ### 4.7 Cost
 
-Per run (six rounds, primary seed, mean over instances): guided Wake 590–625 s
+Per run (six rounds, mean over instances): guided Wake 590–625 s
 (B: 13 s; the enumeration under a task-conditioned grammar is repeated per task
 instead of once per cohort), compression 105–115 s, Dream 2.5 s, recognition
 training 14 s. Held-out evaluation per round: 7 s with the library alone, 260–283 s
@@ -449,20 +490,26 @@ alone: +13.9 points at low reuse with an interval excluding zero, +4.6 at medium
 +5.3 at high; with recognition at test time +16.2 / +11.5 / +1.4). But the
 exposure → recovery half is essentially untouched:
 
-* exposure: ER@2 rises from 0.28 to 0.39 at medium reuse and from 0.06 to 0.14 at
-  low reuse (15% and 19% of the exposure gap to a perfect Wake), and not at all at
-  high reuse; the count of supported (latent, task) pairs is unchanged at medium
-  reuse (15 → 14) because the additional solved latent-bearing tasks are solved in
-  re-expressed forms (P(supported | solved) 0.60 → 0.34);
-* recovery: one more latent at medium reuse (recall 0.11 → 0.17, 25% of the gap to
-  `PWS_B`, 6% of the gap to the oracle), recovered in an equivalent form without
-  syntactic exposure; none of the three latents recognition newly exposed was
-  accepted; nothing at low or high reuse, with precision halved by twice as many
+* exposure: syntactic ER@2 rises from 0.28 to 0.39 at medium reuse (0.48 pooled
+  over three training seeds; 15–28% of the exposure gap to a perfect Wake) and from
+  0.06 to 0.14 at low reuse (19%), and not at all at high reuse; the count of
+  syntactically supported (latent, task) pairs is unchanged at medium reuse with the
+  primary seed (15 → 14) because the additional solved latent-bearing tasks are
+  solved in re-expressed forms (P(supported | solved) 0.60 → 0.34–0.47), although
+  behaviourally the latents are present (behavioural ER@2 0.56 → 0.78–0.89);
+* recovery: one more latent at medium reuse for every training seed (recall
+  0.11 → 0.17, 25% of the gap to `PWS_B`, 6% of the gap to the oracle), recovered in
+  an equivalent form without syntactic exposure; latents that recognition newly
+  exposed in two or more frontiers are accepted in 1 of 14 cases (pooled over
+  seeds); nothing at low or high reuse, with precision reduced by twice as many
   inventions;
-* oracle gap: 25% (library) / 63% (with test-time recognition) closed at medium
-  reuse and 49% / 58% at low reuse, but the recognition part of the closure is a
-  generic learned bigram prior (the deranged control performs the same) rather than
-  a better library, and `PWS_B` still beats the Full-DC library at medium reuse.
+* oracle gap: 25% with the primary seed and 48% pooled (library) / 63% (with
+  test-time recognition) closed at medium reuse and 49% / 58% at low reuse; the
+  library gain is real (pooled +8.7 points [0.026, 0.154]) but does not come
+  through recovered latents, the recognition part of the closure is a generic
+  learned bigram prior (the deranged control performs the same) rather than a
+  better library, and `PWS_B` still beats the Full-DC library at medium reuse
+  (+11 points primary seed, +7 pooled).
 
 Training solve rate and held-out solve rate therefore improve without the causal
 chain through abstraction: the recognition model makes search better, not
@@ -492,8 +539,10 @@ an MDL-driven search.
 ## 6. Limitations
 
 * Three benchmark instances and, except at medium reuse, one training seed: most
-  contrasts have intervals that include zero, and the medium-reuse replication seeds
-  show that the single-latent recovery gain is not stable across seeds.
+  single-seed contrasts have intervals that include zero. The medium-reuse
+  replication (three seeds) shows that the training-solve, recall and library gains
+  are stable across seeds while syntactic exposure varies between seeds (ER@2
+  0.39–0.61).
 * Recognition is the accepted recipe of the frozen core (64 dreams, 600 steps, a
   fresh network per round, hand-designed grid features); a larger or better-trained
   recognition model could guide search differently, but it would face the same
