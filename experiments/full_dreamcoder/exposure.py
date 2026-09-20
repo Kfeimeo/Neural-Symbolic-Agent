@@ -94,7 +94,9 @@ def behavioural_support(k, frontiers, task_names, active, probes, cache=None):
                     if t_sig is None or t_key == s_key or (t_key != var_key and t_key not in s_key):
                         continue
                     for i, v in enumerate(values):
-                        if latent_on(f, t_key, t_sig, v) == s_sig:
+                        applied = latent_on(f, t_key, t_sig, v)
+                        # a vacuous match (F acts as the identity on t's outputs) is not exposure of F
+                        if applied is not None and applied == s_sig and applied != t_sig:
                             hit = (s_key, t_key, i)
                             break
                     if hit:
