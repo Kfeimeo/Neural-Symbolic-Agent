@@ -479,7 +479,7 @@ def write_tables(cells, cell, contrasts, con, per_latent, recovery_by_support, t
     rows = [[r['regime'], r['label'], r['latents'], f"{r['recovered_ge2']}/{r['n_ge2']}", fmt(r['p_recovered_ge2'], 2), f"{r['recovered_lt2']}/{r['n_lt2']}", fmt(r['p_recovered_lt2'], 2),
              r['n_1'], fmt(r['p_recovered_1'], 2), r['n_0'], fmt(r['p_recovered_0'], 2)] for r in recovery_by_support]
     L += ['Recovery conditional on frontier support (latents pooled over instances, final iteration):', '',
-          table(['Reuse', 'Arm', 'Active latents', 'Recovered | support>=2', 'P', 'Recovered | support<2', 'P', 'n support=1', 'P(rec | 1)', 'n support=0', 'P(rec | 0)'], rows), '']
+          table(['Reuse', 'Arm', 'Active latents', 'Recovered (support>=2)', 'P(rec given >=2)', 'Recovered (support<2)', 'P(rec given <2)', 'n support=1', 'P(rec given 1)', 'n support=0', 'P(rec given 0)'], rows), '']
     rows = []
     for t in transitions:
         for c, v in t['cells'].items():
