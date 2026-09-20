@@ -157,3 +157,23 @@ inside–outside update、inverse-β compression 和多轮 EC。
 执行 `python -m faithful.run_acceptance` 可重建并实际运行固定官方版本的 golden 对照及旧 V1 回归。
 该完整命令使用现有 WSL Ubuntu-24.04 运行官方 OCaml 压缩器。
 范围、证据、已知差异见 `FAITHFUL_DREAMCODER_REPORT.md`，算法对比见 `FAITHFUL_VS_LITE.md`。
+
+## Phase 1: abstraction learning study (latent-abstraction benchmark)
+
+`benchmarks/latent_abstraction/` generates frozen benchmark instances from a hidden
+library of latent abstractions (reuse regimes zero/low/medium/high, depth 2–8,
+compositional held-out split). `experiments/abstraction_learning/` compares
+abstraction-discovery methods (A no compression, B DreamCoder, C Stitch, D hybrid,
+E DreamCoder proposals + Stitch objective, oracle and perfect-Wake controls) on the
+unchanged core. Results are in `results/abstraction_recovery.json`,
+`results/solve_curves.json`, `results/compression_results.json` and the report
+`PHASE1_REPORT.md`.
+
+```bash
+python -m experiments.abstraction_learning.run benchmark
+python -m experiments.abstraction_learning.run train --workers 4
+python -m experiments.abstraction_learning.run perfect-wake --workers 4
+python -m experiments.abstraction_learning.run evaluate --workers 4
+python -m experiments.abstraction_learning.run analyze
+python -m pytest tests/test_abstraction_learning.py -q
+```

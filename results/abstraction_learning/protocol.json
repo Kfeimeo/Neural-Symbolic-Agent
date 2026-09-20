@@ -1,0 +1,189 @@
+{
+ "seeds": [
+  101,
+  202,
+  303
+ ],
+ "regimes": [
+  "zero",
+  "low",
+  "medium",
+  "high"
+ ],
+ "arms": {
+  "A": {
+   "method": "A",
+   "wake": 3000,
+   "oracle": false,
+   "group": "main"
+  },
+  "B": {
+   "method": "B",
+   "wake": 3000,
+   "oracle": false,
+   "group": "main"
+  },
+  "C": {
+   "method": "C",
+   "wake": 3000,
+   "oracle": false,
+   "group": "main"
+  },
+  "D": {
+   "method": "D",
+   "wake": 3000,
+   "oracle": false,
+   "group": "main"
+  },
+  "E": {
+   "method": "E",
+   "wake": 3000,
+   "oracle": false,
+   "group": "main"
+  },
+  "O": {
+   "method": "A",
+   "wake": 3000,
+   "oracle": true,
+   "group": "main"
+  },
+  "B_wake10000": {
+   "method": "B",
+   "wake": 10000,
+   "oracle": false,
+   "group": "exposure"
+  },
+  "D_wake10000": {
+   "method": "D",
+   "wake": 10000,
+   "oracle": false,
+   "group": "exposure"
+  }
+ },
+ "static": [
+  "A0",
+  "O_uniform"
+ ],
+ "descriptions": {
+  "A": "no compression (prior fit only)",
+  "B": "DreamCoder compression (frozen Haskell compressor)",
+  "C": "Stitch compression: Stitch proposals + Stitch leaf-cost utility",
+  "D": "hybrid: Stitch proposals + DreamCoder MDL selection",
+  "E": "DreamCoder proposals + Stitch leaf-cost utility",
+  "O": "oracle library (true active latents) + prior fit, no compression",
+  "O_uniform": "oracle library, uniform weights, no learning",
+  "A0": "uniform base grammar, no learning"
+ },
+ "rounds": 6,
+ "training_search": {
+  "max_states": 3000000,
+  "max_size": 33,
+  "maximum_depth": 14,
+  "upper_bound": 100,
+  "top_k": 3
+ },
+ "wake_limit_main": 3000,
+ "compressor_iterations": 3,
+ "evaluation_budgets": [
+  100,
+  300,
+  1000,
+  3000,
+  10000,
+  20000
+ ],
+ "intermediate_round_budget": 10000,
+ "evaluation_search": {
+  "max_states": 3000000,
+  "max_size": 33,
+  "maximum_depth": 14,
+  "upper_bound": 100,
+  "top_k": 3
+ },
+ "recognition": "off in every arm",
+ "stitch": {
+  "configs": [
+   {
+    "max_arity": 1,
+    "structure_penalty": "0.5"
+   },
+   {
+    "max_arity": 1,
+    "structure_penalty": "1.0"
+   },
+   {
+    "max_arity": 1,
+    "structure_penalty": "2.0"
+   },
+   {
+    "max_arity": 2,
+    "structure_penalty": "0.5"
+   },
+   {
+    "max_arity": 2,
+    "structure_penalty": "1.0"
+   },
+   {
+    "max_arity": 2,
+    "structure_penalty": "2.0"
+   },
+   {
+    "max_arity": 3,
+    "structure_penalty": "0.5"
+   },
+   {
+    "max_arity": 3,
+    "structure_penalty": "1.0"
+   },
+   {
+    "max_arity": 3,
+    "structure_penalty": "2.0"
+   }
+  ],
+  "iterations_per_config": 4,
+  "version": "0.1.29"
+ },
+ "perfect_wake": {
+  "methods": [
+   "B",
+   "C",
+   "D",
+   "E"
+  ],
+  "iterations": 12
+ },
+ "benchmark_manifests": {
+  "101": {
+   "train.json": "924337ac4f73d18740ad4d8230ed9a97bacd04e1e72410ddc58c9d60b620a773",
+   "test.json": "467a989d41416f0d07dfede21a434ac392592dc1eec6c146011bd3d199d7f72b",
+   "latent_library.json": "10c8e9a97ef51d2c6a9261bde1944530fd6b2d75f599b451cc84f440047d1150",
+   "private.json": "1af64135bc652598a55923888cc113517712ae011c998f587b14c10ada0307c9",
+   "split_validation.json": "52d0f547725e42f0693cc1d96d9ba58fd571d38ac73d2e6c7790dd368758c4d0",
+   "structural_statistics.json": "4d40d5867fb479381bc4b7fa4524d5084417869b1777c9acaee67c823d6fadb5",
+   "calibration.json": "ab40e55b3b35135957ffadfa9f18a55b045f9ab53247921ba7bb4de9e84d6e12"
+  },
+  "202": {
+   "train.json": "6a538625d49468c3043c68d88e7d7e270d86c6a55274fe298c1ce91b277981d1",
+   "test.json": "b2b8f31ac3af65515d5667b6495232897bec98da8c4b86e43b55fe4f2018c92e",
+   "latent_library.json": "3d96eb6a75b2bdd57c7b555f8258cd1dc671181741b8fa34431a61f28da1b4a8",
+   "private.json": "1220ba0009f526e8ae70e5a4cf160fd207f8bb73554b5d744a456ae7b9470ca5",
+   "split_validation.json": "5744ce51c33068500c64e9b7a5d1ed7a9efc0354d90fa8a6662fd333fc49ae0f",
+   "structural_statistics.json": "b25f9cde2c97f131fe6fd40ac35bc91897c7846b8e013973bd509420f94e4b51",
+   "calibration.json": "0d04c58df584ece6962990aed09a150ce949931bf708022c7f62c61a493c7c28"
+  },
+  "303": {
+   "train.json": "131fe584adeda2c4a86f93f75ec0730798c98c605562a421ecdea18fae3f6b48",
+   "test.json": "ddb33b0bdcc444aa208bb2ce279174f23e5c32409591f0b260454cdc8f4ca7e8",
+   "latent_library.json": "46562dac20e02285e256d5c4b8a267317ca2a5886b32b5e52c59b2795e574102",
+   "private.json": "db217e5ee3bbf240b9002b910b6820d04dd872acf19eef3fee0a04c73913fd06",
+   "split_validation.json": "85cac521b3bfd01ecf55e199e32061196d6ae330dfd202ca3be96df0086ef27c",
+   "structural_statistics.json": "70bc981412569973a4fad4f7db046da6517e895d9b5fcd60201d92d159439816",
+   "calibration.json": "13122a4f41a4677a08569c192ce988777f78c8d1f31e0a79ee5bc4511698f96a"
+  }
+ },
+ "policy": [
+  "Protocol fixed before any arm was run; benchmark instances frozen and hash-verified before and after every stage.",
+  "No arm, budget, seed or benchmark parameter is changed after observing results."
+ ],
+ "written": "2026-09-19 17:32:50"
+}
