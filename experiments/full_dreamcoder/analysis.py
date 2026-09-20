@@ -396,6 +396,102 @@ def analyze():
             row['newly_solved_with_deliberate_latent'] = sum(bool(meta[n]['deliberate_latent_use']) for n in row['newly_solved_by_FullDC'])
             training_detail.append(row)
 
+    # ---- exposure decomposition: for every (active latent, deliberate training task) pair, is the task
+    # solved, and if so does its persistent frontier structurally contain the latent?  Separates the
+    # search channel (task unsolved) from the re-expression channel (solved in another syntactic form).
+    decomposition = []
+    for regime in REGIMES:
+        if regime == 'zero':
+            continue
+        for label in ['B', ARM, f'{ARM}_t2', f'{ARM}_t3', 'B_wake10000']:
+            pairs, solved_pairs, supported_pairs = 0, 0, 0
+            latent_rows = []
+            depth_stats = collections.defaultdict(lambda: [0, 0, 0])
+            for seed in SEEDS:
+                recs = by.get((regime, label, final_iteration(label)), {}).get(seed)
+                if not recs or not recs[0].get('exposure'):
+                    continue
+                r = recs[0]
+                meta = bench.read(bench.DATA / f'seed_{seed}' / 'private.json')['tasks']
+                folder = (PHASE1 / 'runs' / f'seed_{seed}' / regime / label) if not label.startswith(ARM) else run_dir(seed, regime, int(label.split('_t')[1]) if '_t' in label else PRIMARY_SEED)
+                p = round_path(folder, final_iteration(label))
+                if not p.exists():
+                    continue
+                rec = read_json(p)
+                solved = {n for n, f in zip(rec['task_names'], rec['frontiers']) if f['entries']}
+                for latent, ex in r['exposure'].items():
+                    uses = [n for n, m in meta.items() if m['split'] == 'train' and m['regime'] == regime and any(u['latent'] == latent and u['deliberate'] for u in m['latent_uses'])]
+                    s = [n for n in uses if n in solved]
+                    sup = [n for n in s if n in ex['tasks']]
+                    pairs += len(uses)
+                    solved_pairs += len(s)
+                    supported_pairs += len(sup)
+                    for n in uses:
+                        d = depth_stats[meta[n]['depth']]
+                        d[0] += 1
+                        d[1] += n in solved
+                        d[2] += n in sup
+                    latent_rows.append({'seed': seed, 'latent': latent, 'deliberate_tasks': len(uses), 'solved': len(s), 'supported': len(sup),
+                                        'support_total': ex['count'], 'recovered': latent in r['recovery']['metrics']['behavioral']['recovered_latents']})
+            if pairs:
+                latents_all_unsolved = sum(1 for x in latent_rows if x['solved'] == 0)
+                latents_solved_unsupported = sum(1 for x in latent_rows if x['solved'] > 0 and x['supported'] == 0)
+                decomposition.append({'regime': regime, 'label': label, 'pairs': pairs, 'solved_pairs': solved_pairs, 'supported_pairs': supported_pairs,
+                                      'p_solved': solved_pairs / pairs, 'p_supported_given_solved': supported_pairs / solved_pairs if solved_pairs else None,
+                                      'latents': len(latent_rows), 'latents_no_deliberate_task_solved': latents_all_unsolved,
+                                      'latents_solved_but_unsupported': latents_solved_unsupported,
+                                      'latents_supported': sum(1 for x in latent_rows if x['supported'] > 0),
+                                      'by_depth': {str(d): {'pairs': v[0], 'solved': v[1], 'supported': v[2]} for d, v in sorted(depth_stats.items())},
+                                      'rows': latent_rows})
+
+    # ---- behavioural exposure (any syntactic form): from results/full_dreamcoder/behavioural_exposure.json when computed
+    behavioural = []
+    bpath = RESULTS / 'behavioural_exposure.json'
+    if bpath.exists():
+        brows = read_json(bpath)['rows']
+        for regime in REGIMES:
+            if regime == 'zero':
+                continue
+            for label in ['B', ARM, f'{ARM}_t2', f'{ARM}_t3', 'B_wake10000', 'PWS_B']:
+                store_label = f'{ARM}_t{PRIMARY_SEED}' if label == ARM else label
+                per_seed = {seed: brows.get(f'{regime}/{store_label}/{seed}') for seed in SEEDS}
+                per_seed = {s: v for s, v in per_seed.items() if v}
+                if not per_seed:
+                    continue
+                syn = by.get((regime, label, final_iteration(label)), {})
+                er1, er2, means, pairs, solved_pairs, beh_pairs, syn_pairs, both = [], [], [], 0, 0, 0, 0, 0
+                latents_beh, latents_syn, latents_any = 0, 0, 0
+                hist = collections.Counter()
+                for seed, row in per_seed.items():
+                    counts = {fid: v['count'] for fid, v in row['support'].items()}
+                    er1.append(sum(c >= 1 for c in counts.values()) / len(counts))
+                    er2.append(sum(c >= 2 for c in counts.values()) / len(counts))
+                    means.append(statistics.mean(counts.values()))
+                    for c in counts.values():
+                        hist[min(c, 6)] += 1
+                    srec = syn.get(seed, [None])[0]
+                    ssup = {fid: set(v['tasks']) for fid, v in (srec['exposure'].items() if srec and srec.get('exposure') else [])}
+                    meta = bench.read(bench.DATA / f'seed_{seed}' / 'private.json')['tasks']
+                    solved = set(row['solved_tasks'])
+                    for fid, v in row['support'].items():
+                        uses = [n for n, m in meta.items() if m['split'] == 'train' and m['regime'] == regime and any(u['latent'] == fid and u['deliberate'] for u in m['latent_uses'])]
+                        s = [n for n in uses if n in solved]
+                        b = [n for n in s if n in set(v['tasks'])]
+                        sy = [n for n in s if n in ssup.get(fid, set())]
+                        pairs += len(uses)
+                        solved_pairs += len(s)
+                        beh_pairs += len(b)
+                        syn_pairs += len(sy)
+                        both += len(set(b) & set(sy))
+                        latents_beh += v['count'] >= 2
+                        latents_syn += len(ssup.get(fid, set())) >= 2
+                        latents_any += (v['count'] >= 2) or (len(ssup.get(fid, set())) >= 2)
+                behavioural.append({'regime': regime, 'label': label, 'n_instances': len(per_seed), 'behavioural_er1': mstd(er1), 'behavioural_er2': mstd(er2),
+                                    'behavioural_support_mean': mstd(means), 'histogram': {str(k): hist.get(k, 0) for k in range(7)},
+                                    'pairs': pairs, 'solved_pairs': solved_pairs, 'behaviourally_supported_pairs': beh_pairs, 'syntactically_supported_pairs': syn_pairs,
+                                    'both_pairs': both, 'latents_behavioural_ge2': latents_beh, 'latents_syntactic_ge2': latents_syn, 'latents_either_ge2': latents_any,
+                                    'latents': sum(len(r['support']) for r in per_seed.values())})
+
     parity = read_json(RESULTS / 'parity.json') if (RESULTS / 'parity.json').exists() else None
     save_json(RESULTS / 'cells.json', {'budgets': BUDGETS, 'rounds': ROUNDS, 'labels': labels, 'cells': cells,
                                        'notes': ['Means ± sample SD over benchmark instances; pooled labels first average the training seeds within an instance.',
@@ -404,6 +500,7 @@ def analyze():
                                                  'training_solve_rate = solved persistent frontiers / 56 training tasks.']}, compact=False)
     save_json(RESULTS / 'contrasts.json', {'contrasts': contrasts, 'note': 'two-way paired bootstrap over instances and their held-out tasks; solved indicators averaged over training seeds for pooled labels'}, compact=False)
     save_json(RESULTS / 'per_latent.json', {'per_latent': per_latent, 'recovery_by_support': recovery_by_support, 'transitions': transitions,
+                                            'exposure_decomposition': decomposition, 'behavioural_exposure': behavioural,
                                             'notes': ['support = number of distinct training tasks whose persistent frontier structurally contains the latent (Phase 1 criterion; evaluation-only).',
                                                       'perfect_support = distinct training tasks whose generating program contains the latent (the support a perfect Wake would give).',
                                                       'recovered = behaviourally recovered by at least one invention of the final library (Phase 1 criterion).']}, compact=False)
@@ -411,7 +508,7 @@ def analyze():
                                              'note': 'closure = (FullDC - B) / (reference - B) with the reference named in the key; undefined when the reference equals B'}, compact=False)
     save_json(RESULTS / 'chain.json', chain, compact=False)
     save_json(RESULTS / 'training_detail.json', {'rows': training_detail}, compact=False)
-    write_tables(cells, cell, contrasts, con, per_latent, recovery_by_support, transitions, gaps, perfect_er2, chain, training_detail, parity, labels)
+    write_tables(cells, cell, contrasts, con, per_latent, recovery_by_support, transitions, gaps, perfect_er2, chain, training_detail, parity, labels, decomposition, behavioural)
     return {'records': len(records), 'cells': len(cells), 'contrasts': len(contrasts)}
 
 
@@ -420,7 +517,7 @@ def ci(c):
     return 'n/a' if not c or 'mean' not in c else f"{c['mean']:+.3f} [{c['paired_bootstrap_95_ci'][0]:.3f}, {c['paired_bootstrap_95_ci'][1]:.3f}]"
 
 
-def write_tables(cells, cell, contrasts, con, per_latent, recovery_by_support, transitions, gaps, perfect_er2, chain, training_detail, parity, labels):
+def write_tables(cells, cell, contrasts, con, per_latent, recovery_by_support, transitions, gaps, perfect_er2, chain, training_detail, parity, labels, decomposition=(), behavioural=()):
     L = ['# Generated tables (experiments/full_dreamcoder/analysis.py)', '']
     have = lambda regime, label, it=None: (regime, label, final_iteration(label) if it is None else it) in cell
     M = lambda regime, label, key, it=None, digits=3: fmt(cell[(regime, label, final_iteration(label) if it is None else it)]['metrics'].get(key), digits) if have(regime, label, it) else 'n/a'
@@ -488,6 +585,22 @@ def write_tables(cells, cell, contrasts, con, per_latent, recovery_by_support, t
           table(['Reuse', 'X', 'Cell', 'Latents', 'Recovered by B', 'Recovered by X', 'Mean support B', 'Mean support X'], rows), '']
     rows = [[t['regime'], t['X'], t['support_change']['raised'], t['support_change']['unchanged'], t['support_change']['lowered']] for t in transitions]
     L += [table(['Reuse', 'X', 'Support raised', 'Unchanged', 'Lowered'], rows), '']
+    rows = []
+    for d in decomposition:
+        rows.append([d['regime'], d['label'], d['pairs'], d['solved_pairs'], fmt(d['p_solved'], 2), d['supported_pairs'], fmt(d['p_supported_given_solved'], 2),
+                     d['latents'], d['latents_no_deliberate_task_solved'], d['latents_solved_but_unsupported'], d['latents_supported'],
+                     ' '.join(f"d{k}:{v['solved']}/{v['pairs']}" for k, v in d['by_depth'].items()),
+                     ' '.join(f"d{k}:{v['supported']}/{v['solved']}" for k, v in d['by_depth'].items() if v['solved'])])
+    L += ['Exposure decomposition over (active latent, deliberate training task) pairs, final iteration, pooled over instances: is the task solved, and if so does its persistent frontier structurally contain the latent?', '',
+          table(['Reuse', 'Arm', 'Pairs', 'Solved', 'P(solved)', 'Supported', 'P(supported given solved)', 'Latents', 'No deliberate task solved', 'Solved but never supported', 'Supported', 'Solved/pairs by depth', 'Supported/solved by depth'], rows), '']
+    if behavioural:
+        rows = [[b['regime'], b['label'], fmt(b['behavioural_support_mean'], 2), fmt(b['behavioural_er1'], 2), fmt(b['behavioural_er2'], 2),
+                 ' / '.join(str(b['histogram'][str(k)]) for k in range(7)), b['pairs'], b['solved_pairs'], b['behaviourally_supported_pairs'], b['syntactically_supported_pairs'], b['both_pairs'],
+                 fmt(b['behaviourally_supported_pairs'] / b['solved_pairs'] if b['solved_pairs'] else None, 2), fmt(b['syntactically_supported_pairs'] / b['solved_pairs'] if b['solved_pairs'] else None, 2),
+                 f"{b['latents_behavioural_ge2']}/{b['latents']}", f"{b['latents_syntactic_ge2']}/{b['latents']}", f"{b['latents_either_ge2']}/{b['latents']}"] for b in behavioural]
+        L += ['Behavioural exposure (a frontier subexpression computes F(x, v) on the 40 probes for some valid v, in any syntactic form) versus the Phase 1 syntactic criterion, final iteration:', '',
+              table(['Reuse', 'Arm', 'Mean behav. support', 'Behav. ER@1', 'Behav. ER@2', 'Histogram 0/1/2/3/4/5/6+', 'Pairs', 'Solved', 'Behav. supported', 'Syntactic supported', 'Both',
+                     'P(behav. given solved)', 'P(syntactic given solved)', 'Latents behav. >=2', 'Latents syntactic >=2', 'Latents either >=2'], rows), '']
 
     L += ['## Held-out solve rate S(B) at every candidate budget (final iteration; unsolved tasks have r > 10000)', '']
     eval_arms = [x for x in ['A0', 'A', 'B', ARM, f'{ARM}_rec', f'{ARM}_shuffle', f'{ARM}_t2', f'{ARM}_t2_rec', f'{ARM}_t3', f'{ARM}_t3_rec', POOL, f'{POOL}_rec', 'B_wake10000', 'PWS_B', 'O', 'O_uniform'] if x in labels or POOL in x]

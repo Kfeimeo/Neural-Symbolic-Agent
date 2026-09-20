@@ -241,9 +241,76 @@ def parity():
     return report
 
 
+BEHAVIOURAL_LABELS = ['B', 'B_wake10000', 'PWS_B'] + [f'{ARM}_t{ts}' for ts in sorted({t for v in TRAINING_SEEDS.values() for t in v})]
+
+
+def behavioural_exposure():
+    """Behavioural frontier support of every active latent in the final frontiers of B, B_wake10000, PWS_B and every FullDC run.
+
+    Cached per (regime, label, instance) in ``results/full_dreamcoder/behavioural_exposure.json``;
+    evaluation-only (reads the latent library and the recovery probes).
+    """
+    from .exposure import behavioural_support
+    path = RESULTS / 'behavioural_exposure.json'
+    store = read_json(path) if path.exists() else {'rows': {}, 'note': 'behavioural support = training tasks whose final persistent frontier holds a subexpression equal to F(x, v) on the 40 recovery probes for some valid v'}
+    k = BridgeKernel()
+    try:
+        for seed in SEEDS:
+            data = instance_dir(seed)
+            private = bench.read(data / 'private.json')
+            probes = private['recovery_probes']
+            latents = bench.read(data / 'latent_library.json')
+            for regime in REGIMES:
+                active = [f for f in latents if f['reuse'][regime]['deliberate_active']]
+                if not active:
+                    continue
+                train_names = [t.name for t in cohort_tasks(seed, 'train', regime)]
+                for label in BEHAVIOURAL_LABELS:
+                    key = f'{regime}/{label}/{seed}'
+                    if key in store['rows']:
+                        continue
+                    if label.startswith(ARM):
+                        ts = int(label.split('_t')[1])
+                        if ts not in TRAINING_SEEDS[regime]:
+                            continue
+                        p = round_path(run_dir(seed, regime, ts), ROUNDS)
+                        if not p.exists():
+                            continue
+                        rec = read_json(p)
+                        frontiers, names = rec['frontiers'], rec['task_names']
+                    elif label == 'PWS_B':
+                        p = PHASE1 / 'perfect_wake_shallow' / f'seed_{seed}' / regime / 'B.json.gz'
+                        if not p.exists():
+                            continue
+                        rec = read_json(p)
+                        if rec.get('timed_out') or rec.get('rewritten') is None:
+                            continue
+                        frontiers, names = rec['rewritten'], rec['task_names']
+                    else:
+                        p = round_path(PHASE1 / 'runs' / f'seed_{seed}' / regime / label, ROUNDS)
+                        if not p.exists():
+                            continue
+                        rec = read_json(p)
+                        frontiers, names = rec['frontiers'], rec['task_names']
+                    cache = {}
+                    support = behavioural_support(k, frontiers, names, active, probes, cache)
+                    store['rows'][key] = {'regime': regime, 'label': label, 'seed': seed, 'iteration': ROUNDS if label != 'PWS_B' else 1,
+                                          'solved_tasks': [n for n, f in zip(names, frontiers) if f['entries']],
+                                          'support': {fid: {'count': v['count'], 'tasks': v['tasks']} for fid, v in support.items()},
+                                          'witnesses': {fid: v['witnesses'][:3] for fid, v in support.items()}}
+                    save_json(path, store, compact=False)
+                    print(f"behavioural exposure {key}: " + ' '.join(f"{fid}={v['count']}" for fid, v in support.items()), flush=True)
+    finally:
+        try:
+            k.process.kill()
+        except Exception:
+            pass
+    return store
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('command', choices=['train', 'evaluate', 'parity', 'analyze', 'figures', 'all'])
+    parser.add_argument('command', choices=['train', 'evaluate', 'parity', 'behavioural-exposure', 'analyze', 'figures', 'all'])
     parser.add_argument('--workers', type=int, default=4)
     parser.add_argument('--regimes', nargs='+', default=None)
     parser.add_argument('--training-seeds', type=int, nargs='+', default=None)
@@ -254,6 +321,8 @@ def main():
         evaluate(args.workers, args.regimes, args.training_seeds)
     if args.command in ['parity', 'all']:
         parity()
+    if args.command in ['behavioural-exposure', 'all']:
+        behavioural_exposure()
     if args.command in ['analyze', 'all']:
         from .analysis import analyze
         analyze()
