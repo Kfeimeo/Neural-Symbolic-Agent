@@ -197,3 +197,18 @@ python -m experiments.full_dreamcoder.run analyze
 python -m experiments.full_dreamcoder.run figures
 python -m pytest tests/test_full_dreamcoder.py -q
 ```
+
+## Phase 3: equivalence-aware abstraction discovery
+
+`experiments/equivalence_abstraction/` adds B0–B3 frontier/proposal adapters to
+the frozen Phase 2 loop: original compression, reduction normalization,
+cost-defined E/R canonicalization, and e-class anti-unification with the original
+DreamCoder MDL gate. The [equation proofs and scope](experiments/equivalence_abstraction/EQUATIONS.md)
+and [runner documentation](experiments/equivalence_abstraction/README.md) describe
+the exact rules, resource limits and parameter-recovery diagnostics.
+
+Results and explicit missing-cell accounting are under
+`results/equivalence_abstraction/`. Final-frontier `replay` diagnostics are
+separate from full six-round training and held-out evaluation. Consult
+`PHASE3_REPORT.md` for actual completion status; implementation and smoke tests
+alone do not establish a recovery or solve-rate improvement.

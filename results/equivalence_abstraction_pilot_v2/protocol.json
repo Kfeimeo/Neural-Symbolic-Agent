@@ -1,0 +1,213 @@
+{
+ "phase": 3,
+ "parent": {
+  "phase": 2,
+  "seeds": [
+   101,
+   202,
+   303
+  ],
+  "regimes": [
+   "zero",
+   "low",
+   "medium",
+   "high"
+  ],
+  "arm": {
+   "FullDC": {
+    "method": "B",
+    "wake": 3000,
+    "recognition": "on",
+    "rounds": 6,
+    "compressor_iterations": 3,
+    "dream_draws": 64,
+    "recognition_steps": 600,
+    "recognition_objective": "bias_optimal",
+    "recognition_model": "task-conditioned AST bigram MLP of the frozen core (faithful/python/recognition.py)",
+    "training_seeds": {
+     "zero": [
+      1
+     ],
+     "low": [
+      1
+     ],
+     "medium": [
+      1,
+      2,
+      3
+     ],
+     "high": [
+      1
+     ]
+    },
+    "primary_training_seed": 1
+   }
+  },
+  "control_arm": "B (Phase 1): identical system with recognition off; read from results/abstraction_learning/evaluation",
+  "comparison_arms": [
+   "A0",
+   "A",
+   "B",
+   "O",
+   "O_uniform",
+   "B_wake10000",
+   "PWS_B",
+   "PWS_D",
+   "PW_D",
+   "PW_C",
+   "PWS_C"
+  ],
+  "training_search": {
+   "max_states": 3000000,
+   "max_size": 33,
+   "maximum_depth": 14,
+   "upper_bound": 100,
+   "top_k": 3
+  },
+  "evaluation_search": {
+   "max_states": 3000000,
+   "max_size": 33,
+   "maximum_depth": 14,
+   "upper_bound": 100,
+   "top_k": 3
+  },
+  "evaluation_budgets": [
+   100,
+   300,
+   1000,
+   3000,
+   10000
+  ],
+  "evaluation_modes": [
+   "library",
+   "recognition",
+   "shuffle"
+  ],
+  "final_only_modes": [
+   "shuffle"
+  ],
+  "metrics": [
+   "training solve rate per iteration",
+   "latent frontier support (distinct training tasks; Phase 1 structural criterion)",
+   "ER@1, ER@2 per iteration",
+   "behavioural precision / recall / F1 (Phase 1 criterion)",
+   "held-out solve rate at 100/300/1000/3000/10000 (library-only and recognition-guided)",
+   "first-solution rank distribution and S(B) with unsolved tasks as r > 10000",
+   "P(recovered | support >= 2) versus P(recovered | support < 2)",
+   "exposure / recovery / oracle gap closure against B, PWS_B and O"
+  ],
+  "benchmark_manifests": {
+   "101": {
+    "train.json": "924337ac4f73d18740ad4d8230ed9a97bacd04e1e72410ddc58c9d60b620a773",
+    "test.json": "467a989d41416f0d07dfede21a434ac392592dc1eec6c146011bd3d199d7f72b",
+    "latent_library.json": "10c8e9a97ef51d2c6a9261bde1944530fd6b2d75f599b451cc84f440047d1150",
+    "private.json": "1af64135bc652598a55923888cc113517712ae011c998f587b14c10ada0307c9",
+    "split_validation.json": "52d0f547725e42f0693cc1d96d9ba58fd571d38ac73d2e6c7790dd368758c4d0",
+    "structural_statistics.json": "4d40d5867fb479381bc4b7fa4524d5084417869b1777c9acaee67c823d6fadb5",
+    "calibration.json": "ab40e55b3b35135957ffadfa9f18a55b045f9ab53247921ba7bb4de9e84d6e12"
+   },
+   "202": {
+    "train.json": "6a538625d49468c3043c68d88e7d7e270d86c6a55274fe298c1ce91b277981d1",
+    "test.json": "b2b8f31ac3af65515d5667b6495232897bec98da8c4b86e43b55fe4f2018c92e",
+    "latent_library.json": "3d96eb6a75b2bdd57c7b555f8258cd1dc671181741b8fa34431a61f28da1b4a8",
+    "private.json": "1220ba0009f526e8ae70e5a4cf160fd207f8bb73554b5d744a456ae7b9470ca5",
+    "split_validation.json": "5744ce51c33068500c64e9b7a5d1ed7a9efc0354d90fa8a6662fd333fc49ae0f",
+    "structural_statistics.json": "b25f9cde2c97f131fe6fd40ac35bc91897c7846b8e013973bd509420f94e4b51",
+    "calibration.json": "0d04c58df584ece6962990aed09a150ce949931bf708022c7f62c61a493c7c28"
+   },
+   "303": {
+    "train.json": "131fe584adeda2c4a86f93f75ec0730798c98c605562a421ecdea18fae3f6b48",
+    "test.json": "ddb33b0bdcc444aa208bb2ce279174f23e5c32409591f0b260454cdc8f4ca7e8",
+    "latent_library.json": "46562dac20e02285e256d5c4b8a267317ca2a5886b32b5e52c59b2795e574102",
+    "private.json": "db217e5ee3bbf240b9002b910b6820d04dd872acf19eef3fee0a04c73913fd06",
+    "split_validation.json": "85cac521b3bfd01ecf55e199e32061196d6ae330dfd202ca3be96df0086ef27c",
+    "structural_statistics.json": "70bc981412569973a4fad4f7db046da6517e895d9b5fcd60201d92d159439816",
+    "calibration.json": "13122a4f41a4677a08569c192ce988777f78c8d1f31e0a79ee5bc4511698f96a"
+   }
+  },
+  "phase1_protocol_sha256": "a0aa57c2db2cd498887197a4ffc2af99258f2f3f56c92da3197e5cf6647a8a15",
+  "policy": [
+   "Protocol fixed before any Phase 2 run; benchmark instances and the fixed core are hash-verified before and after every stage.",
+   "No compressor, DSL, solver, benchmark, budget or Phase 1 artefact is modified; the only change is recognition ON.",
+   "No arm, budget, seed or parameter is changed after observing results."
+  ],
+  "written": "2026-09-20 10:07:27"
+ },
+ "source_hashes": {
+  "experiments/abstraction_learning/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "experiments/abstraction_learning/analysis.py": "66f672de5087f0b273dea8e7709a0fb8c3eec05a812cba7610f6c1a1266d1d02",
+  "experiments/abstraction_learning/compressors.py": "5716ea586eb36cec15c5e08ed8f60df539db6cded889726039491554a5e5849e",
+  "experiments/abstraction_learning/evaluation.py": "851c3865d4579dd6801909d3a7e1672ea2932fd3123ea9dfadb8673bc845eed5",
+  "experiments/abstraction_learning/figures.py": "0485b57250da00b6c638e7ab2cb13920a8e2b949c68efd7be51376ad451dcb03",
+  "experiments/abstraction_learning/learner.py": "f8ecc82d39581efcd7d5b615d7ca23d993f7425261fbf4841eef6a8fa03919f4",
+  "experiments/abstraction_learning/run.py": "79846835183729bfec8fa2b27eb67661fbdeb0437d3360d18bbf4839f3517c2c",
+  "experiments/equivalence_abstraction/__init__.py": "d8c310e3960c875891604ebf875e0360b043796a33b5a29ddd8925545a5b7fc8",
+  "experiments/equivalence_abstraction/analysis.py": "c1760056ff5b0905f61e6ce4c2eabb805698a6afb426a3e4c60552e17e4f42ff",
+  "experiments/equivalence_abstraction/compressor.py": "6168c1be9aec66bae4eb9cf73a55f16a2b6a5a92e0a61cf1e3cfe64de081a308",
+  "experiments/equivalence_abstraction/egraph.py": "94656e96ef08112632bf89ddf2b1e4c34b6679f0ce40d5aacf678d660337c257",
+  "experiments/equivalence_abstraction/equations.py": "e7eb734b5475e07987ed206fc178ed169cd3f7bd64c93bc774fa88a0d7f05a92",
+  "experiments/equivalence_abstraction/learner.py": "7826db2cab4656792825b992d13f8d49ba44affbd14d031d3cbce0193d2d2c7a",
+  "experiments/equivalence_abstraction/metrics.py": "05a9a569fce3cf5a8a1117b8b50052bf7ba0a044e40de62f681cf56ffa4672f0",
+  "experiments/equivalence_abstraction/run.py": "a5c806c06f757186419b39be3db2950a02b85929164c5fdc79578412d362e74a",
+  "experiments/full_dreamcoder/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "experiments/full_dreamcoder/analysis.py": "610e043d3bc6b465bc888ec9ee51134d9978deccc0c060f962060b166811e334",
+  "experiments/full_dreamcoder/evaluation.py": "a54a5e46ae626b61f6528aa12aa8dab00532ff2be081aac7cdc73a86069b340c",
+  "experiments/full_dreamcoder/exposure.py": "343a8678ddcc97eec18b5656edfa940e9ca84bf571c0b6ee2d83f011e10a7b85",
+  "experiments/full_dreamcoder/figures.py": "5f4c1e035a9556b8fbcfe842c3a8de31013cb30d08d24e82aa6e12d48b1f18b3",
+  "experiments/full_dreamcoder/learner.py": "5b1fb220e379977fa2420dc8fc8792fb3e31517c11b48191ad0dc55d6b52ba1b",
+  "experiments/full_dreamcoder/run.py": "a3a975d6b8ed11989d6ef83a4fcf1ed28017172b9a293cfe4ec655b00cca557a",
+  "faithful/compression/audit.py": "e7fa9dfdafbc2801c89a0ea9d8ae99dae09345aa63fe35ced52b63a764f96448",
+  "faithful/compression/Bridge.hs": "cc9761dff057d6003f39e7addf0b4a3d201bc8f94364806f2b4fe817e893d8ba",
+  "faithful/compression/interface.py": "661db8e272994d6f289a53ec0154f62ef0c15b4eafdce03ee1d1e6c0b1782db6",
+  "faithful/compression/original.py": "5e5616b93943137d75147554551f71200a689cc90d956c5980ae99e4cdf4e063",
+  "faithful/compression/report.py": "2c8f2307552f3aced143e70e5a3343abed2aed200c48761ec434b2da97c8d949",
+  "faithful/compression/stitch.py": "36958e1b61a9f47e2f780a267cfc90181c8066bf4f2fbefad63de40e77a68302",
+  "faithful/compression/study.py": "fa873a028c16ce225f698269b95e58f4a1b03895008e357f3d34226f6d37e253",
+  "faithful/haskell/Agenda.hs": "f780d823df9b1fc92b5962332a3050a8cb74fe20907768a53a33767900602559",
+  "faithful/haskell/Compression.hs": "b8befb475b8b008b594ce10803c88c2d1c1d98faf71e1170455bde2afc91ce5e",
+  "faithful/haskell/Evaluation.hs": "f57fd46bfa024d6917eb45f60bbd99b8018cd1157892e417b026cc606a5d0b5a",
+  "faithful/haskell/Grammar.hs": "2d043683279a51d67a10852d033c453d21459f977652ab1d518a290c9cf244cb",
+  "faithful/haskell/Json.hs": "9419d420eed6ffeb86600b9b806ba5d8cdcfda9caf84d6a830a3bbd81536fd84",
+  "faithful/haskell/Main.hs": "6c1f5deb518d89fbae4acf4df114308eed055fdb66e5a835fc5b383c9542dd7a",
+  "faithful/haskell/Search.hs": "766f8a529581c1f2d4a2de7f1eb2a604fafe47b9463e675d1a91f14412eec9d0",
+  "faithful/haskell/Syntax.hs": "771899618591b0515c5048cfe09edb8d8c1f84209a2265677aaf37839d9304b3",
+  "faithful/python/controlled_audit.py": "7a01cd9ec8c39fd5b8b7e78a1f4f9eccb19d4a550a254ed62240b77abf87a55b",
+  "faithful/python/controlled_data.py": "7988443f9e23091bf79b92b3fca83701633a25266827d0709d0050a11039ce67",
+  "faithful/python/controlled_finish.py": "6acbc9e778f72dd699aa883713b00260f8afb75835516ec06c53de6da835840d",
+  "faithful/python/controlled_learner.py": "c5608def089315e542640fc35440c90f0d7aef3ceea58e63c68389f932976e1e",
+  "faithful/python/controlled_metrics.py": "23bd873db8d5caf843bfa5f839509437123b27b9af407cd50989feaa6923b387",
+  "faithful/python/controlled_profile.py": "08170bfd641ac8b1968931867d4db7f0c154d17b5b8c31c611839979f18ecef1",
+  "faithful/python/controlled_provenance.py": "c71fa59e3db4979b6ebd0e7ebd98c9dd12711e6e335ce3f7ccba34a9be3137af",
+  "faithful/python/controlled_report.py": "aa3006b11e3f66460afb381dea36c18ed68eb6b52ed9aa9f9261b9a7b66b76dd",
+  "faithful/python/controlled_run.py": "456b2275a837dafb5283303da1025c491f3d4b479ed52067d64831feba5d8218",
+  "faithful/python/ec.py": "e0a70dfc974c2ba458c17198545f5ec96b4e5d7b0da36d84caae801cc7f39509",
+  "faithful/python/grid.py": "144154dbc9b1f6d217b75c65f3ab02f869fd4812252a02be71f07c84b9e2c570",
+  "faithful/python/kernel.py": "87987fe042efdac04fb93edfeadcf2adc1164d52f6a83d586c1e82bd98d4e663",
+  "faithful/python/recognition.py": "2e95620777bf7443f27f648cb0cac30a429826652059dcf50df12ecb66d4a039",
+  "faithful/python/toy.py": "d20c69812c9f7022eeb92bc268688ac7cc058f98b7b481b16bc7535cec4fa971",
+  "results/full_dreamcoder/protocol.json": "9ea98d294d35510be012c2b94a721001d1963c4fbe904f5c9de06efa0cac29c8"
+ },
+ "arms": [
+  "B0",
+  "B1",
+  "B2",
+  "B3"
+ ],
+ "cost": "(AST node count, lexicographic immutable term)",
+ "equation_system": "equations.py; semantics-derived; no probe-based equations",
+ "saturation_cap": 512,
+ "au_pair_cap": 256,
+ "max_au_parameters": 2,
+ "on_resource_limit": "fail cell explicitly; no truncated equivalence-space claim",
+ "frontier_policy": "preserve likelihood, deduplicate identical representations; never pad or add solutions",
+ "au_scope": "first-order application bodies; inventions opaque; at most grid + one parameter",
+ "mdl": "frozen Haskell compression_objective/compression_trial, unchanged constants and inside-outside",
+ "parameter_metric": "same argument types up to permutation, all valid values; finite-probe witness",
+ "primary_questions": [
+  "RR recovery improvement",
+  "canonical exposure gap closure",
+  "B3 versus B2",
+  "parameter generalisation versus specialisation",
+  "medium syntactic gap attribution"
+ ]
+}
