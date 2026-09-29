@@ -49,6 +49,8 @@ class Abstraction:
         return body
 
     def __str__(self) -> str:
+        if not self.param_types:
+            return f"{self.name} = {self.body}"
         params = " ".join(f"x{i}:{t}" for i, t in enumerate(self.param_types))
         return f"{self.name} = λ{params}. {self.body}"
 

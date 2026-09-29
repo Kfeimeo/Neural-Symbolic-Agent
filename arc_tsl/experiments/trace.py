@@ -18,7 +18,7 @@ def trace_markdown(task_id: str, task: dict, baseline: dict, tsl_record: dict, c
     for i, (x, y) in enumerate(task["train"]):
         L += [f"### pair {i}", "", "```", grid_to_text(x), "", "→", "", grid_to_text(y), "```", ""]
     L += ["## Baseline A: fixed ML+DSA search over all pairs", ""]
-    L += ["```", _dump(baseline), "```", ""]
+    L += ["```", _dump(baseline.get("search") or {}), "```", ""]
     rec = tsl_record["conditions"][condition]
     L += [f"## Method B ({condition}): local wake → local compression → TSL_τ → re-wake", ""]
     L += ["### Local wake (one micro-task per pair)", ""]
