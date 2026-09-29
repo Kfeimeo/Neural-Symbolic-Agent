@@ -206,4 +206,61 @@ the fixed DSL (631×; wake cost 188 448 states), with program length 3 vs 8.
 
 ### Deep-budget diagnostic run (`results/arc_tsl/deep`)
 
-DEEP_RESULTS_PLACEHOLDER
+Hand-picked (not deterministic) diagnostic on six tasks whose reference
+programs are expressible: two easy ones (`25ff71a9`, `a79310a0`), three
+"expressible but deep" ones (`bb43febb` 11, `5521c0d9` 11, `67385a82` 13) and
+the partial-success task `63613498`.  Budget: `600k` states, `300 s` per
+search, 2 workers (a 1M-state run was killed by the memory cgroup at 4.4 GB
+per worker: the enumerator keeps the values of every retained term).
+
+| task | baseline | tsl re-wake | reweight re-wake | tsl_reweight re-wake | wake cost | note |
+|---|---:|---:|---:|---:|---:|---|
+| 25ff71a9 | 7 370 states, L=6 | **106** (`(#f0 $0)`, L=2, MDL 9) | 391 | **7** | 18 388 | whole-program abstraction |
+| a79310a0 | 93 743 states, L=8 | **106** (L=2, MDL 11) | 3 879 | **7** | 207 071 | whole-program abstraction |
+| bb43febb | timeout @ level 8 | timeout @ 8 | timeout | timeout | 1.2 M | reference cost 11; wake also stops at 8 |
+| 5521c0d9 | timeout @ level 8 | timeout @ 8 | timeout | timeout | 1.8 M | reference cost 11 |
+| 67385a82 | timeout @ level 8 | timeout @ 8 | timeout | timeout | 2.4 M | reference cost 13; one pair reaches 9 |
+| 63613498 | timeout @ level 8 | `#f0(Color, Set)` invented, timeout @ 8 | timeout | timeout | 0.19 M | hole isolated, relational Color expr. still too deep |
+
+Doubling the state budget (300k → 600k) did not add a cost level: level 8 of
+this language contains several hundred thousand observationally distinct
+terms, so bottom-up enumeration grows by roughly an order of magnitude per
+level and the per-pair wake gains at most one level.
+
+### What v0.1 establishes, and what it does not
+
+1. The closed loop `wake → typed anti-unification + MDL compression → re-wake`
+   works on real ARC tasks and on the synthetic example, with all statistics,
+   MDL accounting, expansion/contraction and ablations in place.
+2. When `TSL_τ` captures the shared structure, the full-task search collapses
+   (10²–10³× fewer expanded states, 2–3× shorter programs), and `θ_τ` alone
+   gives ~10×.  Counting the wake, the pipeline is *more* expensive on tasks
+   the fixed DSL already solves (ratio ≈ 0.4): the benefit can only appear
+   on tasks where the full search fails but the pairwise searches succeed.
+3. Exactly that regime exists (`63613498`: 3/3 pairs solved, 0 shared
+   programs; 6 of the 130 tasks solve ≥1 pair locally while the baseline
+   fails), but v0.1's search cannot reach the cost levels where the
+   task-level programs of those tasks live (11–24 vs. a reachable 8).
+   So the hypothesis is **neither confirmed nor refuted on real ARC yet**: the
+   evidence is a clear failure analysis rather than a win.
+4. The bottleneck is not the ontology (reference programs exist for many
+   tasks) but enumeration depth.  The next steps that do not change the
+   research design are: a top-down / best-first enumerator with grammar
+   priors (as in `dreamcoder/search.py`) so that `θ_τ` and `A_τ` prune
+   instead of merely re-ordering levels; anti-unification that can abstract
+   *within* one pair's frontier (needs richer frontiers than OE allows);
+   and memory-bounded OE (values are currently kept for every retained term).
+
+### Reproducing the tables
+
+```bash
+python -m arc_tsl.experiments.run_all --tasks 130 --seed 0 --in-scope-only --time-limit 30 --wake-time-limit 20 --out results/arc_tsl/main --workers 4
+python -m arc_tsl.experiments.diagnose --all --out results/arc_tsl/main
+python -m arc_tsl.experiments.trace --out results/arc_tsl/main --task 63613498
+python -m arc_tsl.experiments.run_all --task-ids 25ff71a9,a79310a0,bb43febb,5521c0d9,67385a82,63613498 --max-states 600000 --time-limit 300 --out results/arc_tsl/deep --workers 2
+python -m arc_tsl.experiments.synthetic_demo --out results/arc_tsl/synthetic_demo.md
+```
+
+Wall-clock numbers depend on the machine; expanded-state counts, programs,
+abstractions and MDL values are deterministic.
+
