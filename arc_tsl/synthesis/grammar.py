@@ -2,10 +2,14 @@
 production costs.
 
 Cost convention (shared by every experimental condition):
-  * each production occurrence (primitive, invented abstraction, variable)
-    costs an integer weight, 1 under the uniform grammar;
+  * each production occurrence costs its fixed *base* weight: 1 for every
+    primitive, variable and invented abstraction, except the ML logic /
+    arithmetic combinators whose base weight is set in ``ml/generic.py``
+    (a fixed, task-independent prior of Base_{ML+DSA});
   * application nodes cost 0, lambda nodes cost ``lam_cost`` (1);
-  * L(A) = sum over abstractions of L(body) + 1.
+  * L(A) = sum over abstractions of L(body) + 1;
+  * ``costs`` holds the optional task-local theta_tau overrides, which only
+    change the search order (``description_length(uniform=True)`` ignores them).
 """
 from __future__ import annotations
 
@@ -53,7 +57,7 @@ class Abstraction:
 class Library:
     primitives: dict[str, Primitive]
     abstractions: dict[str, Abstraction] = field(default_factory=dict)
-    costs: dict[str, int] = field(default_factory=dict)
+    costs: dict[str, int] = field(default_factory=dict)     # theta_tau overrides
     var_cost: int = 1
     lam_cost: int = 1
 
@@ -88,8 +92,13 @@ class Library:
     def production_names(self) -> list[str]:
         return list(self.primitives) + list(self.abstractions)
 
+    def base_cost(self, name: str) -> int:
+        p = self.primitives.get(name)
+        return p.cost if p is not None else 1
+
     def cost(self, name: str) -> int:
-        return self.costs.get(name, 1)
+        """Search cost: theta_tau override if present, else the base weight."""
+        return self.costs.get(name, self.base_cost(name))
 
     def signature(self, name: str) -> tuple[tuple[TypeLike, ...], TypeLike]:
         if name in self.primitives:
@@ -145,17 +154,17 @@ class Library:
 
     # --- description length ----------------------------------------------
     def description_length(self, t: Term, uniform: bool = True) -> int:
-        """L(t | this library).  ``uniform`` ignores learned costs."""
+        """L(t | this library) in base weights; ``uniform=False`` applies theta_tau."""
         if isinstance(t, Var):
             return 1 if uniform else self.var_cost
         if isinstance(t, Hole):
             return 1
         if isinstance(t, Prim):
             self._check(t.name)
-            return 1 if uniform else self.cost(t.name)
+            return self.base_cost(t.name) if uniform else self.cost(t.name)
         if isinstance(t, App):
             self._check(t.name)
-            head = 1 if uniform else self.cost(t.name)
+            head = self.base_cost(t.name) if uniform else self.cost(t.name)
             return head + sum(self.description_length(a, uniform) for a in t.args)
         if isinstance(t, Abs):
             return (1 if uniform else self.lam_cost) + self.description_length(t.body, uniform)

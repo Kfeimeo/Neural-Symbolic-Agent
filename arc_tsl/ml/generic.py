@@ -10,20 +10,26 @@ from fractions import Fraction
 from ..ml.types import BOOL, INT, Arrow, Type
 from .primitives import EvalError, Primitive, constant, function
 
+# Fixed base weight of the ML logic / arithmetic combinators (add, sub, neg,
+# eq_int, lt, not, and, or, vadd, vsub, vneg, vscale).  Part of the fixed
+# Base_{ML+DSA} prior, identical in every condition; never tuned per task.
+COMBINATOR_COST = 2
+
 
 def bool_int_primitives() -> list[Primitive]:
     P: list[Primitive] = []
     for n in (0, 1, 2, 3):
         P.append(constant(f"i{n}", INT, n, description="integer constant"))
+    c = COMBINATOR_COST
     P += [
-        function("add", (INT, INT), INT, lambda a, b: a + b),
-        function("sub", (INT, INT), INT, lambda a, b: a - b),
-        function("neg", (INT,), INT, lambda a: -a),
-        function("eq_int", (INT, INT), BOOL, lambda a, b: a == b),
-        function("lt", (INT, INT), BOOL, lambda a, b: a < b),
-        function("not", (BOOL,), BOOL, lambda a: not a),
-        function("and", (BOOL, BOOL), BOOL, lambda a, b: a and b),
-        function("or", (BOOL, BOOL), BOOL, lambda a, b: a or b),
+        function("add", (INT, INT), INT, lambda a, b: a + b, cost=c),
+        function("sub", (INT, INT), INT, lambda a, b: a - b, cost=c),
+        function("neg", (INT,), INT, lambda a: -a, cost=c),
+        function("eq_int", (INT, INT), BOOL, lambda a, b: a == b, cost=c),
+        function("lt", (INT, INT), BOOL, lambda a, b: a < b, cost=c),
+        function("not", (BOOL,), BOOL, lambda a: not a, cost=c),
+        function("and", (BOOL, BOOL), BOOL, lambda a, b: a and b, cost=c),
+        function("or", (BOOL, BOOL), BOOL, lambda a, b: a or b, cost=c),
     ]
     return P
 
@@ -36,10 +42,10 @@ def vec2_primitives(VEC2: Type) -> list[Primitive]:
         constant("down", VEC2, (F(1), F(0))),
         constant("left", VEC2, (F(0), F(-1))),
         constant("right", VEC2, (F(0), F(1))),
-        function("vadd", (VEC2, VEC2), VEC2, lambda a, b: (a[0] + b[0], a[1] + b[1])),
-        function("vsub", (VEC2, VEC2), VEC2, lambda a, b: (a[0] - b[0], a[1] - b[1])),
-        function("vneg", (VEC2,), VEC2, lambda a: (-a[0], -a[1])),
-        function("vscale", (INT, VEC2), VEC2, lambda k, a: (k * a[0], k * a[1])),
+        function("vadd", (VEC2, VEC2), VEC2, lambda a, b: (a[0] + b[0], a[1] + b[1]), cost=COMBINATOR_COST),
+        function("vsub", (VEC2, VEC2), VEC2, lambda a, b: (a[0] - b[0], a[1] - b[1]), cost=COMBINATOR_COST),
+        function("vneg", (VEC2,), VEC2, lambda a: (-a[0], -a[1]), cost=COMBINATOR_COST),
+        function("vscale", (INT, VEC2), VEC2, lambda k, a: (k * a[0], k * a[1]), cost=COMBINATOR_COST),
     ]
 
 

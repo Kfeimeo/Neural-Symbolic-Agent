@@ -19,6 +19,7 @@ class Primitive:
     implementation: Callable[..., Any]
     layer: str = "ml"               # "ml" | "dsa" | "invented"
     description: str = ""
+    cost: int = 1                   # fixed base production cost (part of Base, never task-tuned)
 
     @property
     def arguments(self) -> tuple:
@@ -34,5 +35,5 @@ def constant(name: str, typ: Type, value: Any, layer: str = "ml", description: s
 
 
 def function(name: str, args: tuple, result: Type, impl: Callable[..., Any], layer: str = "ml",
-             description: str = "") -> Primitive:
-    return Primitive(name, Arrow(tuple(args), result), impl, layer, description)
+             description: str = "", cost: int = 1) -> Primitive:
+    return Primitive(name, Arrow(tuple(args), result), impl, layer, description, cost)
