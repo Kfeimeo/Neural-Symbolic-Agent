@@ -1,0 +1,68 @@
+{
+  "_note": "Human-written reference programs used ONLY by experiments/diagnose.py to classify failures (expressible-but-out-of-reach vs. inexpressible). They are never read by the search, the compressor, or task selection. REFERENCE_DOES_NOT_SOLVE means the attempted reference is wrong or the task is not expressible in v0.1; it is not evidence either way.",
+  "programs": {
+    "25ff71a9": {
+      "program": "(map (λObject. (translate $0 down)) $0)"
+    },
+    "a79310a0": {
+      "program": "(map (λObject. (recolor (translate $0 down) c2)) $0)"
+    },
+    "3c9b0459": {
+      "program": "(map (λObject. (rotate $0 r180)) $0)"
+    },
+    "3aa6fb7a": {
+      "program": "(map (λObject. (add_region $0 rg_bbox c1)) $0)"
+    },
+    "67385a82": {
+      "program": "(map (λObject. (if_obj (lt i2 (size $0)) (recolor $0 c8) $0)) $0)",
+      "connectivity": 4
+    },
+    "bb43febb": {
+      "program": "(map (λObject. (add_region (recolor (remove_region $0 rg_boundary) c2) rg_neighbors8 c5)) $0)"
+    },
+    "5521c0d9": {
+      "program": "(map (λObject. (translate $0 (vec (neg (height $0)) i0))) $0)"
+    },
+    "7f4411dc": {
+      "program": "(filter (λObject. (lt i1 (size $0))) $0)",
+      "connectivity": 4
+    },
+    "d511f180": {
+      "program": "(map (λObject. (replace_color (replace_color (replace_color $0 c5 c0) c8 c5) c0 c8)) $0)",
+      "background": "most_frequent"
+    },
+    "b27ca6d3": {
+      "program": "(map (λObject. (if_obj (eq_int (size $0) i2) (add_region $0 rg_neighbors8 c3) $0)) $0)"
+    },
+    "d2abd087": {
+      "program": "(map (λObject. (if_obj (eq_int (size $0) (add i3 i3)) (recolor $0 c2) (recolor $0 c1))) $0)"
+    },
+    "6e82a1ae": {
+      "program": "(map (λObject. (if_obj (eq_int (size $0) i2) (recolor $0 c3) (if_obj (eq_int (size $0) i3) (recolor $0 c2) (recolor $0 c1)))) $0)"
+    },
+    "aabf363d": {
+      "program": "(map (λObject. (recolor $0 (dominant_color (argmin (λObject. (size $0)) $1)))) (delete $0 (argmin (λObject. (size $0)) $0)))"
+    },
+    "c8f0f002": {
+      "program": "(map (λObject. (replace_color $0 c7 c5)) $0)",
+      "background": "most_frequent"
+    },
+    "b1948b0a": {
+      "program": "(map (λObject. (replace_color $0 c6 c2)) $0)",
+      "background": "most_frequent"
+    },
+    "a5313dff": {
+      "program": "(map (λObject. (add_region $0 rg_bbox_minus_support c1)) $0)"
+    },
+    "6f8cd79b": {
+      "program": "(map (λObject. (add_region $0 rg_boundary c8)) $0)",
+      "background": "most_frequent"
+    },
+    "d364b489": {
+      "program": "(map (λObject. (add_region $0 rg_neighbors4 c1)) $0)"
+    },
+    "913fb3ed": {
+      "program": "(map (λObject. (add_region $0 rg_neighbors8 c1)) $0)"
+    }
+  }
+}

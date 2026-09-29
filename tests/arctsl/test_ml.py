@@ -44,3 +44,9 @@ def test_description_length_convention():
     assert L.description_length(P) == 8
     assert L.description_length(Var(0)) == 1
     assert L.with_costs({"map": 3}).description_length(P, uniform=False) == 10
+
+
+def test_parser_round_trips_pretty_printer():
+    from arc_tsl.ml.parser import parse_term
+    for t in (P, Abs(OBJECT, App("size", (Var(0),))), App("#f0", (Prim("right"), Var(0))), Prim("c3")):
+        assert parse_term(str(t)) == t
