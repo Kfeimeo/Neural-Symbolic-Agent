@@ -1,5 +1,9 @@
 # Minimal DreamCoder V1
 
+> **ARC-TSL v0.1** (task-specific language induction for ARC-AGI-1 program synthesis) lives in
+> [`arc_tsl/`](arc_tsl/README.md) with its design note in [`docs/ARC_TSL_DESIGN.md`](docs/ARC_TSL_DESIGN.md).
+> Tests: `python -m pytest tests/arctsl -q`. It is pure Python and does not need torch.
+
 当前 Faithful DreamCoder 的 controlled benchmark 入口是
 [`CONTROLLED_BENCHMARK_REPORT.md`](CONTROLLED_BENCHMARK_REPORT.md) 与
 [`CONTROLLED_EXPERIMENT_REPORT.md`](CONTROLLED_EXPERIMENT_REPORT.md)，数据位于
