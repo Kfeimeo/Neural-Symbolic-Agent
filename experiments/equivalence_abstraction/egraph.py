@@ -102,7 +102,7 @@ def holes(p):
     return set().union(*(holes(c) for c in p[2])) if p[0] == 'node' else set()
 
 
-def anti_unify(graph, a, b, max_parameters=2, limit=256):
+def anti_unify(graph, a, b, max_parameters=5, limit=256):
     memo = {}
     def go(a, b, visiting):
         key = a, b
