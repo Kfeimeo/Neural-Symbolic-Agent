@@ -4,16 +4,32 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "minimal-dreamcoder"
-version = "0.1.0"
+version = "0.2.0"
+description = "Faithful DreamCoder: Haskell symbolic kernel, PyTorch recognition, pluggable domains and compression backends"
 requires-python = ">=3.11"
 dependencies = ["torch>=2.2"]
 
 [project.optional-dependencies]
+# Stitch abstraction learning backend (faithful.lib.stitch / StitchCompressor).
+# A matching wheel is also vendored under faithful/vendor for Python 3.12 on Windows.
+stitch = ["stitch_core==0.1.29"]
+# Historical reference tests against the pinned ellisk42/ec checkout.
+reference = ["frozendict==2.4.7"]
 test = ["pytest>=8"]
 
+[project.scripts]
+faithful-kernel = "faithful.lib.__main__:main"
+
 [tool.setuptools.packages.find]
-include = ["dreamcoder*", "arc_tsl*"]
+include = ["dreamcoder*", "arc_tsl*", "faithful*"]
+exclude = ["faithful.results*", "faithful.reference*", "faithful.vendor*", "faithful.tests*", "faithful.build*"]
+namespaces = false
+
+[tool.setuptools.package-data]
+# Haskell sources ship with the wheel so `python -m faithful.lib build` works from an install.
+faithful = ["haskell/*.hs", "compression/*.hs", "versionspace/*.hs", "domains/*.hs", "protocol/README.md"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-pythonpath = ["."]
+# faithful/vendor supplies stitch_core/frozendict when they are not installed.
+pythonpath = [".", "faithful/vendor"]

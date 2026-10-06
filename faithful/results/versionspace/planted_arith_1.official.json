@@ -1,0 +1,423 @@
+{
+  "DSL": {
+    "logVariable": -0.4046156968933179,
+    "productions": [
+      {
+        "expression": "#(lambda (if (eq? (- 0 0) 1) $0 $0))",
+        "logProbability": -1.1033832087815396
+      },
+      {
+        "expression": "#(lambda (* (* $0 0) 0))",
+        "logProbability": -0.7264024265448836
+      },
+      { "expression": "0", "logProbability": -0.8492067228003615 },
+      { "expression": "1", "logProbability": -0.8099443101848141 },
+      { "expression": "+", "logProbability": -1.0879008515346795 },
+      { "expression": "-", "logProbability": -1.0561475076939648 },
+      { "expression": "*", "logProbability": -0.9996118847232838 },
+      { "expression": "mod", "logProbability": -1.0210610800467803 },
+      { "expression": "if", "logProbability": -1.1465508884438682 },
+      { "expression": "eq?", "logProbability": -0.125167635156886 },
+      { "expression": "gt?", "logProbability": -0.09237781233389519 },
+      { "expression": "is-prime", "logProbability": -0.02985282702263614 }
+    ]
+  },
+  "frontiers": [
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          { "constructor": "int", "arguments": [] },
+          { "constructor": "int", "arguments": [] }
+        ]
+      },
+      "programs": [
+        {
+          "program": "(lambda (#(lambda (if (eq? (- 0 0) 1) $0 $0)) $0))",
+          "logLikelihood": 0.0
+        },
+        {
+          "program":
+            "(lambda (* $0 (#(lambda (if (eq? (- 0 0) 1) $0 $0)) 1)))",
+          "logLikelihood": 0.0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "list",
+            "arguments": [ { "constructor": "int", "arguments": [] } ]
+          },
+          { "constructor": "int", "arguments": [] }
+        ]
+      },
+      "programs": [
+        {
+          "program":
+            "(lambda (mod (#(lambda (if (eq? (- 0 0) 1) $0 $0)) 1) 1))",
+          "logLikelihood": 0.0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "list",
+            "arguments": [ { "constructor": "int", "arguments": [] } ]
+          },
+          { "constructor": "int", "arguments": [] }
+        ]
+      },
+      "programs": [
+        {
+          "program": "(lambda (#(lambda (* (* $0 0) 0)) 0))",
+          "logLikelihood": 0.0
+        },
+        {
+          "program": "(lambda (#(lambda (if (eq? (- 0 0) 1) $0 $0)) 1))",
+          "logLikelihood": 0.0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          { "constructor": "int", "arguments": [] },
+          { "constructor": "int", "arguments": [] }
+        ]
+      },
+      "programs": [
+        {
+          "program": "(lambda (#(lambda (* (* $0 0) 0)) $0))",
+          "logLikelihood": 0.0
+        },
+        {
+          "program": "(lambda (if (is-prime 1) (- 1 1) 0))",
+          "logLikelihood": 0.0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          { "constructor": "int", "arguments": [] },
+          { "constructor": "int", "arguments": [] }
+        ]
+      },
+      "programs": [
+        {
+          "program": "(lambda (#(lambda (* (* $0 0) 0)) (- $0 $0)))",
+          "logLikelihood": 0.0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "list",
+            "arguments": [ { "constructor": "int", "arguments": [] } ]
+          },
+          { "constructor": "int", "arguments": [] }
+        ]
+      },
+      "programs": [
+        {
+          "program": "(lambda (#(lambda (if (eq? (- 0 0) 1) $0 $0)) 0))",
+          "logLikelihood": 0.0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          { "constructor": "int", "arguments": [] },
+          {
+            "constructor": "->",
+            "arguments": [
+              {
+                "constructor": "list",
+                "arguments": [ { "constructor": "int", "arguments": [] } ]
+              },
+              {
+                "constructor": "list",
+                "arguments": [ { "constructor": "int", "arguments": [] } ]
+              }
+            ]
+          }
+        ]
+      },
+      "programs": [
+        {
+          "program":
+            "(lambda (lambda (#(lambda (if (eq? (- 0 0) 1) $0 $0)) $0)))",
+          "logLikelihood": 0.0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "list",
+            "arguments": [ { "constructor": "int", "arguments": [] } ]
+          },
+          {
+            "constructor": "list",
+            "arguments": [ { "constructor": "int", "arguments": [] } ]
+          }
+        ]
+      },
+      "programs": [
+        {
+          "program":
+            "(lambda (if (is-prime (#(lambda (* (* $0 0) 0)) 0)) $0 $0))",
+          "logLikelihood": 0.0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "list",
+            "arguments": [ { "constructor": "int", "arguments": [] } ]
+          },
+          { "constructor": "int", "arguments": [] }
+        ]
+      },
+      "programs": [
+        {
+          "program": "(lambda (#(lambda (* (* $0 0) 0)) 1))",
+          "logLikelihood": 0.0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "list",
+            "arguments": [ { "constructor": "int", "arguments": [] } ]
+          },
+          { "constructor": "int", "arguments": [] }
+        ]
+      },
+      "programs": [
+        {
+          "program": "(lambda (#(lambda (* (* $0 0) 0)) (+ 1 0)))",
+          "logLikelihood": 0.0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "list",
+            "arguments": [ { "constructor": "int", "arguments": [] } ]
+          },
+          { "constructor": "int", "arguments": [] }
+        ]
+      },
+      "programs": [
+        {
+          "program": "(lambda (* 0 (#(lambda (* (* $0 0) 0)) 1)))",
+          "logLikelihood": 0.0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "list",
+            "arguments": [ { "constructor": "int", "arguments": [] } ]
+          },
+          { "constructor": "int", "arguments": [] }
+        ]
+      },
+      "programs": [
+        {
+          "program": "(lambda (mod 0 (#(lambda (* (* $0 0) 0)) 1)))",
+          "logLikelihood": 0.0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "list",
+            "arguments": [ { "constructor": "int", "arguments": [] } ]
+          },
+          {
+            "constructor": "list",
+            "arguments": [ { "constructor": "int", "arguments": [] } ]
+          }
+        ]
+      },
+      "programs": [
+        {
+          "program":
+            "(lambda (if (is-prime (#(lambda (* (* $0 0) 0)) 1)) $0 $0))",
+          "logLikelihood": 0.0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          {
+            "constructor": "list",
+            "arguments": [ { "constructor": "int", "arguments": [] } ]
+          },
+          { "constructor": "int", "arguments": [] }
+        ]
+      },
+      "programs": [
+        {
+          "program":
+            "(lambda (* 1 (#(lambda (if (eq? (- 0 0) 1) $0 $0)) 0)))",
+          "logLikelihood": 0.0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          { "constructor": "int", "arguments": [] },
+          { "constructor": "int", "arguments": [] }
+        ]
+      },
+      "programs": [
+        {
+          "program": "(lambda (+ $0 (if (is-prime 0) (- 1 0) 0)))",
+          "logLikelihood": 0.0
+        },
+        {
+          "program": "(lambda (mod (#(lambda (* (* $0 0) 0)) 0) $0))",
+          "logLikelihood": 0.0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          { "constructor": "int", "arguments": [] },
+          { "constructor": "int", "arguments": [] }
+        ]
+      },
+      "programs": [
+        {
+          "program":
+            "(lambda (#(lambda (* (* $0 0) 0)) (#(lambda (* (* $0 0) 0)) $0)))",
+          "logLikelihood": 0.0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          { "constructor": "int", "arguments": [] },
+          { "constructor": "int", "arguments": [] }
+        ]
+      },
+      "programs": [
+        {
+          "program": "(lambda (* $0 (#(lambda (* (* $0 0) 0)) 0)))",
+          "logLikelihood": 0.0
+        },
+        {
+          "program": "(lambda (mod 1 (#(lambda (* (* $0 0) 0)) 1)))",
+          "logLikelihood": 0.0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          { "constructor": "int", "arguments": [] },
+          {
+            "constructor": "->",
+            "arguments": [
+              {
+                "constructor": "list",
+                "arguments": [ { "constructor": "int", "arguments": [] } ]
+              },
+              {
+                "constructor": "list",
+                "arguments": [ { "constructor": "int", "arguments": [] } ]
+              }
+            ]
+          }
+        ]
+      },
+      "programs": [
+        {
+          "program":
+            "(lambda (lambda (if (gt? (#(lambda (* (* $0 0) 0)) $1) 1) $0 $0)))",
+          "logLikelihood": 0.0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          { "constructor": "int", "arguments": [] },
+          { "constructor": "int", "arguments": [] }
+        ]
+      },
+      "programs": [
+        {
+          "program": "(lambda (if (is-prime $0) (- 1 1) 0))",
+          "logLikelihood": 0.0
+        },
+        {
+          "program": "(lambda (#(lambda (* (* $0 0) 0)) (* $0 $0)))",
+          "logLikelihood": 0.0
+        }
+      ]
+    },
+    {
+      "request": {
+        "constructor": "->",
+        "arguments": [
+          { "constructor": "int", "arguments": [] },
+          { "constructor": "int", "arguments": [] }
+        ]
+      },
+      "programs": [
+        {
+          "program": "(lambda (if (is-prime $0) (- 1 $0) 0))",
+          "logLikelihood": 0.0
+        },
+        {
+          "program": "(lambda (if (is-prime 1) (- 1 $0) 0))",
+          "logLikelihood": 0.0
+        }
+      ]
+    }
+  ]
+}

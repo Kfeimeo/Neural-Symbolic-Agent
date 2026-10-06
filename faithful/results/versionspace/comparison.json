@@ -1,0 +1,905 @@
+{
+ "list_arity1": {
+  "options": {
+   "arity": 1,
+   "iterations": 4,
+   "top_k": 5,
+   "top_i": 300,
+   "beam_size": 1000000,
+   "pseudo_counts": 30.0,
+   "aic": 1.0,
+   "structure_penalty": 1.5,
+   "inline": true
+  },
+  "frontiers": 44,
+  "programs": 53,
+  "steps": 4,
+  "inventions": [
+   "#(lambda (map (lambda (+ $0 $1))))",
+   "#(lambda (fold $0 empty (lambda (lambda (if (gt? $1 0) (cons $1 $0) $0)))))",
+   "#(map (lambda (* $0 $0)))",
+   "#(lambda (fold $0 0 (lambda (lambda (+ $1 $0)))))"
+  ],
+  "candidates": [
+   400,
+   381,
+   241,
+   222
+  ],
+  "rescored": 1063,
+  "version_table_size": [
+   7111,
+   6818,
+   6542,
+   6413
+  ],
+  "largest_log_version_size": 10.058095270762568,
+  "seconds_ours": 22.0,
+  "seconds_official": 27.98,
+  "differences": []
+ },
+ "list_arity2": {
+  "options": {
+   "arity": 2,
+   "iterations": 4,
+   "top_k": 2,
+   "top_i": 300,
+   "beam_size": 1000000,
+   "pseudo_counts": 30.0,
+   "aic": 1.0,
+   "structure_penalty": 1.5,
+   "inline": true
+  },
+  "frontiers": 44,
+  "programs": 53,
+  "steps": 4,
+  "inventions": [
+   "#(lambda (lambda (fold $1 empty (lambda (lambda (if ($2 $1) (cons $1 $0) $0))))))",
+   "#(lambda (map (lambda (+ $0 $1))))",
+   "#(map (lambda (* $0 $0)))",
+   "#(lambda (fold $0 0 (lambda (lambda (+ $1 $0)))))"
+  ],
+  "candidates": [
+   3202,
+   1670,
+   1477,
+   1431
+  ],
+  "rescored": 1200,
+  "version_table_size": [
+   124236,
+   96041,
+   90565,
+   86959
+  ],
+  "largest_log_version_size": 15.054645948527492,
+  "seconds_ours": 54.5,
+  "seconds_official": 219.74,
+  "differences": []
+ },
+ "list_arity3": {
+  "options": {
+   "arity": 3,
+   "iterations": 2,
+   "top_k": 2,
+   "top_i": 40,
+   "beam_size": 1000000,
+   "pseudo_counts": 30.0,
+   "aic": 1.0,
+   "structure_penalty": 1.5,
+   "inline": true
+  },
+  "frontiers": 44,
+  "programs": 53,
+  "steps": 2,
+  "inventions": [
+   "#(lambda (lambda (fold $1 empty (lambda (lambda (if ($2 $1) (cons $1 $0) $0))))))",
+   "#(lambda (map (lambda (+ $0 $1))))"
+  ],
+  "candidates": [
+   24908,
+   10272
+  ],
+  "rescored": 80,
+  "version_table_size": [
+   2369476,
+   1401163
+  ],
+  "largest_log_version_size": 22.150775966887498,
+  "seconds_ours": 65.88,
+  "seconds_official": 535.13,
+  "differences": []
+ },
+ "list_cheap_library": {
+  "options": {
+   "arity": 2,
+   "iterations": 6,
+   "top_k": 2,
+   "top_i": 300,
+   "beam_size": 1000000,
+   "pseudo_counts": 1.0,
+   "aic": 1.0,
+   "structure_penalty": 0.2,
+   "inline": true
+  },
+  "frontiers": 44,
+  "programs": 53,
+  "steps": 6,
+  "inventions": [
+   "#(lambda (lambda (fold $1 empty (lambda (lambda (if ($2 $1) (cons $1 $0) $0))))))",
+   "#(lambda (map (lambda (+ $0 $1))))",
+   "#(lambda (fold $0 0 (lambda (lambda (+ $1 $0)))))",
+   "#(map (lambda (* $0 $0)))",
+   "#(lambda (mod $0 (+ 1 1)))",
+   "#(lambda (lambda (map ($0 index) (range (length $1)))))"
+  ],
+  "candidates": [
+   3202,
+   1670,
+   1477,
+   1465,
+   1408,
+   1085
+  ],
+  "rescored": 1800,
+  "version_table_size": [
+   124236,
+   96041,
+   90565,
+   86396,
+   83860,
+   77657
+  ],
+  "largest_log_version_size": 15.054645948527492,
+  "seconds_ours": 78.53,
+  "seconds_official": 429.07,
+  "differences": []
+ },
+ "list_narrow_beam": {
+  "options": {
+   "arity": 2,
+   "iterations": 2,
+   "top_k": 2,
+   "top_i": 300,
+   "beam_size": 6,
+   "pseudo_counts": 30.0,
+   "aic": 1.0,
+   "structure_penalty": 1.5,
+   "inline": true
+  },
+  "frontiers": 44,
+  "programs": 53,
+  "steps": 2,
+  "inventions": [
+   "#(lambda (lambda (fold $1 empty (lambda (lambda (if ($2 $1) (cons $1 $0) $0))))))",
+   "#(lambda (lambda (map (lambda (+ $0 $1)) $1)))"
+  ],
+  "candidates": [
+   3202,
+   1670
+  ],
+  "rescored": 600,
+  "version_table_size": [
+   124236,
+   96041
+  ],
+  "largest_log_version_size": 15.054645948527492,
+  "seconds_ours": 27.88,
+  "seconds_official": 156.38,
+  "differences": []
+ },
+ "list_narrow_rescoring": {
+  "options": {
+   "arity": 2,
+   "iterations": 3,
+   "top_k": 2,
+   "top_i": 12,
+   "beam_size": 1000000,
+   "pseudo_counts": 30.0,
+   "aic": 1.0,
+   "structure_penalty": 1.5,
+   "inline": true
+  },
+  "frontiers": 44,
+  "programs": 53,
+  "steps": 3,
+  "inventions": [
+   "#(lambda (lambda (fold $1 empty (lambda (lambda (if ($2 $1) (cons $1 $0) $0))))))",
+   "#(lambda (map (lambda (+ $0 $1))))",
+   "#(map (lambda (* $0 $0)))"
+  ],
+  "candidates": [
+   3202,
+   1670,
+   1477
+  ],
+  "rescored": 36,
+  "version_table_size": [
+   124236,
+   96041,
+   90565
+  ],
+  "largest_log_version_size": 15.054645948527492,
+  "seconds_ours": 4.05,
+  "seconds_official": 12.34,
+  "differences": []
+ },
+ "list_no_inline": {
+  "options": {
+   "arity": 2,
+   "iterations": 4,
+   "top_k": 2,
+   "top_i": 300,
+   "beam_size": 1000000,
+   "pseudo_counts": 30.0,
+   "aic": 1.0,
+   "structure_penalty": 0.2,
+   "inline": false
+  },
+  "frontiers": 44,
+  "programs": 53,
+  "steps": 4,
+  "inventions": [
+   "#(lambda (lambda (fold $1 empty (lambda (lambda (if ($2 $1) (cons $1 $0) $0))))))",
+   "#(lambda (map (lambda (+ $0 $1))))",
+   "#(lambda (fold $0 0 (lambda (lambda (+ $1 $0)))))",
+   "#(map (lambda (* $0 $0)))"
+  ],
+  "candidates": [
+   3202,
+   1642,
+   1423,
+   1403
+  ],
+  "rescored": 1200,
+  "version_table_size": [
+   124236,
+   95023,
+   89146,
+   84869
+  ],
+  "largest_log_version_size": 15.054645948527492,
+  "seconds_ours": 52.38,
+  "seconds_official": 206.84,
+  "differences": []
+ },
+ "list_nothing_to_learn": {
+  "options": {
+   "arity": 1,
+   "iterations": 30,
+   "top_k": 5,
+   "top_i": 300,
+   "beam_size": 1000000,
+   "pseudo_counts": 30.0,
+   "aic": 3.0,
+   "structure_penalty": 4.0,
+   "inline": true
+  },
+  "frontiers": 44,
+  "programs": 53,
+  "steps": 1,
+  "inventions": [],
+  "candidates": [
+   400
+  ],
+  "rescored": 300,
+  "version_table_size": [
+   7111
+  ],
+  "largest_log_version_size": 10.058095270762568,
+  "seconds_ours": 5.25,
+  "seconds_official": 7.03,
+  "differences": []
+ },
+ "list_top1": {
+  "options": {
+   "arity": 2,
+   "iterations": 3,
+   "top_k": 1,
+   "top_i": 300,
+   "beam_size": 1000000,
+   "pseudo_counts": 30.0,
+   "aic": 1.0,
+   "structure_penalty": 1.5,
+   "inline": true
+  },
+  "frontiers": 44,
+  "programs": 53,
+  "steps": 3,
+  "inventions": [
+   "#(lambda (lambda (fold $1 empty (lambda (lambda (if ($2 $1) (cons $1 $0) $0))))))",
+   "#(lambda (map (lambda (+ $0 $1))))",
+   "#(map (lambda (* $0 $0)))"
+  ],
+  "candidates": [
+   3002,
+   1465,
+   1016
+  ],
+  "rescored": 900,
+  "version_table_size": [
+   108921,
+   80751,
+   75797
+  ],
+  "largest_log_version_size": 15.054645948527492,
+  "seconds_ours": 33.89,
+  "seconds_official": 144.16,
+  "differences": []
+ },
+ "list_until_rejected": {
+  "options": {
+   "arity": 1,
+   "iterations": 30,
+   "top_k": 5,
+   "top_i": 300,
+   "beam_size": 1000000,
+   "pseudo_counts": 30.0,
+   "aic": 1.0,
+   "structure_penalty": 1.5,
+   "inline": true
+  },
+  "frontiers": 44,
+  "programs": 53,
+  "steps": 7,
+  "inventions": [
+   "#(lambda (map (lambda (+ $0 $1))))",
+   "#(lambda (fold $0 empty (lambda (lambda (if (gt? $1 0) (cons $1 $0) $0)))))",
+   "#(map (lambda (* $0 $0)))",
+   "#(lambda (fold $0 0 (lambda (lambda (+ $1 $0)))))",
+   "#(+ 1 1)",
+   "#(lambda (fold $0 empty))"
+  ],
+  "candidates": [
+   400,
+   381,
+   241,
+   222,
+   210,
+   182,
+   175
+  ],
+  "rescored": 1630,
+  "version_table_size": [
+   7111,
+   6818,
+   6542,
+   6413,
+   6252,
+   5621,
+   5575
+  ],
+  "largest_log_version_size": 10.058095270762568,
+  "seconds_ours": 32.74,
+  "seconds_official": 30.51,
+  "differences": []
+ },
+ "planted_arith_0": {
+  "options": {
+   "arity": 3,
+   "iterations": 2,
+   "top_k": 2,
+   "top_i": 40,
+   "beam_size": 1000000,
+   "pseudo_counts": 30.0,
+   "aic": 1.0,
+   "structure_penalty": 0.5,
+   "inline": true
+  },
+  "frontiers": 20,
+  "programs": 27,
+  "steps": 2,
+  "inventions": [
+   "#(lambda (if (is-prime 0) $0 $0))",
+   "#(lambda (lambda (if (eq? 0 $0) $1 $1)))"
+  ],
+  "candidates": [
+   37182,
+   18336
+  ],
+  "rescored": 80,
+  "version_table_size": [
+   2008338,
+   951403
+  ],
+  "largest_log_version_size": 17.141700804372366,
+  "seconds_ours": 48.28,
+  "seconds_official": 298.4,
+  "differences": []
+ },
+ "planted_arith_1": {
+  "options": {
+   "arity": 3,
+   "iterations": 2,
+   "top_k": 2,
+   "top_i": 40,
+   "beam_size": 1000000,
+   "pseudo_counts": 30.0,
+   "aic": 1.0,
+   "structure_penalty": 0.5,
+   "inline": true
+  },
+  "frontiers": 20,
+  "programs": 27,
+  "steps": 2,
+  "inventions": [
+   "#(lambda (* (* $0 0) 0))",
+   "#(lambda (if (eq? (- 0 0) 1) $0 $0))"
+  ],
+  "candidates": [
+   77095,
+   51425
+  ],
+  "rescored": 80,
+  "version_table_size": [
+   2219264,
+   1297244
+  ],
+  "largest_log_version_size": 14.943994221377087,
+  "seconds_ours": 55.57,
+  "seconds_official": 279.01,
+  "differences": []
+ },
+ "planted_arith_2": {
+  "options": {
+   "arity": 3,
+   "iterations": 2,
+   "top_k": 2,
+   "top_i": 40,
+   "beam_size": 1000000,
+   "pseudo_counts": 30.0,
+   "aic": 1.0,
+   "structure_penalty": 0.5,
+   "inline": true
+  },
+  "frontiers": 20,
+  "programs": 25,
+  "steps": 2,
+  "inventions": [
+   "#(lambda (- (mod $0 1) 0))",
+   "#(lambda (+ (- 1 $0) 0))"
+  ],
+  "candidates": [
+   72182,
+   36353
+  ],
+  "rescored": 80,
+  "version_table_size": [
+   2893191,
+   1347629
+  ],
+  "largest_log_version_size": 15.522257015775823,
+  "seconds_ours": 70.09,
+  "seconds_official": 297.74,
+  "differences": []
+ },
+ "planted_first_order_0": {
+  "options": {
+   "arity": 2,
+   "iterations": 3,
+   "top_k": 2,
+   "top_i": 300,
+   "beam_size": 1000000,
+   "pseudo_counts": 30.0,
+   "aic": 1.0,
+   "structure_penalty": 0.5,
+   "inline": true
+  },
+  "frontiers": 40,
+  "programs": 66,
+  "steps": 3,
+  "inventions": [
+   "#(lambda (car (cons $0 (cdr (cdr (cons empty empty))))))",
+   "#(lambda (car (index (length $0) empty)))",
+   "#(lambda (+ 1 (index (index 0 $0) $0)))"
+  ],
+  "candidates": [
+   91009,
+   23536,
+   5544
+  ],
+  "rescored": 900,
+  "version_table_size": [
+   1424972,
+   461193,
+   159338
+  ],
+  "largest_log_version_size": 16.881378922613923,
+  "seconds_ours": 122.86,
+  "seconds_official": 962.36,
+  "differences": []
+ },
+ "planted_first_order_1": {
+  "options": {
+   "arity": 2,
+   "iterations": 3,
+   "top_k": 2,
+   "top_i": 60,
+   "beam_size": 1000000,
+   "pseudo_counts": 30.0,
+   "aic": 1.0,
+   "structure_penalty": 0.5,
+   "inline": true
+  },
+  "frontiers": 40,
+  "programs": 64,
+  "steps": 3,
+  "inventions": [
+   "#(cons (+ (car (range 0)) 0))",
+   "#(lambda (mod (* (car $0) 0) (car empty)))",
+   "#(lambda (index $0 (cdr (car empty))))"
+  ],
+  "candidates": [
+   40785,
+   24609,
+   16016
+  ],
+  "rescored": 180,
+  "version_table_size": [
+   1161920,
+   768918,
+   402367
+  ],
+  "largest_log_version_size": 19.556728207135134,
+  "seconds_ours": 47.46,
+  "seconds_official": 294.18,
+  "differences": []
+ },
+ "planted_first_order_2": {
+  "options": {
+   "arity": 2,
+   "iterations": 3,
+   "top_k": 2,
+   "top_i": 60,
+   "beam_size": 1000000,
+   "pseudo_counts": 30.0,
+   "aic": 1.0,
+   "structure_penalty": 0.5,
+   "inline": true
+  },
+  "frontiers": 40,
+  "programs": 64,
+  "steps": 3,
+  "inventions": [
+   "#(lambda (cdr (range (index 0 $0))))",
+   "#(lambda (+ (car $0) (length empty)))",
+   "#(lambda (mod (* 1 $0) $0))"
+  ],
+  "candidates": [
+   38932,
+   15388,
+   10998
+  ],
+  "rescored": 180,
+  "version_table_size": [
+   1566255,
+   902951,
+   636491
+  ],
+  "largest_log_version_size": 21.08943942043421,
+  "seconds_ours": 50.79,
+  "seconds_official": 352.82,
+  "differences": []
+ },
+ "planted_inlining_0": {
+  "options": {
+   "arity": 2,
+   "iterations": 3,
+   "top_k": 2,
+   "top_i": 300,
+   "beam_size": 1000000,
+   "pseudo_counts": 30.0,
+   "aic": 1.0,
+   "structure_penalty": 0.5,
+   "inline": true
+  },
+  "frontiers": 36,
+  "programs": 51,
+  "steps": 3,
+  "inventions": [
+   "#(lambda (range (index (length empty) $0)))",
+   "#(lambda (* (mod (* 0 1) $0) (index 1 empty)))",
+   "#(lambda (* $0 (car (car empty))))"
+  ],
+  "candidates": [
+   14888,
+   7898,
+   2219
+  ],
+  "rescored": 900,
+  "version_table_size": [
+   870511,
+   604237,
+   387996
+  ],
+  "largest_log_version_size": 20.94632872180719,
+  "seconds_ours": 109.48,
+  "seconds_official": 854.85,
+  "differences": []
+ },
+ "planted_inlining_1": {
+  "options": {
+   "arity": 2,
+   "iterations": 3,
+   "top_k": 2,
+   "top_i": 60,
+   "beam_size": 1000000,
+   "pseudo_counts": 30.0,
+   "aic": 1.0,
+   "structure_penalty": 0.5,
+   "inline": true
+  },
+  "frontiers": 36,
+  "programs": 51,
+  "steps": 3,
+  "inventions": [
+   "#(lambda (length (map (lambda (range $0)) $0)))",
+   "#(lambda (index $0 (cdr empty)))",
+   "#(lambda (* 0 (length $0)))"
+  ],
+  "candidates": [
+   9656,
+   6704,
+   2529
+  ],
+  "rescored": 180,
+  "version_table_size": [
+   619442,
+   467733,
+   203263
+  ],
+  "largest_log_version_size": 21.621286860219968,
+  "seconds_ours": 29.1,
+  "seconds_official": 129.49,
+  "differences": []
+ },
+ "planted_inlining_2": {
+  "options": {
+   "arity": 2,
+   "iterations": 3,
+   "top_k": 2,
+   "top_i": 60,
+   "beam_size": 1000000,
+   "pseudo_counts": 30.0,
+   "aic": 1.0,
+   "structure_penalty": 0.5,
+   "inline": true
+  },
+  "frontiers": 36,
+  "programs": 55,
+  "steps": 3,
+  "inventions": [
+   "#(lambda (index (car (range (length (range $0)))) (car empty)))",
+   "#(lambda (car (map (lambda $1) empty)))",
+   "#(lambda (+ (car $0) 1))"
+  ],
+  "candidates": [
+   28002,
+   9956,
+   3258
+  ],
+  "rescored": 180,
+  "version_table_size": [
+   1150859,
+   418441,
+   151154
+  ],
+  "largest_log_version_size": 19.032176562397773,
+  "seconds_ours": 38.85,
+  "seconds_official": 188.41,
+  "differences": []
+ },
+ "planted_large_0": {
+  "options": {
+   "arity": 2,
+   "iterations": 2,
+   "top_k": 2,
+   "top_i": 30,
+   "beam_size": 1000000,
+   "pseudo_counts": 30.0,
+   "aic": 1.0,
+   "structure_penalty": 1.0,
+   "inline": true
+  },
+  "frontiers": 100,
+  "programs": 153,
+  "steps": 2,
+  "inventions": [
+   "#(lambda (index (* $0 0) empty))",
+   "#(lambda (index (mod 1 (car $0)) $0))"
+  ],
+  "candidates": [
+   162955,
+   80257
+  ],
+  "rescored": 60,
+  "version_table_size": [
+   3920631,
+   2140170
+  ],
+  "largest_log_version_size": 20.886311641870936,
+  "seconds_ours": 95.56,
+  "seconds_official": 542.94,
+  "differences": []
+ },
+ "planted_list_0": {
+  "options": {
+   "arity": 2,
+   "iterations": 3,
+   "top_k": 2,
+   "top_i": 300,
+   "beam_size": 1000000,
+   "pseudo_counts": 30.0,
+   "aic": 1.0,
+   "structure_penalty": 0.5,
+   "inline": true
+  },
+  "frontiers": 40,
+  "programs": 58,
+  "steps": 3,
+  "inventions": [
+   "#(lambda (fold $0 empty (lambda (lambda $2))))",
+   "#(lambda (- 1 (fold $0 0 (lambda (lambda 1)))))",
+   "#(lambda (fold empty $0 (lambda (lambda 0))))"
+  ],
+  "candidates": [
+   40322,
+   9588,
+   5451
+  ],
+  "rescored": 900,
+  "version_table_size": [
+   3201362,
+   627383,
+   445515
+  ],
+  "largest_log_version_size": 23.183521076657716,
+  "seconds_ours": 156.91,
+  "seconds_official": 1852.2,
+  "differences": []
+ },
+ "planted_list_1": {
+  "options": {
+   "arity": 2,
+   "iterations": 3,
+   "top_k": 2,
+   "top_i": 60,
+   "beam_size": 1000000,
+   "pseudo_counts": 30.0,
+   "aic": 1.0,
+   "structure_penalty": 0.5,
+   "inline": true
+  },
+  "frontiers": 40,
+  "programs": 56,
+  "steps": 3,
+  "inventions": [
+   "#(lambda (car (cons $0 (cdr empty))))",
+   "#(lambda (+ 0 (length (range (+ (length empty) $0)))))",
+   "#(lambda (* $0 (+ 0 0)))"
+  ],
+  "candidates": [
+   30462,
+   11596,
+   6456
+  ],
+  "rescored": 180,
+  "version_table_size": [
+   1276641,
+   533285,
+   337102
+  ],
+  "largest_log_version_size": 17.70815245724369,
+  "seconds_ours": 37.63,
+  "seconds_official": 197.64,
+  "differences": []
+ },
+ "planted_list_2": {
+  "options": {
+   "arity": 2,
+   "iterations": 3,
+   "top_k": 2,
+   "top_i": 60,
+   "beam_size": 1000000,
+   "pseudo_counts": 30.0,
+   "aic": 1.0,
+   "structure_penalty": 0.5,
+   "inline": true
+  },
+  "frontiers": 40,
+  "programs": 57,
+  "steps": 3,
+  "inventions": [
+   "#(lambda (fold (cdr empty) $0 (lambda (lambda $2))))",
+   "#(lambda (cdr (range (car $0))))",
+   "#(lambda (mod (car empty) (car $0)))"
+  ],
+  "candidates": [
+   34061,
+   12638,
+   4374
+  ],
+  "rescored": 180,
+  "version_table_size": [
+   1160533,
+   410029,
+   263710
+  ],
+  "largest_log_version_size": 21.460771169565458,
+  "seconds_ours": 36.63,
+  "seconds_official": 179.89,
+  "differences": []
+ },
+ "planted_weighted_0": {
+  "options": {
+   "arity": 2,
+   "iterations": 3,
+   "top_k": 3,
+   "top_i": 300,
+   "beam_size": 1000000,
+   "pseudo_counts": 1.0,
+   "aic": 1.0,
+   "structure_penalty": 0.5,
+   "inline": true
+  },
+  "frontiers": 36,
+  "programs": 85,
+  "steps": 3,
+  "inventions": [
+   "#(map (lambda (index (car (cdr empty)) empty)))",
+   "#(lambda (* (mod (car empty) 1) (index 1 $0)))",
+   "#(lambda (cdr (cdr (map (lambda 0) $0))))"
+  ],
+  "candidates": [
+   175453,
+   53537,
+   49260
+  ],
+  "rescored": 900,
+  "version_table_size": [
+   2543238,
+   848579,
+   668369
+  ],
+  "largest_log_version_size": 22.716204562479437,
+  "seconds_ours": 212.73,
+  "seconds_official": 1862.28,
+  "differences": []
+ },
+ "planted_weighted_1": {
+  "options": {
+   "arity": 2,
+   "iterations": 3,
+   "top_k": 3,
+   "top_i": 60,
+   "beam_size": 1000000,
+   "pseudo_counts": 1.0,
+   "aic": 1.0,
+   "structure_penalty": 0.5,
+   "inline": true
+  },
+  "frontiers": 36,
+  "programs": 89,
+  "steps": 3,
+  "inventions": [
+   "#(lambda (cdr (map (lambda (car (cons (car $1) $0))) empty)))",
+   "#(lambda (cons 1 (range (car $0))))",
+   "#(lambda (+ (car empty) (mod (fold $0 0 (lambda (lambda 0))) 0)))"
+  ],
+  "candidates": [
+   146604,
+   38491,
+   21311
+  ],
+  "rescored": 180,
+  "version_table_size": [
+   2280076,
+   946452,
+   562552
+  ],
+  "largest_log_version_size": 20.49492472292449,
+  "seconds_ours": 89.73,
+  "seconds_official": 358.23,
+  "differences": []
+ }
+}

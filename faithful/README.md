@@ -3,6 +3,17 @@
 Independent Haskell symbolic kernel + Python/PyTorch recognition. The original
 `dreamcoder/` remains the separate DreamCoder-lite implementation.
 
+## Library interface
+
+`faithful.lib` (see [lib/README.md](lib/README.md)) is the packaged interface over
+this core: named kernel build targets with executable discovery and process
+management, a `Domain` contract (DSL + execution semantics, task likelihood, task
+encoder, Dream generation), pluggable compressors including a complete
+`stitch_core` wrapper, and a dependency-injected Explore–Compress driver.
+`pip install -e .[stitch]` installs it; `python -m faithful.lib build` compiles the
+kernel. The modules below remain the frozen experiment drivers referenced by the
+hash-locked studies and are unchanged.
+
 ## Controlled hierarchical benchmark
 
 Recognition automatically selects CUDA when `torch.cuda.is_available()` is true,
@@ -48,6 +59,23 @@ match. Their target-task assignments remain distinct. `evaluation_index.json` is
 the authoritative selection of cache rows; interim/profiling caches are not added
 to final metrics. The finite rewrite-space and probe limitations are explicit in
 the reports. The original toy below is regression/smoke evidence only.
+
+## Shared version-space compressor
+
+`haskell/Compression.hs` (the frozen `compress` operation) enumerates explicit
+finite version sets. `faithful/versionspace` ports the reference's shared
+version table and its candidate, beam and refactoring procedures, behind a
+separate executable that leaves the frozen core and its hashes untouched:
+
+```powershell
+python -m faithful.compression.versionspace
+python -m pytest faithful/tests/test_versionspace.py -q
+```
+
+It is compared candidate by candidate with the unmodified OCaml binary on 23
+corpora of up to 175,000 candidates; see `versionspace/README.md` for the
+method, the results and the differences that remain. The historical controlled
+and Stitch studies used the frozen operation and are not rerun.
 
 ## Core and regression commands
 

@@ -47,6 +47,15 @@ Operations:
 | compression_candidates | grammar, frontiers, arity | closed invented candidates |
 | compress | grammar, frontiers, arity, iterations, pseudo_counts, aic, structure_penalty | updated grammar, rewritten frontiers, improvement history |
 
+The separate `versionspace_kernel` executable (see `../versionspace/README.md`)
+serves every operation above unchanged and adds:
+
+| Operation | Additional request | Result |
+|---|---|---|
+| vs_compress | grammar, frontiers, arity, iterations, pseudo_counts, aic, structure_penalty, optional top_k, top_i, beam_size, inline, likelihood, trace | as `compress`, computed on the shared version table; `history` entries add table statistics, `final_step` describes the rejected last step |
+| vs_candidates | grammar, frontiers, arity, optional top_k, inline | closed candidates proposed from the shared table |
+| vs_versions | program, arity, optional inline, count_only | contents and size of one program's n-step inversion space |
+
 A frontier is `{request,entries:[{program,log_likelihood}]}`. Unsatisfied
 deterministic programs are omitted. Extra entry metadata is not used by learning.
 No operation takes ground-truth labels for real held-out tasks.

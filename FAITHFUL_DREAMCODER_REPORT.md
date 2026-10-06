@@ -79,6 +79,17 @@ arity 是每个子项允许的逆 β 步数，**不是 invention 的参数数上
 目标值相同。原版使用共享 version-space 节点和 minimum-cost representatives，
 本实现使用显式 finite sets；复杂 corpus 上的性能与代表筛选行为仍需单独评测。
 
+**后续补充：共享 version table。** 上述缺口现由 `faithful/versionspace/` 单独实现：按
+`versions.ml` 与 `compression.ml` 的单进程路径移植了 hash-consed version table、
+`substitutions` / `recursive_inversion` / `n_step_inversion`、minimum-cost inhabitants 候选、
+beam 评分和 `minimal_inhabitant` 重构，通过独立可执行文件提供 `vs_compress` 等操作；
+冻结核心及其哈希未改动，G 行与上表描述的仍是冻结的 `compress` 操作。
+在 25 个 corpus 上（arity 1–3、多程序 frontier、库中已有 invention、单步最多 175,453 个候选）
+与未修改的 OCaml 二进制逐候选比较排序、离散/连续得分、重写结果以及最终库、权重和 frontier，
+共 77 个压缩步、13,969 个被重评分的候选，无差异。该比较使用 OCaml 自身的似然定义；
+它在多态库上与 Python 参考及本内核不同，在单态库（含 Grid）上相同。方法、结果表和仍然存在的
+差异见 `faithful/versionspace/README.md`。受控实验与 Stitch 对照等历史结果未用新压缩器重跑。
+
 结构代价采用 OCaml `program_size`：primitive / index / invented leaf 各计 1，
 application/lambda 不额外计结构 token。每个 invention 的 definition 单独计入 library prior。
 目标是 fitted finite-frontier log evidence − AIC × library size − λ × definition size。
@@ -93,7 +104,8 @@ application/lambda 不额外计结构 token。每个 invention 的 definition �
   本实现不使用该 heuristic；通过供给相同 uniform stream、官方足够深度验证真实 ancestral choices。
   资源耗尽是拒绝事件，不重分配概率，不把有限资源下接受的样本谎称无条件精确分布。
 * 原 `enumerate` 的 `limit` 仅为输出上限；新 `enumerate_budget/search_tasks` 会真正按
-  candidate/state caps 终止。显式 compression version sets 仍可指数增长，尚不应把原始 toy
+  candidate/state caps 终止。冻结 `compress` 的显式 version sets 仍可指数增长
+（共享表实现见上文补充，默认驱动尚未切换），尚不应把原始 toy
   跑通视作具备 ARC 或原论文大规模实验的计算性能。
 * Grid DSL 现已补齐旧 V1 的全部 24 productions，类型签名及 Haskell 执行语义有对照测试。
   五操作版本仅保留为原始 smoke fixture。搜索预算/停止规则与 recognition 训练步数仍须显式列出，
