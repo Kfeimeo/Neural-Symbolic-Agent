@@ -11,6 +11,7 @@ import time
 from ..arc.grid import load_arc_task
 from ..tsl.pipeline import run_baseline
 from .common import add_common_args, pipeline_config, run_parallel, select_tasks, stamp, write_json
+from .evaluation import evaluate_test
 
 
 def _one(job):
@@ -20,6 +21,7 @@ def _one(job):
     t0 = time.perf_counter()
     rec = run_baseline(task["train"], cfg)
     rec.update(task_id=tid, wall_seconds=time.perf_counter() - t0)
+    rec["test_evaluation"] = evaluate_test(rec, task["test"], cfg.extraction)
     print(f"[baseline] {tid} {rec['status']} states={(rec.get('search') or {}).get('expanded_states')} "
           f"program={rec.get('program')}", file=sys.stderr, flush=True)
     return rec

@@ -40,6 +40,7 @@ def row(b: dict, t: dict | None) -> dict:
         "baseline_search_seconds": bs.get("seconds"),
         "baseline_program_length": b.get("program_length"),
         "baseline_program": b.get("program"),
+        "baseline_test_correct": (b.get("test_evaluation") or {}).get("all_test_correct"),
     }
     if t is None:
         r.update(tsl_status=None, status=b["status"], solved=b["status"] == "SOLVED")
@@ -54,6 +55,7 @@ def row(b: dict, t: dict | None) -> dict:
         full_program = t["program"].startswith("(" + used[0] + " ") and t["program"].count("(") == 1
     r.update({
         "tsl_status": t["status"],
+        "tsl_test_correct": (t.get("test_evaluation") or {}).get("all_test_correct"),
         "tsl_expanded_states": rw.get("expanded_states"),
         "tsl_first_solution_nodes": rw.get("first_solution_nodes"),
         "tsl_first_solution_states": rw.get("first_solution_states"),
@@ -128,6 +130,8 @@ def summarize(rows: list[dict], condition: str) -> dict:
 
     in_scope = [r for r in rows if r["baseline_status"] != "UNSUPPORTED"]
     both = [r for r in rows if r["baseline_status"] == "SOLVED" and r.get("tsl_status") == "SOLVED"]
+    solved_tsl = [r for r in rows if r.get("tsl_status") == "SOLVED"]
+    scored = [r for r in rows if r.get("baseline_test_correct") is not None and r.get("tsl_test_correct") is not None]
     statuses = {}
     for r in rows:
         statuses[r["status"]] = statuses.get(r["status"], 0) + 1
@@ -135,6 +139,9 @@ def summarize(rows: list[dict], condition: str) -> dict:
         "condition": condition,
         "num_tasks": len(rows),
         "num_in_scope": len(in_scope),
+        "test_scored_tasks": len(scored),
+        "test_correct_baseline": sum(r["baseline_test_correct"] for r in scored),
+        "test_correct_tsl": sum(r["tsl_test_correct"] for r in scored),
         "solve_rate_baseline": sum(r["baseline_status"] == "SOLVED" for r in rows) / max(1, len(rows)),
         "solve_rate_tsl": sum(r.get("tsl_status") == "SOLVED" for r in rows) / max(1, len(rows)),
         "solve_rate_baseline_in_scope": sum(r["baseline_status"] == "SOLVED" for r in in_scope) / max(1, len(in_scope)),
@@ -142,8 +149,8 @@ def summarize(rows: list[dict], condition: str) -> dict:
         "solved_by_baseline_only": [r["task_id"] for r in rows if r["baseline_status"] == "SOLVED" and r.get("tsl_status") != "SOLVED"],
         "solved_by_tsl_only": [r["task_id"] for r in rows if r["baseline_status"] != "SOLVED" and r.get("tsl_status") == "SOLVED"],
         "num_tasks_with_abstractions": sum(1 for r in rows if (r.get("tsl_num_abstractions") or 0) > 0),
-        "num_solved_using_abstraction": sum(1 for r in both if (r.get("tsl_num_abstractions_used") or 0) > 0),
-        "num_full_program_abstractions": sum(1 for r in both if r.get("abstraction_is_full_program")),
+        "num_solved_using_abstraction": sum(1 for r in solved_tsl if (r.get("tsl_num_abstractions_used") or 0) > 0),
+        "num_full_program_abstractions": sum(1 for r in solved_tsl if r.get("abstraction_is_full_program")),
         "status_counts": statuses,
         "all_tasks": block(in_scope),
         "solved_only": block(both),
@@ -157,8 +164,10 @@ def markdown(summaries: dict, tables: dict) -> str:
     for cond, s in summaries.items():
         lines += [f"## Condition: {cond}", "",
                   f"- tasks: {s['num_tasks']} (in scope: {s['num_in_scope']}); status counts: {s['status_counts']}",
-                  f"- solve rate (all): baseline {s['solve_rate_baseline']:.3f} vs {cond} {s['solve_rate_tsl']:.3f}",
-                  f"- solve rate (in scope): baseline {s['solve_rate_baseline_in_scope']:.3f} vs {cond} {s['solve_rate_tsl_in_scope']:.3f}",
+                  f"- training-fit rate (all): baseline {s['solve_rate_baseline']:.3f} vs {cond} {s['solve_rate_tsl']:.3f}",
+                  f"- training-fit rate (in scope): baseline {s['solve_rate_baseline_in_scope']:.3f} vs {cond} {s['solve_rate_tsl_in_scope']:.3f}",
+                  f"- labeled test tasks correct: baseline {s['test_correct_baseline']}/{s['test_scored_tasks']} vs "
+                  f"{cond} {s['test_correct_tsl']}/{s['test_scored_tasks']}",
                   f"- solved by baseline only: {s['solved_by_baseline_only']}; by {cond} only: {s['solved_by_tsl_only']}",
                   f"- tasks with >=1 abstraction: {s['num_tasks_with_abstractions']}; solved using an abstraction: "
                   f"{s['num_solved_using_abstraction']} (of which whole-program abstractions: {s['num_full_program_abstractions']})",

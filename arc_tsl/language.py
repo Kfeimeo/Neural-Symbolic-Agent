@@ -16,3 +16,9 @@ def base_primitives():
 
 def base_library() -> Library:
     return Library.from_primitives(base_primitives())
+
+
+def grid_library() -> Library:
+    """Opt-in Grid -> Grid language with explicit parsing and local shapes."""
+    from .dsa.shapes import primitives
+    return Library.from_primitives(base_primitives() + primitives())

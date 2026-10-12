@@ -28,6 +28,7 @@ from ..ml.ast import Abs, App, Prim, Term, Var
 from ..ml.types import Arrow, Type
 from .evaluator import ERR, Closure, _CAUGHT, compile_term
 from .grammar import Library, TypeLike
+from .diversity import structure_key
 
 Context = tuple[TypeLike, ...]
 
@@ -44,6 +45,7 @@ class EnumerationStats:
     budget_exhausted: bool = False
     termination_reason: str = "running"
     seconds: float = 0.0
+    additional_oe_representatives: int = 0
 
 
 @dataclass
@@ -54,6 +56,7 @@ class EnumerationConfig:
     max_lambda_depth: int = 2
     max_terms_per_cell: int = 20000  # safety cap per (context, type, cost)
     max_context_bindings: int = 128  # deterministic subsample of sample bindings per lambda context
+    oe_representatives: int = 1  # bounded distinct structures per observational class
 
 
 @dataclass
@@ -81,13 +84,18 @@ def _subsample(items: list, k: int) -> list:
 
 class Enumerator:
     def __init__(self, library: Library, scenes: list[tuple], config: EnumerationConfig = EnumerationConfig(),
-                 is_solution=None):
+                 is_solution=None, *, root_type=OBJECTS, object_samples=None):
         """``is_solution(values) -> bool`` lets observationally duplicate *solutions*
         of the top cell be reported (not retained), so top-K frontiers of
         syntactically distinct programs can be collected."""
         self.library = library
+        self.root_type = root_type
+        self.object_samples = object_samples if object_samples is not None else lambda scene: scene
+        self._samples = {scene: tuple(self.object_samples(scene)) for scene in scenes}
         self.is_solution = is_solution
         self.config = config
+        if config.oe_representatives < 1:
+            raise ValueError("oe_representatives must be positive")
         self.scenes = scenes
         self.stats = EnumerationStats()
         self.contexts: list[Context] = []
@@ -97,6 +105,7 @@ class Enumerator:
         self.types = list(library.all_types())
         self.terms: dict[tuple[Context, TypeLike], dict[int, list[Entry]]] = {}
         self.seen: dict[tuple[Context, TypeLike], set] = {}
+        self.representatives: dict = {}
         for ctx in self.contexts:
             for t in self.types:
                 self.terms[(ctx, t)] = {}
@@ -107,13 +116,13 @@ class Enumerator:
 
     # ------------------------------------------------------------------
     def _build_contexts(self):
-        ctx: Context = (OBJECTS,)
+        ctx: Context = (self.root_type,)
         envs = [(scene,) for scene in self.scenes]
         self.contexts.append(ctx)
         self.envs[ctx] = envs
         for _ in range(self.config.max_lambda_depth):
             inner: Context = (OBJECT,) + ctx
-            inner_envs = [(o,) + env for env in envs for o in env[-1]]
+            inner_envs = [(o,) + env for env in envs for o in self._samples[env[-1]]]
             inner_envs = _subsample(inner_envs, self.config.max_context_bindings)
             self.contexts.append(inner)
             self.envs[inner] = inner_envs
@@ -131,7 +140,7 @@ class Enumerator:
             return ERR
         if isinstance(typ, Arrow):
             out = []
-            for o in env[-1]:
+            for o in self._samples[env[-1]]:
                 try:
                     v = value(o)
                 except _CAUGHT:
@@ -187,13 +196,20 @@ class Enumerator:
             self.stats.dead_terms += 1
             return None
         seen = self.seen[(ctx, typ)]
+        key = structure_key(term, self.library) if self.config.oe_representatives > 1 else None
+        bucket = self.representatives.setdefault((ctx, typ, obs), set()) if key is not None else None
         if obs in seen:
-            self.stats.equivalent_terms += 1
-            if (self.is_solution is not None and ctx == self.contexts[-1] and typ == OBJECTS
-                    and self.is_solution(values)):
-                return Entry(term, cost, values, obs)   # reported, not retained
-            return None
+            if bucket is not None and key not in bucket and len(bucket) < self.config.oe_representatives:
+                self.stats.additional_oe_representatives += 1
+            else:
+                self.stats.equivalent_terms += 1
+                if (self.is_solution is not None and ctx == self.contexts[-1] and typ == self.root_type
+                        and self.is_solution(values)):
+                    return Entry(term, cost, values, obs)   # reported, not retained
+                return None
         seen.add(obs)
+        if bucket is not None:
+            bucket.add(key)
         entry = Entry(term, cost, values, obs)
         cell = self.terms[(ctx, typ)].setdefault(cost, [])
         cell.append(entry)
@@ -285,27 +301,115 @@ class Enumerator:
     def programs(self) -> Iterator[Entry]:
         """Yield complete programs (C0 terms of type ObjectSet) in enumeration
         order.  Values are the output ObjectSets per scene."""
+        for _, entry in self.expressions({self.root_type: self.config.max_cost}):
+            yield entry
+
+    def _minimum_costs(self) -> dict:
+        """Syntactic lower bounds, including lambda and variable costs."""
+        lib = self.library
+        cells = [(ctx, typ) for ctx in self.contexts for typ in self.types]
+        minimum = {cell: float("inf") for cell in cells}
+        changed = True
+        while changed:
+            changed = False
+            for ctx, typ in cells:
+                best = lib.var_cost if typ in ctx else float("inf")
+                for name in lib.production_names:
+                    args, result = lib.signature(name)
+                    if result == typ:
+                        best = min(best, lib.cost(name) + sum(minimum.get((ctx, a), float("inf")) for a in args))
+                inner = self._inner(ctx)
+                if isinstance(typ, Arrow) and typ.arguments == (OBJECT,) and inner is not None:
+                    best = min(best, lib.lam_cost + minimum.get((inner, typ.result), float("inf")))
+                if best < minimum[(ctx, typ)]:
+                    minimum[(ctx, typ)] = best
+                    changed = True
+        return minimum
+
+    def _demand_expressions(self, goals):
+        """Build memoized cells only when a current goal depends on them.
+
+        Each (context, type) is populated in increasing cost order, preserving
+        the cheapest representative under the existing OE rule. Dependencies
+        have strictly smaller cost, so recursive demands terminate.
+        """
+        lib, top = self.library, self.contexts[-1]
+        minimum, built = self._minimum_costs(), {}
+
+        def ensure(ctx, typ, limit):
+            if limit < minimum.get((ctx, typ), float("inf")):
+                return
+            for cost in range(built.get((ctx, typ), 0) + 1, limit + 1):
+                if cost <= built.get((ctx, typ), 0):
+                    continue
+                for name in lib.production_names:
+                    args, result = lib.signature(name)
+                    if result != typ or not args:
+                        continue
+                    mins = [minimum.get((ctx, a), float("inf")) for a in args]
+                    if lib.cost(name) + sum(mins) > cost:
+                        continue
+                    for i, arg in enumerate(args):
+                        bound = int(cost - lib.cost(name) - sum(mins[:i] + mins[i + 1:]))
+                        yield from ensure(ctx, arg, bound)
+                inner = self._inner(ctx)
+                if isinstance(typ, Arrow) and typ.arguments == (OBJECT,) and inner is not None:
+                    yield from ensure(inner, typ.result, cost - lib.lam_cost)
+                gens = itertools.chain(self._gen_leaves(ctx, typ, cost),
+                                       self._gen_apps(ctx, typ, cost), self._gen_lambdas(ctx, typ, cost))
+                for count, entry in enumerate(gens, 1):
+                    if ctx == top and cost <= goals.get(typ, 0):
+                        self.stats.evaluated_programs += 1
+                        yield typ, entry
+                    if count >= self.config.max_terms_per_cell:
+                        self.stats.cell_caps_hit += 1
+                        break
+                built[(ctx, typ)] = cost
+
+        for cost in range(1, min(self.config.max_cost, max(goals.values(), default=0)) + 1):
+            self.stats.max_cost_reached = cost
+            for typ, limit in goals.items():
+                if cost <= limit:
+                    yield from ensure(top, typ, cost)
+
+    def expressions(self, goals: dict[TypeLike, int], demand_driven: bool = False):
+        """Yield (type, entry) for requested top-context expression types.
+
+        The ordinary program search keeps its original cell order. Parameter
+        synthesis can opt into backward type/cost reachability.
+        """
         self._started = time.perf_counter()
         top = self.contexts[-1]
         try:
+            if self.config.max_expanded_states <= 0:
+                self.stats.termination_reason = "max_expanded_states"
+                raise _Budget()
+            if self.config.time_limit_seconds <= 0:
+                self.stats.termination_reason = "time_limit"
+                raise _Budget()
+            if demand_driven:
+                yield from self._demand_expressions(goals)
+                self.stats.termination_reason = "max_cost"
+                return
             cells = [(ctx, typ) for ctx in self.contexts for typ in self.types]
             # the top cell only depends on strictly cheaper terms, so expanding it
             # first at every level reports solutions before the level's other cells
-            cells.remove((top, OBJECTS))
-            cells.insert(0, (top, OBJECTS))
-            for cost in range(1, self.config.max_cost + 1):
+            targets = [(top, typ) for typ in goals if (top, typ) in cells]
+            cells = targets + [cell for cell in cells if cell not in targets]
+            limits = {cell: self.config.max_cost for cell in cells}
+            for cost in range(1, min(self.config.max_cost, max(goals.values(), default=0)) + 1):
                 self.stats.max_cost_reached = cost
                 for ctx, typ in cells:
-                    if True:
+                    if cost <= limits.get((ctx, typ), 0):
                         gens = itertools.chain(self._gen_leaves(ctx, typ, cost),
                                                self._gen_apps(ctx, typ, cost),
                                                self._gen_lambdas(ctx, typ, cost))
                         cell_count = 0
                         for e in gens:
                             cell_count += 1
-                            if ctx == top and typ == OBJECTS:
+                            if ctx == top and cost <= goals.get(typ, 0):
                                 self.stats.evaluated_programs += 1
-                                yield e
+                                yield typ, e
                             if cell_count >= self.config.max_terms_per_cell:
                                 self.stats.cell_caps_hit += 1
                                 break

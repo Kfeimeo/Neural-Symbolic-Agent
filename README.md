@@ -19,7 +19,7 @@ Python 3.11+，CPU 即可：
 ```powershell
 python -m pip install -e ".[test]"
 python -m pytest -q
-python run_experiment.py
+
 ```
 
 如需专用 conda 环境，在项目根目录执行：

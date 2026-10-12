@@ -37,9 +37,13 @@ def add_common_args(p: argparse.ArgumentParser) -> None:
     p.add_argument("--background", type=str, default="color0", choices=["color0", "most_frequent"])
     p.add_argument("--same-color-only", action="store_true")
     p.add_argument("--wake-top-k", type=int, default=1)
+    p.add_argument("--wake-diverse", action="store_true", help="keep distinct operator/binding structures in Wake frontiers")
+    p.add_argument("--wake-oe-representatives", type=int, default=1, help="bounded structural representatives per Wake observational class")
+    p.add_argument("--wake-demand-driven", action="store_true", help="build Wake expression cells only when demanded by the output type")
     p.add_argument("--max-abstractions", type=int, default=3)
     p.add_argument("--max-arity", type=int, default=3)
     p.add_argument("--unused-cost", type=int, default=2)
+    p.add_argument("--total-budget", action="store_true", help="charge Wake and Sleep to the full-task state/time budget")
     p.add_argument("--workers", type=int, default=1)
 
 
@@ -48,9 +52,10 @@ def pipeline_config(args) -> PipelineConfig:
                              max_context_bindings=args.max_context_bindings)
     wake = EnumerationConfig(args.wake_max_cost or args.max_cost, args.wake_max_states or args.max_states,
                              args.wake_time_limit or args.time_limit, args.lambda_depth,
-                             max_context_bindings=args.max_context_bindings)
+                             max_context_bindings=args.max_context_bindings, oe_representatives=args.wake_oe_representatives)
     return PipelineConfig(ExtractionConfig(args.connectivity, args.background, args.same_color_only),
-                          wake, full, args.wake_top_k, args.max_abstractions, args.max_arity, args.unused_cost)
+                          wake, full, args.wake_top_k, args.max_abstractions, args.max_arity, args.unused_cost,
+                          args.total_budget, args.wake_diverse, args.wake_demand_driven)
 
 
 def select_tasks(data: Path, n: int, seed: int, in_scope_only: bool = False, task_ids: str | None = None) -> list[str]:

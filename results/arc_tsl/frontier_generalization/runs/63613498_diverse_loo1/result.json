@@ -1,0 +1,244 @@
+{
+ "task_id": "63613498",
+ "arm": "diverse",
+ "heldout_index": 1,
+ "train_indices": [
+  0,
+  2
+ ],
+ "evaluation_kind": "leave_one_training_pair_out",
+ "config": {
+  "extraction": {
+   "connectivity": 8,
+   "background": "color0",
+   "same_color_only": false
+  },
+  "wake": {
+   "max_cost": 10,
+   "max_expanded_states": 300000,
+   "time_limit_seconds": 20,
+   "max_lambda_depth": 2,
+   "max_terms_per_cell": 20000,
+   "max_context_bindings": 128,
+   "oe_representatives": 2
+  },
+  "full": {
+   "max_cost": 24,
+   "max_expanded_states": 300000,
+   "time_limit_seconds": 90,
+   "max_lambda_depth": 2,
+   "max_terms_per_cell": 20000,
+   "max_context_bindings": 128,
+   "oe_representatives": 1
+  },
+  "wake_top_k": 5,
+  "max_abstractions": 3,
+  "max_arity": 3,
+  "unused_cost": 2,
+  "total_budget": true,
+  "wake_diverse": true,
+  "wake_demand_driven": true,
+  "parameter_max_templates": 64
+ },
+ "record": {
+  "num_train_pairs": 2,
+  "condition": "tsl_parameters",
+  "wake": {
+   "pairs": [
+    {
+     "solved": true,
+     "expanded_states": 91319,
+     "retained_terms": 41112,
+     "evaluated_programs": 8052,
+     "equivalent_terms": 46672,
+     "dead_terms": 3535,
+     "additional_oe_representatives": 12203,
+     "cell_caps_hit": 0,
+     "frontier_structural_count": 5,
+     "first_solution_nodes": 58,
+     "first_solution_states": 709,
+     "first_solution_seconds": 0.045138700006646104,
+     "seconds": 9.873896999997669,
+     "termination_reason": "frontier_complete",
+     "max_cost_reached": 10,
+     "best_program": "(map (λObject. (replace_color $0 c6 c5)) $0)",
+     "best_program_length": 7,
+     "frontier": [
+      "(map (λObject. (replace_color $0 c6 c5)) $0)",
+      "(map (λObject. (replace_color (remove_region $0 rg_bbox_minus_support) c6 c5)) $0)",
+      "(map (λObject. $0) (map (λObject. (replace_color $0 c6 c5)) $0))",
+      "(map (λObject. (replace_color $0 c6 c5)) (map (λObject. $0) $0))",
+      "(map (λObject. (replace_color (add_region $0 rg_bbox c0) c6 c5)) $0)"
+     ]
+    },
+    {
+     "solved": true,
+     "expanded_states": 83024,
+     "retained_terms": 35676,
+     "evaluated_programs": 3893,
+     "equivalent_terms": 43872,
+     "dead_terms": 3476,
+     "additional_oe_representatives": 10850,
+     "cell_caps_hit": 0,
+     "frontier_structural_count": 5,
+     "first_solution_nodes": 55,
+     "first_solution_states": 702,
+     "first_solution_seconds": 0.04416210000636056,
+     "seconds": 8.546863299998222,
+     "termination_reason": "frontier_complete",
+     "max_cost_reached": 10,
+     "best_program": "(map (λObject. (replace_color $0 c1 c5)) $0)",
+     "best_program_length": 7,
+     "frontier": [
+      "(map (λObject. (replace_color $0 c1 c5)) $0)",
+      "(map (λObject. (replace_color (remove_region $0 rg_bbox_minus_support) c1 c5)) $0)",
+      "(insert $0 (recolor (argmin (λObject. (size $0)) $0) c5))",
+      "(insert $0 (recolor (argmin (λObject. (bbox_bottom $0)) $0) c5))",
+      "(map (λObject. $0) (map (λObject. (replace_color $0 c1 c5)) $0))"
+     ]
+    }
+   ],
+   "solved_pairs": 2,
+   "num_pairs": 2,
+   "total_expanded_states": 174343,
+   "total_seconds": 18.420863599996665,
+   "search_seconds_sum": 18.42076029999589,
+   "frontier_sizes": [
+    5,
+    5
+   ],
+   "frontier_structural_counts": [
+    5,
+    5
+   ]
+  },
+  "sleep": {
+   "seconds": 0.01166170000215061,
+   "num_abstractions": 0,
+   "abstractions": [],
+   "abstraction_lengths": {},
+   "library_description_length": 0,
+   "mdl_before": 14,
+   "mdl_after": 14,
+   "pruned": [],
+   "steps": [],
+   "rewritten_frontiers": [
+    [
+     "(map (λObject. (replace_color $0 c6 c5)) $0)",
+     "(map (λObject. (replace_color (remove_region $0 rg_bbox_minus_support) c6 c5)) $0)",
+     "(map (λObject. $0) (map (λObject. (replace_color $0 c6 c5)) $0))",
+     "(map (λObject. (replace_color $0 c6 c5)) (map (λObject. $0) $0))",
+     "(map (λObject. (replace_color (add_region $0 rg_bbox c0) c6 c5)) $0)"
+    ],
+    [
+     "(map (λObject. (replace_color $0 c1 c5)) $0)",
+     "(map (λObject. (replace_color (remove_region $0 rg_bbox_minus_support) c1 c5)) $0)",
+     "(insert $0 (recolor (argmin (λObject. (size $0)) $0) c5))",
+     "(insert $0 (recolor (argmin (λObject. (bbox_bottom $0)) $0) c5))",
+     "(map (λObject. $0) (map (λObject. (replace_color $0 c1 c5)) $0))"
+    ]
+   ],
+   "costs": {}
+  },
+  "rewake_budget": {
+   "max_cost": 24,
+   "max_expanded_states": 125657,
+   "time_limit_seconds": 71.56445329998678,
+   "max_lambda_depth": 2,
+   "max_terms_per_cell": 20000,
+   "max_context_bindings": 128,
+   "oe_representatives": 1
+  },
+  "parameter_search": {
+   "strategy": "witness_constrained_parameters",
+   "templates": [],
+   "parameter_expressions": 0,
+   "complete_program_checks": 0,
+   "witness_program_checks": 0,
+   "cell_caps_hit": 0,
+   "witness_assignments_considered": 0,
+   "templates_truncated": false,
+   "max_templates": 64
+  },
+  "rewake_shared": false,
+  "rewake": {
+   "solved": false,
+   "expanded_states": 0,
+   "retained_terms": 0,
+   "evaluated_programs": 0,
+   "equivalent_terms": 0,
+   "dead_terms": 0,
+   "additional_oe_representatives": 0,
+   "cell_caps_hit": 0,
+   "frontier_structural_count": null,
+   "first_solution_nodes": null,
+   "first_solution_states": null,
+   "first_solution_seconds": null,
+   "seconds": 3.0499999411404133e-05,
+   "termination_reason": "no_applicable_template",
+   "max_cost_reached": 0,
+   "best_program": null,
+   "best_program_length": null,
+   "frontier": []
+  },
+  "tsl_is_base": true,
+  "total_expanded_states": 174343,
+  "total_seconds": 18.432555799998227,
+  "pipeline_wall_seconds": 18.435638400012976,
+  "phase_seconds": {
+   "wake": 18.420863599996665,
+   "sleep": 0.01166170000215061,
+   "rewake": 3.0499999411404133e-05,
+   "preparation": 0.0030214000144042075
+  },
+  "status": "NO_SHARED_PROGRAM",
+  "program": null,
+  "program_length": null,
+  "abstractions_used": [],
+  "total_mdl": null,
+  "wake_unsolved_pairs": 0
+ },
+ "training_evaluation": {
+  "program_frozen_before_scoring": true,
+  "num_test_pairs": 2,
+  "labeled_pairs": 2,
+  "correct_pairs": 0,
+  "all_test_correct": false,
+  "pairs": [
+   {
+    "prediction": null,
+    "correct": false
+   },
+   {
+    "prediction": null,
+    "correct": false
+   }
+  ]
+ },
+ "evaluation": {
+  "program_frozen_before_scoring": true,
+  "num_test_pairs": 1,
+  "labeled_pairs": 1,
+  "correct_pairs": 0,
+  "all_test_correct": false,
+  "pairs": [
+   {
+    "prediction": null,
+    "correct": false
+   }
+  ]
+ },
+ "frozen_program_sha256": null,
+ "total_expanded_states": 174343,
+ "resources": {
+  "solve_wall_seconds": 18.43567069999699,
+  "solve_cpu_seconds": 18.25,
+  "scoring_wall_seconds": 0.000374399998690933,
+  "worker_wall_seconds": 18.436425399995642,
+  "worker_cpu_seconds": 18.25,
+  "peak_rss_bytes": 636932096,
+  "memory_scope": "fresh worker lifetime OS peak; includes interpreter/imports; not parent memory"
+ },
+ "job_wall_seconds": 19.725367799997912,
+ "startup_transport_wall_seconds": 1.28894240000227
+}

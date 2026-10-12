@@ -9,10 +9,12 @@ from ..arc.grid import Grid
 from ..arc.parse import Scene
 from ..arc.render import render
 from ..ml.ast import Term
+from ..dsa.types import OBJECTS
 from .enumerator import EnumerationConfig, EnumerationStats, Enumerator
 from .evaluator import ERR
 from .frontier import Frontier, Solution
 from .grammar import Library
+from .diversity import structure_key
 
 
 @dataclass(frozen=True)
@@ -30,6 +32,7 @@ class SearchResult:
     first_solution_seconds: float | None
     seconds: float
     termination_reason: str
+    structural_count: int | None = None
 
     @property
     def solved(self) -> bool:
@@ -44,6 +47,9 @@ class SearchResult:
             "evaluated_programs": self.stats.evaluated_programs,
             "equivalent_terms": self.stats.equivalent_terms,
             "dead_terms": self.stats.dead_terms,
+            "additional_oe_representatives": self.stats.additional_oe_representatives,
+            "cell_caps_hit": self.stats.cell_caps_hit,
+            "frontier_structural_count": self.structural_count,
             "first_solution_nodes": self.first_solution_nodes,
             "first_solution_states": self.first_solution_states,
             "first_solution_seconds": self.first_solution_seconds,
@@ -66,7 +72,7 @@ def _accept(values, pairs, targets) -> bool:
 
 
 def search(pairs: list[Pair], library: Library, config: EnumerationConfig = EnumerationConfig(),
-           top_k: int = 1) -> SearchResult:
+           top_k: int = 1, diverse: bool = False, demand_driven: bool = False) -> SearchResult:
     started = time.perf_counter()
     scenes = [p.scene.objects for p in pairs]
     targets = [p.output for p in pairs]
@@ -74,10 +80,12 @@ def search(pairs: list[Pair], library: Library, config: EnumerationConfig = Enum
         return _accept(values, pairs, targets)
 
     enumerator = Enumerator(library, scenes, config, is_solution=is_solution if top_k > 1 else None)
-    frontier = Frontier(top_k)
+    frontier = Frontier(top_k, structure=(lambda p: structure_key(p, library)) if diverse else None)
     first_nodes = first_states = first_seconds = None
     reason = None
-    for entry in enumerator.programs():
+    stream = enumerator.expressions({OBJECTS: config.max_cost}, demand_driven=True) if demand_driven else None
+    entries = (entry for _, entry in stream) if stream is not None else enumerator.programs()
+    for entry in entries:
         if _accept(entry.values, pairs, targets):
             stats = enumerator.stats
             sol = Solution(entry.term, entry.cost, library.description_length(entry.term),
@@ -91,5 +99,9 @@ def search(pairs: list[Pair], library: Library, config: EnumerationConfig = Enum
     stats = enumerator.stats
     if reason is None:
         reason = stats.termination_reason
+    entries.close()
+    if stream is not None:
+        stream.close()
     return SearchResult(frontier, stats, first_nodes, first_states, first_seconds,
-                        time.perf_counter() - started, reason)
+                        time.perf_counter() - started, reason,
+                        len({structure_key(s.program, library) for s in frontier.solutions}))

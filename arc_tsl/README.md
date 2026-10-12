@@ -1,5 +1,11 @@
 # ARC-TSL v0.1 — task-specific language induction for ARC-AGI-1 program synthesis
 
+**Opt-in grid DSL:** `grid_library()` + `search_grids()` add two explicit
+object views, local colored shapes, geometry comparisons, finite canvases and
+painting. See [Grid DSL semantics and usage](../docs/ARC_TSL_GRID_DSL.md).
+Run it with `python -m arc_tsl.experiments.run_grid --help`. The original
+ObjectSet Wake/Sleep pipeline retains its base language.
+
 A runnable, testable, controlled prototype for one research question:
 
 > **On fixed domain axioms, does inducing a task-specific language `TSL_τ` from
@@ -251,7 +257,109 @@ level and the per-pair wake gains at most one level.
    *within* one pair's frontier (needs richer frontiers than OE allows);
    and memory-bounded OE (values are currently kept for every retained term).
 
-### Reproducing the tables
+## Directed completion of learned parameters
+
+The `63613498` pilot found a training-consistent program in 1,547 directed
+search states (191,276 including Wake); both controls exhausted 300,000 total
+states without a shared program. The chosen program failed the test pair.
+See [the pilot report](../results/arc_tsl/parameter_directed/REPORT.md): this is
+a search improvement on one diagnostic task, not an ARC test-accuracy gain.
+
+The optional `tsl_parameters` condition keeps a learned abstraction call fixed
+and synthesizes only its varying arguments (`tsl/parameter_search.py`). It
+rewrites the original Wake frontiers with the learned library, considers up to
+64 cost-ordered combinations of root-call witnesses across pairs, and fixes arguments whose
+syntax agrees across pairs. Each remaining ground-typed argument must reproduce
+its witnessed values on **all training inputs**. The completed program is then
+type-checked and verified against every training output.
+
+Parameter expressions use the same DSL, costs, evaluator, and observational
+equivalence as the baseline. Cells are built on demand from the requested type
+and current cost, including only dependencies needed for that expression.
+`max_cost` bounds the **complete call**, including its fixed arguments. No
+task IDs, reference programs, or test outputs are passed to synthesis.
+
+This first implementation is a restricted search: it needs a root abstraction
+call in every pair's frontier, supports varying non-function parameters, and
+uses a bounded set of witness assignments. It may miss solutions using other
+witnesses or parameter values. The original pilot used one cheapest witness
+per pair; its saved results are unchanged. It does not automatically fall back to full
+search. Multi-parameter calls are supported; no assumption of independent
+output effects is made. A matched witness vector for each argument is only a
+sufficient constraint, and the full program is always checked.
+
+Use `--total-budget` to charge all Wake searches and Sleep time to the full-task
+budget. Wake stops spending states when this pooled budget is exhausted; each
+condition receives only the remainder for Re-wake. Enumeration states, witness
+checks, parameter-expression checks, complete-program checks and elapsed time
+are recorded separately. As in the existing enumerator, wall-time limits are
+cooperative (a primitive evaluation cannot be preempted).
+
+The CLI also scores each frozen selected program on the task's test inputs and
+records `test_evaluation`. `SOLVED` still means **training consistency**; use
+`all_test_correct` for labeled test correctness. Test labels never affect
+search, candidate selection, or parameter constraints.
+
+```powershell
+python -m arc_tsl.experiments.run_baseline --task-ids 63613498 --max-cost 24 --max-states 300000 --time-limit 90 --wake-max-cost 10 --wake-time-limit 20 --total-budget --out results/arc_tsl/parameter_directed
+python -m arc_tsl.experiments.run_tsl --task-ids 63613498 --conditions tsl,tsl_parameters --max-cost 24 --max-states 300000 --time-limit 90 --wake-max-cost 10 --wake-time-limit 20 --total-budget --out results/arc_tsl/parameter_directed
+python -m arc_tsl.experiments.compare --out results/arc_tsl/parameter_directed
+python -m pytest tests/arctsl -q -p no:cacheprovider
+```
+
+## Frontier diversity and generalization evaluation
+
+Wake can retain multiple operator/binding structures with
+`--wake-diverse --wake-top-k 5 --wake-oe-representatives 2`. The first flag
+requires distinct structural signatures in the solution frontier; the last
+allows up to two structural representatives of each observational class in
+intermediate cells. Literal-only changes (e.g. `c1` versus `c2`) are not new
+structures. This is bounded syntactic diversity, not a proof of equivalence.
+The settings apply only to Wake; ordinary full-task search stays unchanged.
+
+`--wake-demand-driven` uses the existing on-demand enumerator for Wake's
+ObjectSet goal. The evaluation separates its effect from diversity:
+
+| Arm | Wake search | Frontier K | Representatives per OE class |
+|---|---|---:|---:|
+| baseline | no local Wake | — | 1 |
+| parameters | original | 1 | 1 |
+| demand_single | on demand | 1 | 1 |
+| diverse | on demand | 5 distinct structures | 2 |
+
+```powershell
+python -m arc_tsl.experiments.generalization --task-ids 63613498 --loo --out results/arc_tsl/frontier_generalization
+```
+
+This freezes the source/data hashes and all budgets in `protocol.json`, then
+runs each arm sequentially in a fresh worker process. The default per-run
+total budget is 300,000 states / 90 seconds, maximum full-program cost 24;
+Wake has cost 10 / 20 seconds per pair and shares the total state/time budget.
+Completed matching-protocol jobs can be resumed; a changed source or protocol
+requires a new output directory.
+
+The three learned arms also undergo leave-one-training-pair-out validation:
+each fold learns a fresh Wake frontier and library from only its training
+subset. The withheld pair never enters synthesis, compression, parameter
+constraints, or program selection. Fold scores do not rerank the full-task
+program. The baseline full-task control is included; use `--loo-arms` to
+explicitly request its leave-one-out folds as well.
+
+Outputs separate training consistency, task-test exact correctness, leave-one-out
+correctness, and conditional correctness given training fit. Missing labels
+are excluded; unsolved labeled cases are failures. Empty conditional denominators
+are `null`. Per-run metrics include enumeration states, complete fit wall/CPU
+time, scoring time, worker and launch/transport time, and OS peak resident
+memory. Memory includes the interpreter/imports; each run gets a fresh process
+so its peak cannot inherit a previous run's memory use. Validation compute is
+reported separately and must be added when accounting for the whole study.
+
+`63613498` is a known development case with a previously inspected test answer.
+Its rerun can diagnose search, overfitting and cost, but cannot establish an
+untouched benchmark generalization gain. The source and selection rule remain
+frozen throughout this diagnostic.
+
+### Reproducing the original v0.1 tables
 
 ```bash
 python -m arc_tsl.experiments.run_all --tasks 130 --seed 0 --in-scope-only --time-limit 30 --wake-time-limit 20 --out results/arc_tsl/main --workers 4

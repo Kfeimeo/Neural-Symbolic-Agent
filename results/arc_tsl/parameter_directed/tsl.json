@@ -1,0 +1,518 @@
+{
+ "conditions": [
+  "tsl",
+  "tsl_parameters"
+ ],
+ "created": "2026-10-11T14:15:31",
+ "config": {
+  "extraction": {
+   "connectivity": 8,
+   "background": "color0",
+   "same_color_only": false
+  },
+  "wake": {
+   "max_cost": 10,
+   "max_expanded_states": 300000,
+   "time_limit_seconds": 20.0,
+   "max_lambda_depth": 2,
+   "max_terms_per_cell": 20000,
+   "max_context_bindings": 128
+  },
+  "full": {
+   "max_cost": 24,
+   "max_expanded_states": 300000,
+   "time_limit_seconds": 90.0,
+   "max_lambda_depth": 2,
+   "max_terms_per_cell": 20000,
+   "max_context_bindings": 128
+  },
+  "wake_top_k": 1,
+  "max_abstractions": 3,
+  "max_arity": 3,
+  "unused_cost": 2,
+  "total_budget": true
+ },
+ "seed": 0,
+ "task_ids": [
+  "63613498"
+ ],
+ "records": [
+  {
+   "task_id": "63613498",
+   "num_train_pairs": 3,
+   "conditions": {
+    "tsl": {
+     "num_train_pairs": 3,
+     "condition": "tsl",
+     "wake": {
+      "pairs": [
+       {
+        "solved": true,
+        "expanded_states": 64173,
+        "retained_terms": 16280,
+        "evaluated_programs": 52,
+        "equivalent_terms": 45652,
+        "dead_terms": 2241,
+        "first_solution_nodes": 52,
+        "first_solution_states": 64173,
+        "first_solution_seconds": 7.215397399995709,
+        "seconds": 7.215418300002057,
+        "termination_reason": "frontier_complete",
+        "max_cost_reached": 7,
+        "best_program": "(map (λObject. (replace_color $0 c6 c5)) $0)",
+        "best_program_length": 7,
+        "frontier": [
+         "(map (λObject. (replace_color $0 c6 c5)) $0)"
+        ]
+       },
+       {
+        "solved": true,
+        "expanded_states": 63785,
+        "retained_terms": 15942,
+        "evaluated_programs": 59,
+        "equivalent_terms": 45331,
+        "dead_terms": 2512,
+        "first_solution_nodes": 59,
+        "first_solution_states": 63785,
+        "first_solution_seconds": 9.79259849999653,
+        "seconds": 9.792610899996362,
+        "termination_reason": "frontier_complete",
+        "max_cost_reached": 7,
+        "best_program": "(map (λObject. (replace_color $0 c9 c5)) $0)",
+        "best_program_length": 7,
+        "frontier": [
+         "(map (λObject. (replace_color $0 c9 c5)) $0)"
+        ]
+       },
+       {
+        "solved": true,
+        "expanded_states": 61771,
+        "retained_terms": 15093,
+        "evaluated_programs": 50,
+        "equivalent_terms": 44093,
+        "dead_terms": 2585,
+        "first_solution_nodes": 50,
+        "first_solution_states": 61771,
+        "first_solution_seconds": 5.260236099995382,
+        "seconds": 5.260248499995214,
+        "termination_reason": "frontier_complete",
+        "max_cost_reached": 7,
+        "best_program": "(map (λObject. (replace_color $0 c1 c5)) $0)",
+        "best_program_length": 7,
+        "frontier": [
+         "(map (λObject. (replace_color $0 c1 c5)) $0)"
+        ]
+       }
+      ],
+      "solved_pairs": 3,
+      "num_pairs": 3,
+      "total_expanded_states": 189729,
+      "total_seconds": 22.268277699993632
+     },
+     "sleep": {
+      "seconds": 0.0035664999959408306,
+      "num_abstractions": 1,
+      "abstractions": [
+       "#f0 = λx0:Color x1:ObjectSet. (map (λObject. (replace_color $0 $2 c5)) $0)"
+      ],
+      "abstraction_lengths": {
+       "#f0": 8
+      },
+      "library_description_length": 8,
+      "mdl_before": 21,
+      "mdl_after": 17,
+      "pruned": [],
+      "steps": [
+       {
+        "abstraction": "#f0 = λx0:Color x1:ObjectSet. (map (λObject. (replace_color $0 $2 c5)) $0)",
+        "name": "#f0",
+        "arity": 2,
+        "body_length": null,
+        "mdl_before": 21,
+        "mdl_after": 17,
+        "candidates_scored": 12
+       }
+      ],
+      "rewritten_frontiers": [
+       [
+        "(#f0 c6 $0)"
+       ],
+       [
+        "(#f0 c9 $0)"
+       ],
+       [
+        "(#f0 c1 $0)"
+       ]
+      ],
+      "costs": {}
+     },
+     "rewake_budget": {
+      "max_cost": 24,
+      "max_expanded_states": 110271,
+      "time_limit_seconds": 67.72815580001043,
+      "max_lambda_depth": 2,
+      "max_terms_per_cell": 20000,
+      "max_context_bindings": 128
+     },
+     "rewake_shared": false,
+     "rewake": {
+      "solved": false,
+      "expanded_states": 110271,
+      "retained_terms": 21651,
+      "evaluated_programs": 246,
+      "equivalent_terms": 86059,
+      "dead_terms": 2560,
+      "first_solution_nodes": null,
+      "first_solution_states": null,
+      "first_solution_seconds": null,
+      "seconds": 30.871479999994335,
+      "termination_reason": "max_expanded_states",
+      "max_cost_reached": 7,
+      "best_program": null,
+      "best_program_length": null,
+      "frontier": []
+     },
+     "tsl_is_base": false,
+     "total_expanded_states": 300000,
+     "total_seconds": 53.14332419998391,
+     "status": "NO_SHARED_PROGRAM",
+     "program": null,
+     "program_length": null,
+     "abstractions_used": [],
+     "total_mdl": null,
+     "wake_unsolved_pairs": 0,
+     "wall_seconds": 53.14452760000131,
+     "test_evaluation": {
+      "program_frozen_before_scoring": true,
+      "num_test_pairs": 1,
+      "labeled_pairs": 1,
+      "correct_pairs": 0,
+      "all_test_correct": false,
+      "pairs": [
+       {
+        "prediction": null,
+        "correct": false
+       }
+      ]
+     }
+    },
+    "tsl_parameters": {
+     "num_train_pairs": 3,
+     "condition": "tsl_parameters",
+     "wake": {
+      "pairs": [
+       {
+        "solved": true,
+        "expanded_states": 64173,
+        "retained_terms": 16280,
+        "evaluated_programs": 52,
+        "equivalent_terms": 45652,
+        "dead_terms": 2241,
+        "first_solution_nodes": 52,
+        "first_solution_states": 64173,
+        "first_solution_seconds": 7.215397399995709,
+        "seconds": 7.215418300002057,
+        "termination_reason": "frontier_complete",
+        "max_cost_reached": 7,
+        "best_program": "(map (λObject. (replace_color $0 c6 c5)) $0)",
+        "best_program_length": 7,
+        "frontier": [
+         "(map (λObject. (replace_color $0 c6 c5)) $0)"
+        ]
+       },
+       {
+        "solved": true,
+        "expanded_states": 63785,
+        "retained_terms": 15942,
+        "evaluated_programs": 59,
+        "equivalent_terms": 45331,
+        "dead_terms": 2512,
+        "first_solution_nodes": 59,
+        "first_solution_states": 63785,
+        "first_solution_seconds": 9.79259849999653,
+        "seconds": 9.792610899996362,
+        "termination_reason": "frontier_complete",
+        "max_cost_reached": 7,
+        "best_program": "(map (λObject. (replace_color $0 c9 c5)) $0)",
+        "best_program_length": 7,
+        "frontier": [
+         "(map (λObject. (replace_color $0 c9 c5)) $0)"
+        ]
+       },
+       {
+        "solved": true,
+        "expanded_states": 61771,
+        "retained_terms": 15093,
+        "evaluated_programs": 50,
+        "equivalent_terms": 44093,
+        "dead_terms": 2585,
+        "first_solution_nodes": 50,
+        "first_solution_states": 61771,
+        "first_solution_seconds": 5.260236099995382,
+        "seconds": 5.260248499995214,
+        "termination_reason": "frontier_complete",
+        "max_cost_reached": 7,
+        "best_program": "(map (λObject. (replace_color $0 c1 c5)) $0)",
+        "best_program_length": 7,
+        "frontier": [
+         "(map (λObject. (replace_color $0 c1 c5)) $0)"
+        ]
+       }
+      ],
+      "solved_pairs": 3,
+      "num_pairs": 3,
+      "total_expanded_states": 189729,
+      "total_seconds": 22.268277699993632
+     },
+     "sleep": {
+      "seconds": 0.002900300001783762,
+      "num_abstractions": 1,
+      "abstractions": [
+       "#f0 = λx0:Color x1:ObjectSet. (map (λObject. (replace_color $0 $2 c5)) $0)"
+      ],
+      "abstraction_lengths": {
+       "#f0": 8
+      },
+      "library_description_length": 8,
+      "mdl_before": 21,
+      "mdl_after": 17,
+      "pruned": [],
+      "steps": [
+       {
+        "abstraction": "#f0 = λx0:Color x1:ObjectSet. (map (λObject. (replace_color $0 $2 c5)) $0)",
+        "name": "#f0",
+        "arity": 2,
+        "body_length": null,
+        "mdl_before": 21,
+        "mdl_after": 17,
+        "candidates_scored": 12
+       }
+      ],
+      "rewritten_frontiers": [
+       [
+        "(#f0 c6 $0)"
+       ],
+       [
+        "(#f0 c9 $0)"
+       ],
+       [
+        "(#f0 c1 $0)"
+       ]
+      ],
+      "costs": {}
+     },
+     "rewake_budget": {
+      "max_cost": 24,
+      "max_expanded_states": 110271,
+      "time_limit_seconds": 67.72882200000458,
+      "max_lambda_depth": 2,
+      "max_terms_per_cell": 20000,
+      "max_context_bindings": 128
+     },
+     "parameter_search": {
+      "strategy": "witness_constrained_parameters",
+      "templates": [
+       {
+        "abstraction": "#f0",
+        "witness_calls": [
+         "(#f0 c6 $0)",
+         "(#f0 c9 $0)",
+         "(#f0 c1 $0)"
+        ],
+        "varying_parameters": [
+         0
+        ],
+        "fixed_cost": 2,
+        "parameter_types": {
+         "0": "Color"
+        },
+        "parameter_cost_limits": {
+         "0": 22
+        },
+        "matched_parameters": {
+         "0": "(dominant_color (argmax (λObject. (bbox_bottom (nearest $0 $1))) $0))"
+        }
+       }
+      ],
+      "parameter_expressions": 39,
+      "complete_program_checks": 1,
+      "witness_program_checks": 3,
+      "cell_caps_hit": 0,
+      "parameter_programs": {
+       "0": "(dominant_color (argmax (λObject. (bbox_bottom (nearest $0 $1))) $0))"
+      }
+     },
+     "rewake_shared": false,
+     "rewake": {
+      "solved": true,
+      "expanded_states": 1547,
+      "retained_terms": 646,
+      "evaluated_programs": 1,
+      "equivalent_terms": 826,
+      "dead_terms": 75,
+      "first_solution_nodes": 1,
+      "first_solution_states": 1547,
+      "first_solution_seconds": 0.08519550000346499,
+      "seconds": 0.08519550000346499,
+      "termination_reason": "frontier_complete",
+      "max_cost_reached": 8,
+      "best_program": "(#f0 (dominant_color (argmax (λObject. (bbox_bottom (nearest $0 $1))) $0)) $0)",
+      "best_program_length": 10,
+      "frontier": [
+       "(#f0 (dominant_color (argmax (λObject. (bbox_bottom (nearest $0 $1))) $0)) $0)"
+      ]
+     },
+     "tsl_is_base": false,
+     "total_expanded_states": 191276,
+     "total_seconds": 22.35637349999888,
+     "status": "SOLVED",
+     "program": "(#f0 (dominant_color (argmax (λObject. (bbox_bottom (nearest $0 $1))) $0)) $0)",
+     "program_length": 10,
+     "expanded_program": "(map (λObject. (replace_color $0 (dominant_color (argmax (λObject. (bbox_bottom (nearest $0 $2))) $1)) c5)) $0)",
+     "expanded_program_length": 14,
+     "abstractions_used": [
+      "#f0"
+     ],
+     "total_mdl": 18,
+     "wake_unsolved_pairs": 0,
+     "wall_seconds": 22.357633999999962,
+     "test_evaluation": {
+      "program_frozen_before_scoring": true,
+      "num_test_pairs": 1,
+      "labeled_pairs": 1,
+      "correct_pairs": 0,
+      "all_test_correct": false,
+      "pairs": [
+       {
+        "prediction": [
+         [
+          0,
+          0,
+          0,
+          5,
+          0,
+          0,
+          0,
+          6,
+          0,
+          0
+         ],
+         [
+          2,
+          2,
+          2,
+          5,
+          0,
+          0,
+          0,
+          6,
+          6,
+          0
+         ],
+         [
+          0,
+          0,
+          2,
+          5,
+          0,
+          0,
+          0,
+          6,
+          0,
+          0
+         ],
+         [
+          5,
+          5,
+          5,
+          5,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0
+         ],
+         [
+          0,
+          0,
+          0,
+          0,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0
+         ],
+         [
+          0,
+          0,
+          0,
+          0,
+          0,
+          3,
+          3,
+          0,
+          0,
+          0
+         ],
+         [
+          8,
+          8,
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          5,
+          0
+         ],
+         [
+          8,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          5,
+          0
+         ],
+         [
+          0,
+          0,
+          0,
+          0,
+          7,
+          7,
+          7,
+          0,
+          5,
+          0
+         ],
+         [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          7,
+          0,
+          0,
+          0
+         ]
+        ],
+        "correct": false
+       }
+      ]
+     }
+    }
+   },
+   "wake_seconds": 22.268698899999436
+  }
+ ]
+}

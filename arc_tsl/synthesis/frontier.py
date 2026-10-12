@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import Callable
 
 from ..ml.ast import Term
 
@@ -18,9 +19,12 @@ class Solution:
 class Frontier:
     capacity: int
     solutions: list[Solution] = field(default_factory=list)
+    structure: Callable | None = None
 
     def add(self, s: Solution) -> bool:
         if any(x.program == s.program for x in self.solutions):
+            return False
+        if self.structure is not None and any(self.structure(x.program) == self.structure(s.program) for x in self.solutions):
             return False
         self.solutions.append(s)
         return True

@@ -8,7 +8,7 @@
 from __future__ import annotations
 
 import time
-from dataclasses import asdict, dataclass, field
+from dataclasses import asdict, dataclass, field, replace
 
 from ..arc.grid import Grid, shape
 from ..arc.parse import parse
@@ -22,6 +22,7 @@ from .compression import CompressionResult, compress
 from .local_library import ThetaConfig, contract, fit_costs, prune_unused, rewrite_with_library, used_productions
 from .local_wake import WakeResult, local_wake
 from .rewake import rewake
+from .parameter_search import parameter_search
 
 STATUS_SOLVED = "SOLVED"
 STATUS_UNSUPPORTED = "UNSUPPORTED"
@@ -41,11 +42,18 @@ class PipelineConfig:
     max_abstractions: int = 3
     max_arity: int = 3
     unused_cost: int = 2
+    total_budget: bool = False
+    wake_diverse: bool = False
+    wake_demand_driven: bool = False
+    parameter_max_templates: int = 64
 
     def to_dict(self) -> dict:
         return {"extraction": asdict(self.extraction), "wake": asdict(self.wake), "full": asdict(self.full),
                 "wake_top_k": self.wake_top_k, "max_abstractions": self.max_abstractions,
-                "max_arity": self.max_arity, "unused_cost": self.unused_cost}
+                "max_arity": self.max_arity, "unused_cost": self.unused_cost,
+                "total_budget": self.total_budget, "wake_diverse": self.wake_diverse,
+                "wake_demand_driven": self.wake_demand_driven,
+                "parameter_max_templates": self.parameter_max_templates}
 
 
 def make_pairs(train: list[tuple[Grid, Grid]], extraction: ExtractionConfig) -> list[Pair]:
@@ -98,11 +106,17 @@ def library_key(lib: Library) -> tuple:
 
 def run_tsl(train, config: PipelineConfig, abstractions: bool = True, reweight: bool = False,
             library: Library | None = None, wake: WakeResult | None = None,
-            rewake_cache: dict | None = None) -> dict:
+            rewake_cache: dict | None = None, parameter_completion: bool = False) -> dict:
     """``rewake_cache`` (optional) maps ``library_key`` -> SearchResult so that
     conditions ending up with the same TSL share one (deterministic) re-wake."""
+    pipeline_started = time.perf_counter()
+    provided_wake = wake is not None
     condition = {(True, False): "tsl", (False, True): "reweight", (True, True): "tsl_reweight",
                  (False, False): "baseline"}[(abstractions, reweight)]
+    if parameter_completion:
+        if not abstractions or reweight:
+            raise ValueError("parameter completion requires abstractions with uniform costs")
+        condition = "tsl_parameters"
     record = {"num_train_pairs": len(train), "condition": condition}
     ok, why = supported(train)
     if not ok:
@@ -113,7 +127,9 @@ def run_tsl(train, config: PipelineConfig, abstractions: bool = True, reweight: 
 
     # ---- local wake ------------------------------------------------------
     if wake is None:
-        wake = local_wake(pairs, base, config.wake, config.wake_top_k)
+        wake_total = replace(config.full, time_limit_seconds=max(0, config.full.time_limit_seconds - (time.perf_counter() - pipeline_started))) if config.total_budget else None
+        wake = local_wake(pairs, base, config.wake, config.wake_top_k, total_config=wake_total,
+                          diverse=config.wake_diverse, demand_driven=config.wake_demand_driven)
     record["wake"] = wake.to_dict()
     frontiers = [F for F in wake.frontiers if F]
 
@@ -150,17 +166,32 @@ def run_tsl(train, config: PipelineConfig, abstractions: bool = True, reweight: 
     }
 
     # ---- local re-wake ---------------------------------------------------
-    key = library_key(tsl)
-    if rewake_cache is not None and key in rewake_cache:
+    full = config.full
+    elapsed_before_rewake = time.perf_counter() - pipeline_started + (wake.total_seconds if provided_wake else 0)
+    if config.total_budget:
+        full = replace(full, max_expanded_states=max(0, full.max_expanded_states - wake.total_expanded),
+                       time_limit_seconds=max(0, full.time_limit_seconds - elapsed_before_rewake))
+    record["rewake_budget"] = asdict(full)
+    key = (library_key(tsl), parameter_completion, tuple(asdict(full).items()))
+    if parameter_completion:
+        r, diagnostics = parameter_search(pairs, tsl, wake.frontiers, full, max_templates=config.parameter_max_templates)
+        record["parameter_search"] = diagnostics
+        record["rewake_shared"] = False
+    elif rewake_cache is not None and key in rewake_cache:
         r = rewake_cache[key]
         record["rewake_shared"] = True
     else:
-        r = rewake(pairs, tsl, config.full, top_k=1)
+        r = rewake(pairs, tsl, full, top_k=1)
         if rewake_cache is not None:
             rewake_cache[key] = r
         record["rewake_shared"] = False
     record["rewake"] = r.summary()
-    record["tsl_is_base"] = key == ((), ())
+    record["tsl_is_base"] = library_key(tsl) == ((), ())
+    record["total_expanded_states"] = wake.total_expanded + r.stats.expanded_states
+    record["total_seconds"] = wake.total_seconds + sleep_seconds + r.seconds
+    record["pipeline_wall_seconds"] = time.perf_counter() - pipeline_started + (wake.total_seconds if provided_wake else 0)
+    record["phase_seconds"] = {"wake": wake.total_seconds, "sleep": sleep_seconds, "rewake": r.seconds,
+                               "preparation": max(0, elapsed_before_rewake - wake.total_seconds - sleep_seconds)}
     if r.solved:
         best = r.frontier.best
         prog = best.program

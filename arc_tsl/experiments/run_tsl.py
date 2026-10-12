@@ -16,8 +16,10 @@ from ..language import base_library
 from ..tsl.local_wake import local_wake
 from ..tsl.pipeline import make_pairs, run_tsl, supported
 from .common import add_common_args, pipeline_config, run_parallel, select_tasks, stamp, write_json
+from .evaluation import evaluate_test
 
-CONDITIONS = {"tsl": (True, False), "reweight": (False, True), "tsl_reweight": (True, True)}
+CONDITIONS = {"tsl": (True, False), "reweight": (False, True), "tsl_reweight": (True, True),
+              "tsl_parameters": (True, False)}
 
 
 def _one(job):
@@ -34,14 +36,18 @@ def _one(job):
         print(f"[tsl] {tid} UNSUPPORTED ({why})", file=sys.stderr, flush=True)
         return out
     t0 = time.perf_counter()
-    wake = local_wake(make_pairs(task["train"], cfg.extraction), base, cfg.wake, cfg.wake_top_k)
+    wake = local_wake(make_pairs(task["train"], cfg.extraction), base, cfg.wake, cfg.wake_top_k,
+                      total_config=cfg.full if cfg.total_budget else None,
+                      diverse=cfg.wake_diverse, demand_driven=cfg.wake_demand_driven)
     out["wake_seconds"] = time.perf_counter() - t0
     cache: dict = {}
     for c in conditions:
         abstractions, reweight = CONDITIONS[c]
         t1 = time.perf_counter()
-        rec = run_tsl(task["train"], cfg, abstractions, reweight, base, wake, cache)
+        rec = run_tsl(task["train"], cfg, abstractions, reweight, base, wake, cache,
+                      parameter_completion=c == "tsl_parameters")
         rec["wall_seconds"] = time.perf_counter() - t1 + out["wake_seconds"]
+        rec["test_evaluation"] = evaluate_test(rec, task["test"], cfg.extraction)
         out["conditions"][c] = rec
         print(f"[{c}] {tid} {rec['status']} wake={wake.solved_pairs}/{len(task['train'])} "
               f"A={rec.get('sleep', {}).get('num_abstractions')} states={rec.get('rewake', {}).get('expanded_states')} "

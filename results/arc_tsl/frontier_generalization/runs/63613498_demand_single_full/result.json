@@ -1,0 +1,789 @@
+{
+ "task_id": "63613498",
+ "arm": "demand_single",
+ "heldout_index": null,
+ "train_indices": [
+  0,
+  1,
+  2
+ ],
+ "evaluation_kind": "task_test",
+ "config": {
+  "extraction": {
+   "connectivity": 8,
+   "background": "color0",
+   "same_color_only": false
+  },
+  "wake": {
+   "max_cost": 10,
+   "max_expanded_states": 300000,
+   "time_limit_seconds": 20,
+   "max_lambda_depth": 2,
+   "max_terms_per_cell": 20000,
+   "max_context_bindings": 128,
+   "oe_representatives": 1
+  },
+  "full": {
+   "max_cost": 24,
+   "max_expanded_states": 300000,
+   "time_limit_seconds": 90,
+   "max_lambda_depth": 2,
+   "max_terms_per_cell": 20000,
+   "max_context_bindings": 128,
+   "oe_representatives": 1
+  },
+  "wake_top_k": 1,
+  "max_abstractions": 3,
+  "max_arity": 3,
+  "unused_cost": 2,
+  "total_budget": true,
+  "wake_diverse": false,
+  "wake_demand_driven": true,
+  "parameter_max_templates": 64
+ },
+ "record": {
+  "num_train_pairs": 3,
+  "condition": "tsl_parameters",
+  "wake": {
+   "pairs": [
+    {
+     "solved": true,
+     "expanded_states": 691,
+     "retained_terms": 397,
+     "evaluated_programs": 52,
+     "equivalent_terms": 287,
+     "dead_terms": 7,
+     "additional_oe_representatives": 0,
+     "cell_caps_hit": 0,
+     "frontier_structural_count": 1,
+     "first_solution_nodes": 52,
+     "first_solution_states": 691,
+     "first_solution_seconds": 0.04187899999669753,
+     "seconds": 0.04189860000042245,
+     "termination_reason": "frontier_complete",
+     "max_cost_reached": 7,
+     "best_program": "(map (λObject. (replace_color $0 c6 c5)) $0)",
+     "best_program_length": 7,
+     "frontier": [
+      "(map (λObject. (replace_color $0 c6 c5)) $0)"
+     ]
+    },
+    {
+     "solved": true,
+     "expanded_states": 704,
+     "retained_terms": 424,
+     "evaluated_programs": 59,
+     "equivalent_terms": 273,
+     "dead_terms": 7,
+     "additional_oe_representatives": 0,
+     "cell_caps_hit": 0,
+     "frontier_structural_count": 1,
+     "first_solution_nodes": 59,
+     "first_solution_states": 704,
+     "first_solution_seconds": 0.039491500006988645,
+     "seconds": 0.0395044000033522,
+     "termination_reason": "frontier_complete",
+     "max_cost_reached": 7,
+     "best_program": "(map (λObject. (replace_color $0 c9 c5)) $0)",
+     "best_program_length": 7,
+     "frontier": [
+      "(map (λObject. (replace_color $0 c9 c5)) $0)"
+     ]
+    },
+    {
+     "solved": true,
+     "expanded_states": 685,
+     "retained_terms": 391,
+     "evaluated_programs": 50,
+     "equivalent_terms": 287,
+     "dead_terms": 7,
+     "additional_oe_representatives": 0,
+     "cell_caps_hit": 0,
+     "frontier_structural_count": 1,
+     "first_solution_nodes": 50,
+     "first_solution_states": 685,
+     "first_solution_seconds": 0.03624659999331925,
+     "seconds": 0.03626079999958165,
+     "termination_reason": "frontier_complete",
+     "max_cost_reached": 7,
+     "best_program": "(map (λObject. (replace_color $0 c1 c5)) $0)",
+     "best_program_length": 7,
+     "frontier": [
+      "(map (λObject. (replace_color $0 c1 c5)) $0)"
+     ]
+    }
+   ],
+   "solved_pairs": 3,
+   "num_pairs": 3,
+   "total_expanded_states": 2080,
+   "total_seconds": 0.11775190000480507,
+   "search_seconds_sum": 0.1176638000033563,
+   "frontier_sizes": [
+    1,
+    1,
+    1
+   ],
+   "frontier_structural_counts": [
+    1,
+    1,
+    1
+   ]
+  },
+  "sleep": {
+   "seconds": 0.0017130999913206324,
+   "num_abstractions": 1,
+   "abstractions": [
+    "#f0 = λx0:Color x1:ObjectSet. (map (λObject. (replace_color $0 $2 c5)) $0)"
+   ],
+   "abstraction_lengths": {
+    "#f0": 8
+   },
+   "library_description_length": 8,
+   "mdl_before": 21,
+   "mdl_after": 17,
+   "pruned": [],
+   "steps": [
+    {
+     "abstraction": "#f0 = λx0:Color x1:ObjectSet. (map (λObject. (replace_color $0 $2 c5)) $0)",
+     "name": "#f0",
+     "arity": 2,
+     "body_length": null,
+     "mdl_before": 21,
+     "mdl_after": 17,
+     "candidates_scored": 12
+    }
+   ],
+   "rewritten_frontiers": [
+    [
+     "(#f0 c6 $0)"
+    ],
+    [
+     "(#f0 c9 $0)"
+    ],
+    [
+     "(#f0 c1 $0)"
+    ]
+   ],
+   "costs": {}
+  },
+  "rewake_budget": {
+   "max_cost": 24,
+   "max_expanded_states": 297920,
+   "time_limit_seconds": 89.87741260000621,
+   "max_lambda_depth": 2,
+   "max_terms_per_cell": 20000,
+   "max_context_bindings": 128,
+   "oe_representatives": 1
+  },
+  "parameter_search": {
+   "strategy": "witness_constrained_parameters",
+   "templates": [
+    {
+     "abstraction": "#f0",
+     "witness_calls": [
+      "(#f0 c6 $0)",
+      "(#f0 c9 $0)",
+      "(#f0 c1 $0)"
+     ],
+     "varying_parameters": [
+      0
+     ],
+     "fixed_cost": 2,
+     "parameter_types": {
+      "0": "Color"
+     },
+     "parameter_cost_limits": {
+      "0": 22
+     },
+     "matched_parameters": {
+      "0": "(dominant_color (argmax (λObject. (bbox_bottom (nearest $0 $1))) $0))"
+     }
+    }
+   ],
+   "parameter_expressions": 39,
+   "complete_program_checks": 1,
+   "witness_program_checks": 3,
+   "cell_caps_hit": 0,
+   "witness_assignments_considered": 1,
+   "templates_truncated": false,
+   "max_templates": 64,
+   "parameter_programs": {
+    "0": "(dominant_color (argmax (λObject. (bbox_bottom (nearest $0 $1))) $0))"
+   }
+  },
+  "rewake_shared": false,
+  "rewake": {
+   "solved": true,
+   "expanded_states": 1547,
+   "retained_terms": 646,
+   "evaluated_programs": 1,
+   "equivalent_terms": 826,
+   "dead_terms": 75,
+   "additional_oe_representatives": 0,
+   "cell_caps_hit": 0,
+   "frontier_structural_count": null,
+   "first_solution_nodes": 1,
+   "first_solution_states": 1547,
+   "first_solution_seconds": 0.08905580001010094,
+   "seconds": 0.08905580001010094,
+   "termination_reason": "frontier_complete",
+   "max_cost_reached": 8,
+   "best_program": "(#f0 (dominant_color (argmax (λObject. (bbox_bottom (nearest $0 $1))) $0)) $0)",
+   "best_program_length": 10,
+   "frontier": [
+    "(#f0 (dominant_color (argmax (λObject. (bbox_bottom (nearest $0 $1))) $0)) $0)"
+   ]
+  },
+  "tsl_is_base": false,
+  "total_expanded_states": 3627,
+  "total_seconds": 0.20852080000622664,
+  "pipeline_wall_seconds": 0.21175960000255145,
+  "phase_seconds": {
+   "wake": 0.11775190000480507,
+   "sleep": 0.0017130999913206324,
+   "rewake": 0.08905580001010094,
+   "preparation": 0.0031223999976646155
+  },
+  "status": "SOLVED",
+  "program": "(#f0 (dominant_color (argmax (λObject. (bbox_bottom (nearest $0 $1))) $0)) $0)",
+  "program_length": 10,
+  "expanded_program": "(map (λObject. (replace_color $0 (dominant_color (argmax (λObject. (bbox_bottom (nearest $0 $2))) $1)) c5)) $0)",
+  "expanded_program_length": 14,
+  "abstractions_used": [
+   "#f0"
+  ],
+  "total_mdl": 18,
+  "wake_unsolved_pairs": 0
+ },
+ "training_evaluation": {
+  "program_frozen_before_scoring": true,
+  "num_test_pairs": 3,
+  "labeled_pairs": 3,
+  "correct_pairs": 3,
+  "all_test_correct": true,
+  "pairs": [
+   {
+    "prediction": [
+     [
+      1,
+      1,
+      0,
+      5,
+      0,
+      0,
+      0,
+      7,
+      0,
+      0
+     ],
+     [
+      0,
+      1,
+      1,
+      5,
+      0,
+      0,
+      7,
+      7,
+      7,
+      0
+     ],
+     [
+      0,
+      0,
+      1,
+      5,
+      0,
+      0,
+      0,
+      7,
+      0,
+      0
+     ],
+     [
+      5,
+      5,
+      5,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      5,
+      0,
+      0,
+      0
+     ],
+     [
+      7,
+      7,
+      7,
+      0,
+      0,
+      0,
+      5,
+      5,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      7,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      8,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      8,
+      8,
+      8,
+      8,
+      0,
+      0,
+      0
+     ]
+    ],
+    "correct": true
+   },
+   {
+    "prediction": [
+     [
+      0,
+      3,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      3,
+      3,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      4,
+      4,
+      0,
+      0
+     ],
+     [
+      5,
+      5,
+      5,
+      5,
+      0,
+      0,
+      4,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      7,
+      7,
+      7,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0
+     ],
+     [
+      8,
+      8,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      5,
+      0
+     ],
+     [
+      8,
+      8,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    ],
+    "correct": true
+   },
+   {
+    "prediction": [
+     [
+      0,
+      4,
+      0,
+      5,
+      0,
+      0,
+      0,
+      5,
+      0,
+      0
+     ],
+     [
+      4,
+      4,
+      4,
+      5,
+      0,
+      0,
+      5,
+      5,
+      5,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      5,
+      5,
+      5,
+      5,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3,
+      3,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      3,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      6,
+      6,
+      6,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      6,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+     ]
+    ],
+    "correct": true
+   }
+  ]
+ },
+ "evaluation": {
+  "program_frozen_before_scoring": true,
+  "num_test_pairs": 1,
+  "labeled_pairs": 1,
+  "correct_pairs": 0,
+  "all_test_correct": false,
+  "pairs": [
+   {
+    "prediction": [
+     [
+      0,
+      0,
+      0,
+      5,
+      0,
+      0,
+      0,
+      6,
+      0,
+      0
+     ],
+     [
+      2,
+      2,
+      2,
+      5,
+      0,
+      0,
+      0,
+      6,
+      6,
+      0
+     ],
+     [
+      0,
+      0,
+      2,
+      5,
+      0,
+      0,
+      0,
+      6,
+      0,
+      0
+     ],
+     [
+      5,
+      5,
+      5,
+      5,
+      0,
+      3,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      3,
+      0,
+      0,
+      0,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      3,
+      3,
+      0,
+      0,
+      0
+     ],
+     [
+      8,
+      8,
+      8,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0
+     ],
+     [
+      8,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      5,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      7,
+      7,
+      7,
+      0,
+      5,
+      0
+     ],
+     [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      7,
+      0,
+      0,
+      0
+     ]
+    ],
+    "correct": false
+   }
+  ]
+ },
+ "frozen_program_sha256": "f0d7be8c91c3b12170bda0f001c14416b445d3d0829ff784f36c854ad989d271",
+ "total_expanded_states": 3627,
+ "resources": {
+  "solve_wall_seconds": 0.21196939999936149,
+  "solve_cpu_seconds": 0.21875,
+  "scoring_wall_seconds": 0.005882700002985075,
+  "worker_wall_seconds": 0.21829309999884572,
+  "worker_cpu_seconds": 0.21875,
+  "peak_rss_bytes": 31625216,
+  "memory_scope": "fresh worker lifetime OS peak; includes interpreter/imports; not parent memory"
+ },
+ "job_wall_seconds": 0.4170927999948617,
+ "startup_transport_wall_seconds": 0.198799699996016
+}
