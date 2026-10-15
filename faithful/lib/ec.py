@@ -47,6 +47,12 @@ class DreamConfig:
     enabled: bool = True
     draws: int = 20
     fuel: int = 128            # uniforms per ancestral draw; exhausted fuel rejects the draw
+    seeding: str = "sequential"   # "sequential": one random stream through all draws (bit-exact with
+                                  # earlier runs; cannot be parallel). "independent": each draw gets its own
+                                  # child seed from that stream, so draws run on workers or a KernelPool.
+    def __post_init__(self):
+        if self.seeding not in ("sequential", "independent"):
+            raise ValueError("DreamConfig.seeding must be 'sequential' or 'independent'")
 
 @dataclass
 class RecognitionConfig:
@@ -125,6 +131,22 @@ def kernel_io_wake(ec: "ExploreCompress", task: Task, grammar: ast.Grammar, sear
                          search_log_score=s["search_log_score"]) for s in row["solutions"]]
     trace = WakeTrace(task.name, r["enumerated_nodes"], r["expanded_states"], r["stop_reason"], row["first_solution_nodes"], len(entries), time.perf_counter() - start)
     return ast.frontier(task.request, entries), trace
+
+def dream_draw(domain: Domain, kernel, grammar: ast.Grammar, requests: Sequence[str], tasks: Sequence[Task],
+               rng: random.Random, fuel: int, n: int):
+    """One Dream draw: choose a request, sample a program, let the domain make a task.
+
+    Returns ``("accepted", features, frontier)``, ``("rejected",)`` when sampling fails or
+    ``("failed",)`` when the domain declines. ``rng`` is consumed in this fixed order."""
+    request = json.loads(rng.choice(requests))
+    try:
+        sample = kernel.sample(grammar, request, [rng.random() for _ in range(fuel)])
+    except KernelError:
+        return ("rejected",)
+    task = domain.dream(sample["program"], request, tasks, rng, kernel, name=f"dream-{n}")
+    if task is None: return ("failed",)
+    return ("accepted", domain.features(task),
+            ast.frontier(request, [ast.entry(sample["program"], 0., log_prior=sample["log_probability"])]))
 
 def uses_kernel_io(domain: Domain) -> bool:
     return (isinstance(domain.evaluator, KernelEvaluator)
@@ -208,21 +230,30 @@ class ExploreCompress:
         return ast.frontier(persistent["request"], unique.values())
 
     def dream(self, grammar: ast.Grammar, tasks: Sequence[Task], rng: random.Random):
-        """Sample programs from the library and let the domain turn them into tasks."""
-        cfg = self.config.dream; data, rejected, failed = [], 0, 0
-        if not cfg.enabled: return data, {"draws": 0, "accepted": 0, "rejected": 0}
+        """Sample programs from the library and let the domain turn them into tasks.
+
+        With ``DreamConfig.seeding="independent"`` the draws run on the worker pool when
+        ``config.workers > 1`` (whole draws, including Python-side domain evaluation), else
+        through ``kernel.map`` (a KernelPool spreads the kernel calls). ``"sequential"``
+        keeps one random stream across draws and therefore stays serial."""
+        cfg = self.config.dream
+        if not cfg.enabled: return [], {"draws": 0, "accepted": 0, "rejected": 0}
         requests = sorted({ast.program_key(t.request) for t in tasks})
-        for n in range(cfg.draws):
-            request = json.loads(rng.choice(requests))
-            try:
-                sample = self.kernel.sample(grammar, request, [rng.random() for _ in range(cfg.fuel)])
-            except KernelError:
-                rejected += 1; continue
-            task = self.domain.dream(sample["program"], request, tasks, rng, self.kernel, name=f"dream-{n}")
-            if task is None: failed += 1; continue
-            data.append((self.domain.features(task), ast.frontier(request, [ast.entry(sample["program"], 0., log_prior=sample["log_probability"])])))
+        if cfg.seeding == "sequential":
+            results = [dream_draw(self.domain, self.kernel, grammar, requests, tasks, rng, cfg.fuel, n) for n in range(cfg.draws)]
+        else:
+            seeds = [rng.getrandbits(64) for _ in range(cfg.draws)]
+            if self.config.workers > 1 and cfg.draws > 1:
+                from .parallel import dream_chunk, dream_jobs
+                jobs = dream_jobs(grammar, requests, tasks, cfg.fuel, seeds, self.config.workers)
+                results = [r for chunk in self.pool().map(dream_chunk, jobs) for r in chunk]
+            else:
+                results = self.kernel.map(lambda k, job: dream_draw(self.domain, k, grammar, requests, tasks, random.Random(job[1]), cfg.fuel, job[0]),
+                                          list(enumerate(seeds)))
+        data = [(r[1], r[2]) for r in results if r[0] == "accepted"]
+        rejected = sum(1 for r in results if r[0] == "rejected"); failed = sum(1 for r in results if r[0] == "failed")
         return data, {"draws": cfg.draws, "accepted": len(data), "rejected": rejected + failed,
-                      "sampling_rejections": rejected, "domain_rejections": failed}
+                      "sampling_rejections": rejected, "domain_rejections": failed, "seeding": cfg.seeding}
 
     def train_recognition(self, grammar: ast.Grammar, data: list, seed: int) -> list[float]:
         cfg = self.config.recognition

@@ -33,8 +33,10 @@ independent task searches, with one Kernel per worker in a pool that persists
 across rounds and the final solve; it does not split one task's search.
 `--kernel-threads N` gives the parent a `KernelPool` of N processes for the
 per-entry rescoring after each Wake, the recognition summaries and MDL
-accounting; results are identical to one process. There is no Haskell
-search-algorithm change.
+accounting; results are identical to one process. `--dream-seeding independent`
+gives every dream its own child seed so the same workers (or kernel processes)
+draw dreams in parallel; the default `sequential` keeps one random stream and
+reproduces earlier runs bit for bit. There is no Haskell search-algorithm change.
 
 `--heldout-task-ids ID1,ID2` adds disjoint tasks that are excluded from all EC
 learning and dreams. At final solve, only their demonstration pairs are used to

@@ -10,7 +10,9 @@ manager) releases it.
 Only trusted, in-process Domain/Wake objects are cloudpickled, once, when the
 pool starts. Grammars and the search configuration travel with every job, so a
 pool created in round 0 is still correct in round 5. Models and live Kernel
-handles stay in the parent. Compression and recognition remain there.
+handles stay in the parent. Independent Dream draws (``DreamConfig.seeding=
+"independent"``) run on the same workers. Compression and recognition remain
+in the parent.
 """
 import multiprocessing
 from multiprocessing.util import Finalize
@@ -49,6 +51,20 @@ def _run(job):
     return frontier, trace
 
 
+def dream_chunk(job):
+    """Independent Dream draws ``(n, seed)`` on this worker's Domain and Kernel."""
+    import random
+    from .ec import dream_draw
+    grammar, requests, tasks, fuel, draws = job
+    return [dream_draw(_ec.domain, _ec.kernel, grammar, requests, tasks, random.Random(seed), fuel, n) for n, seed in draws]
+
+
+def dream_jobs(grammar, requests, tasks, fuel, seeds, workers):
+    """Split independent draws into at most ``workers`` contiguous chunks (tasks are pickled once per chunk)."""
+    draws = list(enumerate(seeds)); size = -(-len(draws) // workers)
+    return [(grammar, requests, tasks, fuel, draws[i:i + size]) for i in range(0, len(draws), size)]
+
+
 def worker_config(config):
     """The per-job copy of the driver configuration a worker runs with."""
     return replace(config, workers=1, output=None)
@@ -81,13 +97,15 @@ class WakePool:
     def alive(self) -> bool:
         return self._pool is not None
 
-    def map(self, jobs):
+    def map(self, fn, jobs):
+        """``fn`` is a module-level worker function (``_run`` for Wake, ``dream_chunk`` for
+        dreams); results come back in job order."""
         if self._pool is None:
             raise RuntimeError("WakePool is closed")
         try:
-            # map preserves task order regardless of completion order; failure is
+            # map preserves job order regardless of completion order; failure is
             # propagated, not silently recorded as an unsolved task.
-            return list(self._pool.map(_run, jobs))
+            return list(self._pool.map(fn, jobs))
         except BrokenProcessPool:
             self.close(); raise
 
@@ -105,4 +123,4 @@ def parallel_wake(ec, tasks, use_recognition):
     config = worker_config(ec.config)
     jobs = [(task, ec.grammar, ec.search_grammar(task) if use_recognition else ec.grammar, config)
             for task in tasks]
-    return ec.pool().map(jobs)
+    return ec.pool().map(_run, jobs)

@@ -29,6 +29,8 @@ def main():
     p.add_argument("--maximum-depth", type=int, default=14)
     p.add_argument("--top-k", type=int, default=5)
     p.add_argument("--dreams", type=int, default=20)
+    p.add_argument("--dream-seeding", choices=["sequential", "independent"], default="sequential",
+                   help="independent: one child seed per draw, so --workers / --kernel-threads parallelize dreams")
     p.add_argument("--recognition-steps", type=int, default=30)
     p.add_argument("--compressor", choices=["original", "stitch", "none"], default="original")
     p.add_argument("--kernel-timeout", type=float, default=120, help="seconds per kernel call; timeout fails the run")
@@ -48,7 +50,7 @@ def main():
                       search=SearchConfig(limit=args.limit, max_states=args.max_states,
                                           max_size=args.max_size, maximum_depth=args.maximum_depth,
                                           top_k=args.top_k),
-                      dream=DreamConfig(enabled=args.dreams > 0, draws=args.dreams),
+                      dream=DreamConfig(enabled=args.dreams > 0, draws=args.dreams, seeding=args.dream_seeding),
                       recognition=RecognitionConfig(enabled=args.recognition_steps > 0,
                                                     steps=args.recognition_steps))
     compressors = {"original": OriginalCompressor, "stitch": StitchCompressor, "none": NoCompression}

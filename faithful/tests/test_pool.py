@@ -140,3 +140,54 @@ def test_wake_pool_survives_job_failure_and_pool_kernel_parent():
         assert ec._pool is p and len(out) == 3
         assert all(t.kernel_pid not in pool.pids for _, t in out)      # workers never share the parent's processes
         assert pool.beta(P("z")) == P("z")
+
+
+# ---- independent dreams ----------------------------------------------------------------------------
+
+def dcfg(workers=1, seeding="independent", draws=12):
+    return ECConfig(rounds=1, seed=11, workers=workers, search=SearchConfig(limit=40, max_states=2000, top_k=3),
+                    dream=DreamConfig(draws=draws, seeding=seeding), recognition=RecognitionConfig(steps=3))
+
+
+def test_dream_seeding_validation_and_sequential_is_serial():
+    with pytest.raises(ValueError): DreamConfig(seeding="random")
+    d, tasks = arith(3)
+    with Kernel() as k, ExploreCompress(d, k, NoCompression(), dcfg(workers=2, seeding="sequential"), wake=slow_wake) as ec:
+        ec.solve(tasks); pool = ec._pool
+        before = pool._pool._processes and set(pool._pool._processes)  # workers already started by Wake
+        data, stats = ec.dream(ec.grammar, tasks, __import__("random").Random(0))
+        assert stats["seeding"] == "sequential" and stats["draws"] == 12 and stats["accepted"] == len(data)
+        assert set(pool._pool._processes) == before                     # no dream work went to the pool
+
+
+def test_independent_dreams_equal_across_serial_pool_and_workers():
+    """Serial Kernel, KernelPool threads and worker processes produce the same dreams and training."""
+    import random
+    d, tasks = arith(4)
+    with Kernel() as k, KernelPool(2) as pool:
+        serial = ExploreCompress(d, k, NoCompression(), dcfg())
+        threaded = ExploreCompress(d, pool, NoCompression(), dcfg())
+        with ExploreCompress(d, k, NoCompression(), dcfg(workers=2)) as procs:
+            g = serial.grammar
+            a = serial.dream(g, tasks, random.Random(5)); b = threaded.dream(g, tasks, random.Random(5)); c = procs.dream(g, tasks, random.Random(5))
+            assert a[1] == b[1] == c[1] and a[1]["accepted"] > 1
+            for (fa, xa), (fb, xb), (fc, xc) in zip(a[0], b[0], c[0]):
+                assert torch.equal(fa, fb) and torch.equal(fa, fc) and xa == xb == xc
+            assert all(kk.calls > 0 for kk in pool.kernels)             # the pool spread the draws
+            hs, ht, hp = serial.run(tasks)[0], threaded.run(tasks)[0], procs.run(tasks)[0]
+            assert hs.dream == ht.dream == hp.dream and hs.recognition_losses == ht.recognition_losses == hp.recognition_losses
+            assert hs.frontiers == ht.frontiers == hp.frontiers
+            # draws are independent of their batch: fewer draws keep the common prefix exactly
+            short = ExploreCompress(d, k, NoCompression(), dcfg(draws=5)).dream(g, tasks, random.Random(5))
+            assert len(short[0]) <= 5 and [x for _, x in short[0]] == [x for _, x in a[0]][:len(short[0])]
+
+
+def test_independent_dreams_on_kernel_domain_through_workers():
+    d = smoke_domain(); tasks = grid_tasks(d)
+    cfg = ECConfig(rounds=1, seed=7, workers=2, dream=DreamConfig(draws=6, seeding="independent"), recognition=RecognitionConfig(steps=2),
+                   search=SearchConfig(upper_bound=4.5, maximum_depth=7, limit=1000, max_size=1000, max_states=60000))
+    with Kernel() as k:
+        with ExploreCompress(d, k, OriginalCompressor(arity=0), replace(cfg, workers=1)) as one, \
+             ExploreCompress(d, k, OriginalCompressor(arity=0), cfg) as two:
+            h1, h2 = one.run(tasks)[0], two.run(tasks)[0]
+            assert h1.dream == h2.dream and h1.dream["accepted"] > 0 and h1.recognition_losses == h2.recognition_losses

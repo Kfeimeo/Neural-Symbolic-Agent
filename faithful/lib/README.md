@@ -151,6 +151,23 @@ small tasks may be slower than a serial run. This is not single-task parallelism
 `explore_compress(..., kernel_threads=n)` combines both: a `KernelPool` of `n`
 processes in the parent and the worker pool for Wake.
 
+### Parallel dreams
+
+`DreamConfig(seeding="sequential")`, the default, draws every dream from one
+random stream: the request choice, the sampler's uniforms and the domain's
+input choice of draw *n* all precede draw *n+1*, and whether the domain is
+consulted depends on the kernel's answer. That keeps earlier runs bit-exact and
+cannot be parallelized. `DreamConfig(seeding="independent")` draws one child
+seed per dream from that stream first and gives each draw its own
+`random.Random`; draws are then independent of each other and of their batch
+(fewer draws keep the common prefix). With `workers > 1` whole draws, including
+Python-side domain evaluation, run on the persistent worker pool in chunks;
+otherwise the draws go through `kernel.map`, so a `KernelPool` spreads their
+kernel calls. The dreams, the statistics and the recognition training are the
+same on every path. The two seedings produce different dreams for the same
+seed, so a study that must match a recorded run keeps `"sequential"`.
+`faithful.lib.ec.dream_draw` is the per-draw function both paths share.
+
 ### ARC local-shape DSL
 
 `faithful.lib.domains.arc_shapes.ARCShapesDomain` adapts all productions from
