@@ -24,7 +24,7 @@ import shutil
 import subprocess
 import sys
 import threading
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any, Callable, Iterable, Mapping, Optional, Sequence, TypeVar
@@ -274,9 +274,14 @@ class Kernel(_Protocol):
             raise KernelError(response.get("error", "unknown kernel error"), operation)
         return response["result"]
 
-    def map(self, fn: Callable[["Kernel", T], R], items: Iterable[T]) -> list[R]:
-        """``[fn(self, x) for x in items]``; :class:`KernelPool` overrides this to run the calls concurrently."""
-        return [fn(self, x) for x in items]
+    def map(self, fn: Callable[["Kernel", T], R], items: Iterable[T], on_done: Optional[Callable[[R], Any]] = None) -> list[R]:
+        """``[fn(self, x) for x in items]``; :class:`KernelPool` overrides this to run the calls
+        concurrently. ``on_done(result)`` is called after each item, for progress reporting."""
+        out = []
+        for x in items:
+            r = fn(self, x); out.append(r)
+            if on_done: on_done(r)
+        return out
 
 # ---- pool --------------------------------------------------------------------
 
@@ -377,19 +382,23 @@ class KernelPool(_Protocol):
         try: return k.call(operation, **payload)
         finally: self._idle.put(k)
 
-    def map(self, fn: Callable[["KernelPool", T], R], items: Iterable[T]) -> list[R]:
+    def map(self, fn: Callable[["KernelPool", T], R], items: Iterable[T], on_done: Optional[Callable[[R], Any]] = None) -> list[R]:
         """``[fn(self, x) for x in items]`` evaluated on up to ``size`` processes at once.
 
-        Order is preserved and every item runs even when an earlier one fails;
-        the first failure is re-raised once all have finished."""
+        Order is preserved; ``on_done(result)`` runs on the calling thread as each item
+        completes (in completion order); the first failure is re-raised."""
         items = list(items)
         if len(items) <= 1 or self.size == 1 or getattr(self._local, "kernel", None) is not None:
-            return [fn(self, x) for x in items]
+            return Kernel.map(self, fn, items, on_done)
         with self._lock:
             if self._executor is None:
                 self._executor = ThreadPoolExecutor(max_workers=self.size, thread_name_prefix="faithful-kernel")
             ex = self._executor
-        return list(ex.map(self._run, ((fn, x) for x in items)))
+        futures = [ex.submit(self._run, (fn, x)) for x in items]
+        for f in as_completed(futures):
+            r = f.result()
+            if on_done: on_done(r)
+        return [f.result() for f in futures]
 
     def _run(self, job):
         fn, item = job

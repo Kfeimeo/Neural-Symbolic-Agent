@@ -55,6 +55,8 @@ recognition features currently summarize dimensions and color frequencies.
 - `--max-states`: maximum popped Haskell agenda states per task per Wake.
 - `--max-size`, `--maximum-depth`: program structure limits.
 - `--kernel-timeout`: per-kernel-call timeout; an expiry fails the run explicitly.
+- `--progress auto|on|off`: per-phase progress bars with elapsed time and ETA on
+  stderr (`auto` only on a terminal). It changes nothing in the outputs.
   It is not an end-to-end task deadline or a bound on Python primitive execution.
 - `--compressor original|stitch|none`: `none` is an ablation, not a full compression run.
 

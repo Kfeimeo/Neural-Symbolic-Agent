@@ -9,7 +9,7 @@ import time
 import pytest
 import torch
 
-from faithful.lib import (ast, Kernel, KernelPool, KernelError, ExploreCompress, ECConfig, SearchConfig, DreamConfig,
+from faithful.lib import (ast, Kernel, KernelPool, KernelError, Progress, NullProgress, ExploreCompress, ECConfig, SearchConfig, DreamConfig,
                           RecognitionConfig, NoCompression, OriginalCompressor, StitchCompressor, accounting)
 from faithful.lib.recognition import Recognition as PooledRecognition
 from faithful.python.recognition import Recognition as FrozenRecognition
@@ -191,3 +191,59 @@ def test_independent_dreams_on_kernel_domain_through_workers():
              ExploreCompress(d, k, OriginalCompressor(arity=0), cfg) as two:
             h1, h2 = one.run(tasks)[0], two.run(tasks)[0]
             assert h1.dream == h2.dream and h1.dream["accepted"] > 0 and h1.recognition_losses == h2.recognition_losses
+
+
+# ---- progress --------------------------------------------------------------------------------------
+
+class Counting(NullProgress):
+    """Records every phase with its final count, for assertions."""
+    def __init__(self): self.phases = []; self.rounds = []; self.closed = False
+    def phase_started(self, name, total=None, unit=""): self.phases.append([name, total, 0])
+    def advance(self, n=1): self.phases[-1][2] += n
+    def round_finished(self, index, note=""): self.rounds.append(index)
+    def close(self): self.closed = True
+
+
+def test_progress_counts_every_phase_and_leaves_results_unchanged():
+    import io
+    d = ListDomain(); a, b = list_tasks(d); tasks = a + b
+    cfg = dcfg(workers=2, draws=7)
+    with Kernel() as k, KernelPool(2) as pool:
+        plain = ExploreCompress(d, k, OriginalCompressor(), replace(cfg, workers=1)).run(tasks)
+        for kern, w in ((k, 1), (pool, 1), (k, 2)):          # serial, KernelPool threads, worker processes
+            counting = Counting()
+            with ExploreCompress(d, kern, OriginalCompressor(), replace(cfg, workers=w), progress=counting) as ec:
+                h = ec.run(tasks); ec.solve(b)
+            assert [(r.frontiers, r.grammar, r.dream, r.recognition_losses) for r in h] == [(r.frontiers, r.grammar, r.dream, r.recognition_losses) for r in plain]
+            names = [n for n, _, _ in counting.phases]
+            assert names == ["wake", "rescore", "compress", "dream", "summaries", "recognition", "solve"]
+            assert all(done == total for _, total, done in counting.phases if total is not None)
+            by = {n: (t, d_) for n, t, d_ in counting.phases}
+            assert by["wake"] == (5, 5) and by["dream"] == (7, 7) and by["recognition"] == (3, 3) and by["solve"] == (2, 2)
+            assert by["rescore"][0] == by["rescore"][1] > 0
+            assert counting.rounds == [0] and counting.closed
+        # Text output on a non-terminal stream: finished lines only, no carriage returns.
+        out = io.StringIO()
+        with ExploreCompress(d, k, NoCompression(), replace(cfg, workers=1), progress=Progress(stream=out, enabled=True)) as ec:
+            ec.run(tasks)
+        text = out.getvalue()
+        assert "\r" not in text and "explore-compress: 1 round(s), 5 task(s)" in text
+        assert "[round 1/1] wake" in text and "5/5 tasks" in text and "round 1/1 done in" in text and text.rstrip().endswith("s")
+        assert Progress(stream=io.StringIO()).enabled is False     # auto mode is silent off a terminal
+
+
+def test_progress_terminal_rendering_and_eta():
+    import io
+    class Tty(io.StringIO):
+        def isatty(self): return True
+    out = Tty(); p = Progress(stream=out, min_interval=0)   # redraw on every advance
+    assert p.enabled and p.animate
+    p.run_started(2, 3); p.round_started(0, 2)
+    p.phase_started("wake", 4, "tasks"); p.advance(); p.advance(2); p.phase_finished("solved 2/3")
+    p.phase_started("compress"); p.phase_finished("+1 invention(s)")
+    p.round_finished(0, "solved 2/3"); p.close()
+    text = out.getvalue()
+    assert "\r[round 1/2] wake        |" in text and "3/4 tasks" in text and "eta" in text
+    import re
+    assert re.search(r"wake\s+3/4 tasks\s+[\d.]+s  solved 2/3\n", text) and "+1 invention(s)" in text
+    assert "round 1/2 done in" in text and "est. remaining" in text and text.rstrip().endswith("s")

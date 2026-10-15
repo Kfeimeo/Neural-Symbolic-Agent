@@ -14,6 +14,7 @@ candidate.
 """
 from __future__ import annotations
 import copy
+import inspect
 import json
 import math
 import random
@@ -29,6 +30,7 @@ from .domain import Domain, KernelEvaluator, Task
 from .kernel import Kernel, KernelPool, KernelError
 from .compression import Compressor, OriginalCompressor
 from .recognition import Recognition
+from .progress import NullProgress, Progress
 
 @dataclass
 class SearchConfig:
@@ -157,8 +159,11 @@ class ExploreCompress:
     def __init__(self, domain: Domain, kernel: Kernel, compressor: Optional[Compressor] = None,
                  config: Optional[ECConfig] = None, *, wake: Optional[WakeFunction] = None,
                  recognition_factory: Optional[Callable[[ast.Grammar], Recognition]] = None,
-                 base_grammar: Optional[ast.Grammar] = None):
+                 base_grammar: Optional[ast.Grammar] = None, progress: Optional[NullProgress] = None):
+        """``progress`` is a :class:`~faithful.lib.progress.Progress` (or anything with its
+        methods) that follows every round, phase and task; ``None`` reports nothing."""
         self.domain, self.kernel = domain, kernel
+        self.progress = progress or NullProgress()
         self.compressor = compressor or OriginalCompressor()
         self.config = config or ECConfig()
         self._wake = wake or (kernel_io_wake if uses_kernel_io(domain) else generic_wake)
@@ -185,6 +190,7 @@ class ExploreCompress:
         """Shut down the worker pool (the kernel is the caller's and stays open)."""
         pool, self._pool = self._pool, None
         if pool is not None: pool.close()
+        self.progress.close()
 
     def __enter__(self): return self
     def __exit__(self, *exc): self.close()
@@ -214,7 +220,8 @@ class ExploreCompress:
         """:meth:`rescore` for many frontiers; the entry scores go through ``kernel.map`` as one
         flat batch, so a :class:`~faithful.lib.kernel.KernelPool` spreads them over its processes."""
         jobs = [(i, e) for i, f in enumerate(frontiers) for e in f["entries"]]
-        priors = self.kernel.map(lambda k, job: k.score(grammar, frontiers[job[0]]["request"], job[1]["program"])["log_probability"], jobs)
+        priors = self.kernel.map(lambda k, job: k.score(grammar, frontiers[job[0]]["request"], job[1]["program"])["log_probability"], jobs,
+                                 on_done=lambda _r: self.progress.advance())
         scored: list[list[dict]] = [[] for _ in frontiers]
         for (i, e), prior in zip(jobs, priors):
             e = copy.deepcopy(e); e["log_prior"] = prior; scored[i].append(e)
@@ -239,19 +246,23 @@ class ExploreCompress:
         cfg = self.config.dream
         if not cfg.enabled: return [], {"draws": 0, "accepted": 0, "rejected": 0}
         requests = sorted({ast.program_key(t.request) for t in tasks})
+        progress = self.progress; progress.phase_started("dream", cfg.draws, "draws")
         if cfg.seeding == "sequential":
-            results = [dream_draw(self.domain, self.kernel, grammar, requests, tasks, rng, cfg.fuel, n) for n in range(cfg.draws)]
+            results = []
+            for n in range(cfg.draws):
+                results.append(dream_draw(self.domain, self.kernel, grammar, requests, tasks, rng, cfg.fuel, n)); progress.advance()
         else:
             seeds = [rng.getrandbits(64) for _ in range(cfg.draws)]
             if self.config.workers > 1 and cfg.draws > 1:
                 from .parallel import dream_chunk, dream_jobs
                 jobs = dream_jobs(grammar, requests, tasks, cfg.fuel, seeds, self.config.workers)
-                results = [r for chunk in self.pool().map(dream_chunk, jobs) for r in chunk]
+                results = [r for chunk in self.pool().map(dream_chunk, jobs, on_done=lambda chunk: progress.advance(len(chunk))) for r in chunk]
             else:
                 results = self.kernel.map(lambda k, job: dream_draw(self.domain, k, grammar, requests, tasks, random.Random(job[1]), cfg.fuel, job[0]),
-                                          list(enumerate(seeds)))
+                                          list(enumerate(seeds)), on_done=lambda _r: progress.advance())
         data = [(r[1], r[2]) for r in results if r[0] == "accepted"]
         rejected = sum(1 for r in results if r[0] == "rejected"); failed = sum(1 for r in results if r[0] == "failed")
+        progress.phase_finished(f"accepted {len(data)}")
         return data, {"draws": cfg.draws, "accepted": len(data), "rejected": rejected + failed,
                       "sampling_rejections": rejected, "domain_rejections": failed, "seeding": cfg.seeding}
 
@@ -259,7 +270,9 @@ class ExploreCompress:
         cfg = self.config.recognition
         if not cfg.enabled: self.model = None; return []
         self.model = self._recognition(grammar)
-        return self.model.fit_frontiers(self.kernel, data, steps=cfg.steps, seed=seed, objective=cfg.objective)
+        fit = self.model.fit_frontiers   # a custom factory may return the frozen network, which has no progress
+        kwargs = {"progress": self.progress} if "progress" in inspect.signature(fit).parameters else {}
+        return fit(self.kernel, data, steps=cfg.steps, seed=seed, objective=cfg.objective, **kwargs)
 
     # -- the loop -------------------------------------------------------------------------------
     def run(self, tasks: Sequence[Task], rounds: Optional[int] = None) -> list[RoundRecord]:
@@ -268,15 +281,23 @@ class ExploreCompress:
         cfg = self.config; first = len(self.history)
         rng = random.Random(cfg.seed + first); torch.manual_seed(cfg.seed + first)
         persistent = [self.frontiers.get(t.name, ast.frontier(t.request)) for t in tasks]
-        for r in range(first, first + (rounds if rounds is not None else cfg.rounds)):
+        total = first + (rounds if rounds is not None else cfg.rounds)
+        progress = self.progress; progress.run_started(total, len(tasks))
+        for r in range(first, total):
+            progress.round_started(r, total)
             seconds = {}; t0 = time.perf_counter()
-            found = self.solve(tasks); traces = [trace for _, trace in found]
-            persistent = self.rescore_all([self.merge(p, f) for p, (f, _) in zip(persistent, found)], self.grammar)
-            seconds["wake"] = time.perf_counter() - t0; t0 = time.perf_counter()
+            found = self.solve(tasks, label="wake"); traces = [trace for _, trace in found]
+            merged = [self.merge(p, f) for p, (f, _) in zip(persistent, found)]
+            progress.phase_started("rescore", sum(len(f["entries"]) for f in merged), "entries")
+            persistent = self.rescore_all(merged, self.grammar)
             solved = sum(1 for f in persistent if f["entries"])
+            progress.phase_finished()
+            seconds["wake"] = time.perf_counter() - t0; t0 = time.perf_counter()
+            progress.phase_started("compress")
             compression = self.compressor.compress(self.kernel, self.grammar, persistent)
             self.grammar, persistent = compression.grammar, compression.frontiers
             self.frontiers = {t.name: f for t, f in zip(tasks, persistent)}
+            progress.phase_finished(f"+{len(compression.inventions)} invention(s), library {len(self.grammar['productions'])}")
             seconds["compress"] = time.perf_counter() - t0; t0 = time.perf_counter()
             dreamed, dream_stats = self.dream(self.grammar, tasks, rng)
             seconds["dream"] = time.perf_counter() - t0; t0 = time.perf_counter()
@@ -288,6 +309,7 @@ class ExploreCompress:
                                  dream_stats, losses, solved, traces, seconds)
             self.history.append(record)
             self.checkpoint(r)
+            progress.round_finished(r, f"solved {solved}/{len(tasks)}, library {len(self.grammar['productions'])}, dreams {dream_stats['accepted']}/{dream_stats['draws']}")
         return self.history
 
     def checkpoint(self, round: int) -> None:
@@ -304,22 +326,29 @@ class ExploreCompress:
         self.model.load_state_dict(saved["state"]); return self.model
 
     # -- evaluation --------------------------------------------------------------------------------
-    def solve(self, tasks: Sequence[Task], *, use_recognition: bool = True) -> list[tuple[ast.Frontier, WakeTrace]]:
-        """Wake-only pass with the current library (and recognition model when present)."""
+    def solve(self, tasks: Sequence[Task], *, use_recognition: bool = True, label: str = "solve") -> list[tuple[ast.Frontier, WakeTrace]]:
+        """Wake-only pass with the current library (and recognition model when present).
+        ``label`` names the progress phase (``run`` uses ``"wake"``)."""
+        progress = self.progress; progress.phase_started(label, len(tasks), "tasks")
         if self.config.workers > 1 and len(tasks) > 1:
             from .parallel import parallel_wake
-            return parallel_wake(self, tasks, use_recognition)
-        results = []
-        for task in tasks:
-            sg = self.search_grammar(task) if use_recognition else self.grammar
-            results.append(self.wake(task, self.grammar, sg))
+            results = parallel_wake(self, tasks, use_recognition, on_done=lambda _r: progress.advance())
+        else:
+            results = []
+            for task in tasks:
+                sg = self.search_grammar(task) if use_recognition else self.grammar
+                results.append(self.wake(task, self.grammar, sg)); progress.advance()
+        progress.phase_finished(f"solved {sum(1 for f, _ in results if f['entries'])}/{len(tasks)}")
         return results
 
 def explore_compress(domain: Domain, tasks: Sequence[Task], *, kernel: Optional[Kernel | KernelPool] = None,
                      compressor: Optional[Compressor] = None, config: Optional[ECConfig] = None,
-                     kernel_threads: int = 1, **kwargs) -> list[RoundRecord]:
+                     kernel_threads: int = 1, progress: Optional[bool | NullProgress] = None, **kwargs) -> list[RoundRecord]:
     """One-call convenience: owns a kernel when none is given (a :class:`KernelPool` of
-    ``kernel_threads`` processes when that is above one) and releases the worker pool."""
+    ``kernel_threads`` processes when that is above one) and releases the worker pool.
+    ``progress=True`` reports on stderr; a :class:`~faithful.lib.progress.Progress` is used as given."""
+    if progress is True: progress = Progress(enabled=True)
+    kwargs["progress"] = progress or None
     if kernel is not None:
         with ExploreCompress(domain, kernel, compressor, config, **kwargs) as ec:
             return ec.run(tasks)

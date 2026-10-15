@@ -28,6 +28,7 @@ from .compression import (Compressor, CompressionResult, OriginalCompressor, Ver
                           NoCompression, make_compressor, accounting)
 from .stitch import StitchOptions, LEAF_COST
 from .parallel import WakePool
+from .progress import Progress, NullProgress
 from .recognition import Recognition
 from .ec import ExploreCompress, ECConfig, SearchConfig, DreamConfig, RecognitionConfig, RoundRecord, WakeTrace, explore_compress
 

@@ -6,7 +6,7 @@ from pathlib import Path
 import time
 
 from arc_tsl.arc.grid import load_arc_task
-from faithful.lib import (Kernel, KernelPool, ExploreCompress, ECConfig, SearchConfig,
+from faithful.lib import (Kernel, KernelPool, Progress, ExploreCompress, ECConfig, SearchConfig,
                           DreamConfig, RecognitionConfig, OriginalCompressor,
                           StitchCompressor, NoCompression, ast)
 from faithful.lib.domains.arc_shapes import ARCShapesDomain
@@ -34,6 +34,8 @@ def main():
     p.add_argument("--recognition-steps", type=int, default=30)
     p.add_argument("--compressor", choices=["original", "stitch", "none"], default="original")
     p.add_argument("--kernel-timeout", type=float, default=120, help="seconds per kernel call; timeout fails the run")
+    p.add_argument("--progress", choices=["auto", "on", "off"], default="auto",
+                   help="per-phase progress with ETA on stderr (auto: only on a terminal)")
     args = p.parse_args()
     if args.rounds < 1 or args.workers < 1 or args.kernel_threads < 1 or args.kernel_timeout <= 0:
         p.error("rounds, workers, kernel-threads and kernel-timeout must be positive")
@@ -70,7 +72,8 @@ def main():
     started = time.perf_counter()
     kernel = (KernelPool(args.kernel_threads, timeout=args.kernel_timeout) if args.kernel_threads > 1
               else Kernel(timeout=args.kernel_timeout))
-    with kernel, ExploreCompress(domain, kernel, compressors[args.compressor](), config) as ec:
+    progress = Progress(enabled={"auto": None, "on": True, "off": False}[args.progress])
+    with kernel, ExploreCompress(domain, kernel, compressors[args.compressor](), config, progress=progress) as ec:
         save("kernel.json", {"path": str(kernel.executable), "kernel_threads": args.kernel_threads,
                               "sha256": hashlib.sha256(kernel.executable.read_bytes()).hexdigest()})
         history = ec.run([tasks[tid] for tid in ids])

@@ -115,6 +115,24 @@ kernel-evaluated domains with the default likelihood use the kernel's I/O filter
 (`search_tasks`). Pass `wake=` to inject another search, `recognition_factory=` to
 replace the network, `base_grammar=` to start from a learned library.
 
+## Progress
+
+```python
+from faithful.lib import Progress
+ec = ExploreCompress(domain, kernel, compressor, config, progress=Progress())
+```
+
+`Progress()` reports on stderr when it is a terminal (`enabled=True` forces it,
+also to a file or pipe, where only finished lines are written). Every round
+shows its phases in turn with a bar, the count, the elapsed time and an ETA:
+`wake` (tasks), `rescore` (entries), `compress` (elapsed only; one kernel
+call), `dream` (draws), `summaries` (kernel calls) and `recognition` (optimizer
+steps), then a round summary with the estimated remaining time from the mean
+round so far; `solve()` shows a `solve` phase. Worker and kernel pools report
+each task, chunk or call as it completes. `explore_compress(..., progress=True)`
+turns it on; any object with the `NullProgress` methods can replace it, for
+logging or notebooks. Progress never changes results.
+
 ## Compressors
 
 ### Task-parallel Wake and solve

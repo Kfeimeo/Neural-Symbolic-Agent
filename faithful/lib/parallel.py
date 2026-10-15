@@ -16,7 +16,7 @@ in the parent.
 """
 import multiprocessing
 from multiprocessing.util import Finalize
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from concurrent.futures.process import BrokenProcessPool
 from dataclasses import replace
 import os
@@ -97,15 +97,20 @@ class WakePool:
     def alive(self) -> bool:
         return self._pool is not None
 
-    def map(self, fn, jobs):
+    def map(self, fn, jobs, on_done=None):
         """``fn`` is a module-level worker function (``_run`` for Wake, ``dream_chunk`` for
-        dreams); results come back in job order."""
+        dreams); results come back in job order. ``on_done(result)`` runs in the parent as
+        each job completes, for progress reporting."""
         if self._pool is None:
             raise RuntimeError("WakePool is closed")
         try:
-            # map preserves job order regardless of completion order; failure is
-            # propagated, not silently recorded as an unsolved task.
-            return list(self._pool.map(fn, jobs))
+            # Results are returned in job order regardless of completion order; a failure
+            # is propagated, not silently recorded as an unsolved task.
+            futures = [self._pool.submit(fn, job) for job in jobs]
+            for f in as_completed(futures):
+                r = f.result()
+                if on_done: on_done(r)
+            return [f.result() for f in futures]
         except BrokenProcessPool:
             self.close(); raise
 
@@ -117,10 +122,10 @@ class WakePool:
     def __exit__(self, *exc): self.close()
 
 
-def parallel_wake(ec, tasks, use_recognition):
+def parallel_wake(ec, tasks, use_recognition, on_done=None):
     """Wake ``tasks`` on the driver's persistent :class:`WakePool`, in task order."""
     # Freeze recognition-conditioned grammars in the parent, before any work.
     config = worker_config(ec.config)
     jobs = [(task, ec.grammar, ec.search_grammar(task) if use_recognition else ec.grammar, config)
             for task in tasks]
-    return ec.pool().map(_run, jobs)
+    return ec.pool().map(_run, jobs, on_done)
