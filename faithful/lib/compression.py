@@ -38,7 +38,7 @@ def new_productions(before: ast.Grammar, after: ast.Grammar) -> list[dict]:
 
 def accounting(kernel: Kernel, grammar: ast.Grammar, frontiers: Sequence[ast.Frontier]) -> dict:
     """DreamCoder MDL terms: library cost + corpus cost (negative log marginals)."""
-    marginals = [kernel.call("frontier", grammar=grammar, frontier=f)["log_marginal"] for f in frontiers if f["entries"]]
+    marginals = kernel.map(lambda k, f: k.call("frontier", grammar=grammar, frontier=f)["log_marginal"], [f for f in frontiers if f["entries"]])
     library = len(grammar["productions"]) + .001 * sum(ast.leaves(p["program"].get("invented", p["program"])) for p in grammar["productions"])
     return dict(mdl=library - sum(marginals), library_cost=library, corpus_cost=-sum(marginals))
 
@@ -171,14 +171,13 @@ class StitchCompressor(Compressor):
     def _apply_stitch_rewrite(self, kernel, grammar, frontiers, invention, type, rewritten_programs, slots):
         g2 = _uniform_with(grammar, invention, type)
         fs = copy.deepcopy(frontiers); fallbacks = 0
-        for (i, j), q in zip(slots, rewritten_programs):
-            entry = fs[i]["entries"][j]; p = entry["program"]
-            ok = False
+        def check(k, job):   # independent per program: beta-equivalence, then well-typed under g2
+            (i, j), q = job
             try:
-                ok = kernel.beta(p) == kernel.beta(q)
-                if ok: kernel.score(g2, fs[i]["request"], q)
-            except KernelError: ok = False
-            if ok: entry["program"] = q
+                return k.beta(fs[i]["entries"][j]["program"]) == k.beta(q) and k.score(g2, fs[i]["request"], q) is not None
+            except KernelError: return False
+        for ((i, j), q), ok in zip(zip(slots, rewritten_programs), kernel.map(check, list(zip(slots, rewritten_programs)))):
+            if ok: fs[i]["entries"][j]["program"] = q
             else: fallbacks += 1
         return g2, fs, fallbacks
 

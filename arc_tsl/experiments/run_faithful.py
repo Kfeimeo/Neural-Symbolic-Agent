@@ -6,7 +6,7 @@ from pathlib import Path
 import time
 
 from arc_tsl.arc.grid import load_arc_task
-from faithful.lib import (Kernel, ExploreCompress, ECConfig, SearchConfig,
+from faithful.lib import (Kernel, KernelPool, ExploreCompress, ECConfig, SearchConfig,
                           DreamConfig, RecognitionConfig, OriginalCompressor,
                           StitchCompressor, NoCompression, ast)
 from faithful.lib.domains.arc_shapes import ARCShapesDomain
@@ -18,7 +18,9 @@ def main():
     p.add_argument("--task-ids", required=True, help="comma-separated tasks for EC learning")
     p.add_argument("--heldout-task-ids", default="", help="unseen tasks; demonstrations used only at final solve")
     p.add_argument("--out", type=Path, required=True)
-    p.add_argument("--workers", type=int, default=1)
+    p.add_argument("--workers", type=int, default=1, help="task-parallel Wake processes (one persistent pool)")
+    p.add_argument("--kernel-threads", type=int, default=1,
+                   help="kernel processes in the parent for rescoring, recognition summaries and MDL accounting")
     p.add_argument("--rounds", type=int, default=2)
     p.add_argument("--seed", type=int, default=7)
     p.add_argument("--limit", type=int, default=3000, help="candidate limit per task per Wake")
@@ -31,8 +33,8 @@ def main():
     p.add_argument("--compressor", choices=["original", "stitch", "none"], default="original")
     p.add_argument("--kernel-timeout", type=float, default=120, help="seconds per kernel call; timeout fails the run")
     args = p.parse_args()
-    if args.rounds < 1 or args.workers < 1 or args.kernel_timeout <= 0:
-        p.error("rounds, workers and kernel-timeout must be positive")
+    if args.rounds < 1 or args.workers < 1 or args.kernel_threads < 1 or args.kernel_timeout <= 0:
+        p.error("rounds, workers, kernel-threads and kernel-timeout must be positive")
     ids = [x.strip() for x in args.task_ids.split(",") if x.strip()]
     heldout = [x.strip() for x in args.heldout_task_ids.split(",") if x.strip()]
     if not ids or len(set(ids + heldout)) != len(ids + heldout):
@@ -64,10 +66,11 @@ def main():
                           "task_sha256": {tid: hashlib.sha256((args.data / f"{tid}.json").read_bytes()).hexdigest()
                                           for tid in raw}})
     started = time.perf_counter()
-    with Kernel(timeout=args.kernel_timeout) as kernel:
-        save("kernel.json", {"path": str(kernel.executable),
+    kernel = (KernelPool(args.kernel_threads, timeout=args.kernel_timeout) if args.kernel_threads > 1
+              else Kernel(timeout=args.kernel_timeout))
+    with kernel, ExploreCompress(domain, kernel, compressors[args.compressor](), config) as ec:
+        save("kernel.json", {"path": str(kernel.executable), "kernel_threads": args.kernel_threads,
                               "sha256": hashlib.sha256(kernel.executable.read_bytes()).hexdigest()})
-        ec = ExploreCompress(domain, kernel, compressors[args.compressor](), config)
         history = ec.run([tasks[tid] for tid in ids])
         # Selection sees demonstration pairs only, including for unseen tasks.
         solved = ec.solve(list(tasks.values()))

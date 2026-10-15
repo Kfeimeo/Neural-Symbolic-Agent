@@ -42,6 +42,34 @@ A kernel that crashes or exceeds `timeout` raises `KernelProcessError` and is
 relaunched on the next call (`restart=False` to forbid). A domain with Haskell
 semantics (like `domains/DomainMain.hs`) is one more target: `register_target(...)`.
 
+### Kernel pool
+
+One `Kernel` answers one request at a time, so every parent-side loop of
+independent calls runs on a single process. `KernelPool(n, ...)` takes the same
+arguments and keeps `n` processes behind the same interface:
+
+```python
+from faithful.lib import KernelPool
+with KernelPool(4, timeout=60) as k:
+    priors = k.map(lambda k, p: k.score(grammar, request, p)["log_probability"], programs)
+    ec = ExploreCompress(domain, k, StitchCompressor(), ECConfig(rounds=3))
+```
+
+`map(fn, items)` evaluates `fn(pool, item)` on up to `n` threads, one borrowed
+process each, in input order, with the first exception propagated; Python
+releases the GIL while a thread waits on its pipe, so the processes run
+concurrently. Calls made outside `map` borrow any idle process; a nested `map`
+runs on the calling thread. `Kernel.map` is the serial equivalent, so library
+code written against `map` works with either. The driver uses it for the
+per-entry rescoring after every Wake (`rescore_all`), the recognition summaries
+prepared before training (`faithful.lib.recognition.Recognition`, a subclass of
+the frozen network with identical losses), MDL `accounting` and the
+beta-equivalence checks of Stitch rewrites. Results are identical to a single
+`Kernel`: no state is shared between processes and no response depends on call
+order. `FAITHFUL_TRACE`/`trace=` files get a `.kernel-<i>` suffix per process.
+The pool does not parallelize the Wake enumeration, compression or dreams; the
+`compress`/`vs_compress` operations remain one call each.
+
 ## The `Domain` interface
 
 A domain delivers four things; defaults cover the common cases.
@@ -92,27 +120,36 @@ replace the network, `base_grammar=` to start from a learned library.
 ### Task-parallel Wake and solve
 
 Set `ECConfig(workers=4)` to parallelize the task searches in both `run()` and
-`solve()`. The default remains one worker. Each spawned process owns a persistent
-Kernel for that batch; the parent computes recognition-conditioned grammars,
-merges results in input-task order, and performs compression/dream/recognition.
+`solve()`. The default remains one worker. The driver creates one `WakePool` of
+`workers` spawned processes on its first parallel Wake and reuses it for every
+later `solve()` and round; each process owns a persistent Kernel. `ec.close()`
+(or `with ExploreCompress(...) as ec:`) releases it, and the next parallel Wake
+builds a fresh one. The parent computes recognition-conditioned grammars, merges
+results in input-task order, and performs compression/dream/recognition.
 Search limits remain **per task per Wake**, not per worker or per whole study.
 Parallel tasks do not share one Kernel or split a single task's search tree.
 
 `cloudpickle` (a package dependency) transports trusted local Domain definitions
-and wake callbacks, including lambda-based primitives. Models, locks and live
-Kernel handles must not be stored in Domains or captured callbacks. A custom
-wake callback gets a worker-local EC object and the explicit frozen grammars;
-it must not depend on the parent's model, history, frontiers or mutable state.
-Use the usual `if __name__ == "__main__":` guard in standalone scripts because
-the executor uses `spawn` on every platform. One-task and empty batches use the
-serial path. Pools are released after each solve / round; workers close their
-Kernels on normal shutdown. Worker failures propagate to the caller.
+and wake callbacks, including lambda-based primitives, once, when the pool is
+created; the grammar, the search grammar and the driver configuration travel
+with every job, so later rounds and a changed `ec.config` are seen by the
+workers without rebuilding the pool. Models, locks and live Kernel handles must
+not be stored in Domains or captured callbacks. A custom wake callback gets a
+worker-local EC object and the explicit frozen grammars; it must not depend on
+the parent's model, history, frontiers or mutable state. Use the usual
+`if __name__ == "__main__":` guard in standalone scripts because the executor
+uses `spawn` on every platform. One-task and empty batches use the serial path.
+Workers close their Kernels on shutdown. A job that raises propagates to the
+caller and leaves the pool usable; a worker process that dies closes the pool
+so the next parallel Wake rebuilds it.
 
 Each worker uses one PyTorch CPU thread to avoid oversubscription. Kernel
 timeouts and executable options are inherited; trace files receive per-worker
 PID suffixes. `WakeTrace.worker_pid` and `kernel_pid` identify parallel workers.
 Launching processes has measurable overhead and increases memory consumption;
 small tasks may be slower than a serial run. This is not single-task parallelism.
+`explore_compress(..., kernel_threads=n)` combines both: a `KernelPool` of `n`
+processes in the parent and the worker pool for Wake.
 
 ### ARC local-shape DSL
 
@@ -171,5 +208,5 @@ the Rust stack. Both are documented on `StitchOptions`.
 ## Tests
 
 ```powershell
-python -m pytest faithful/tests/test_lib.py -q
+python -m pytest faithful/tests/test_lib.py faithful/tests/test_pool.py -q
 ```

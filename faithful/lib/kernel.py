@@ -12,17 +12,24 @@ owns three concerns that the frozen ``faithful.python.kernel`` hard-codes:
 * **Process** — :class:`Kernel` is a thread-safe, restartable, optionally
   timed client; a dead process raises :class:`KernelProcessError` instead of
   returning garbage. There is no Python fallback for any symbolic operation.
+* **Pool** — :class:`KernelPool` runs several independent kernel processes
+  behind the same interface. One ``Kernel`` serializes every call behind its
+  lock; a pool lets independent calls (``map``) proceed concurrently.
 """
 from __future__ import annotations
 import json
 import os
+import queue
 import shutil
 import subprocess
 import sys
 import threading
-from dataclasses import dataclass, field
+from concurrent.futures import ThreadPoolExecutor
+from dataclasses import dataclass, field, replace
 from pathlib import Path
-from typing import Any, Mapping, Optional, Sequence
+from typing import Any, Callable, Iterable, Mapping, Optional, Sequence, TypeVar
+
+T = TypeVar("T"); R = TypeVar("R")
 
 PACKAGE_ROOT = Path(__file__).resolve().parents[1]  # .../faithful
 REPO_ROOT = PACKAGE_ROOT.parent
@@ -142,7 +149,24 @@ class KernelOptions:
     env: Optional[Mapping[str, str]] = None
     extra_args: Sequence[str] = field(default_factory=tuple)
 
-class Kernel:
+class _Protocol:
+    """Convenience wrappers shared by :class:`Kernel` and :class:`KernelPool`."""
+    def infer(self, grammar, program, environment=()):
+        return self.call("infer", grammar=grammar, program=program, environment=list(environment))["type"]
+    def beta(self, program):
+        return self.call("beta", program=program)["program"]
+    def score(self, grammar, request, program, environment=()):
+        return self.call("score", grammar=grammar, request=request, program=program, environment=list(environment))
+    def frontier(self, grammar, frontier):
+        return self.call("frontier", grammar=grammar, frontier=frontier)
+    def sample(self, grammar, request, uniforms):
+        return self.call("sample", grammar=grammar, request=request, uniforms=list(uniforms))
+    def enumerate_budget(self, grammar, request, search_grammar=None, **budget):
+        return self.call("enumerate_budget", grammar=grammar, search_grammar=search_grammar or grammar, request=request, **budget)
+    def evaluate_batch(self, program, input_sets):
+        return self.call("evaluate_batch", program=program, input_sets=list(input_sets))["values"]
+
+class Kernel(_Protocol):
     """Persistent protocol v1 client.
 
     >>> with Kernel() as k:
@@ -250,21 +274,129 @@ class Kernel:
             raise KernelError(response.get("error", "unknown kernel error"), operation)
         return response["result"]
 
-    # -- convenience wrappers for the most common operations
-    def infer(self, grammar, program, environment=()):
-        return self.call("infer", grammar=grammar, program=program, environment=list(environment))["type"]
-    def beta(self, program):
-        return self.call("beta", program=program)["program"]
-    def score(self, grammar, request, program, environment=()):
-        return self.call("score", grammar=grammar, request=request, program=program, environment=list(environment))
-    def frontier(self, grammar, frontier):
-        return self.call("frontier", grammar=grammar, frontier=frontier)
-    def sample(self, grammar, request, uniforms):
-        return self.call("sample", grammar=grammar, request=request, uniforms=list(uniforms))
-    def enumerate_budget(self, grammar, request, search_grammar=None, **budget):
-        return self.call("enumerate_budget", grammar=grammar, search_grammar=search_grammar or grammar, request=request, **budget)
-    def evaluate_batch(self, program, input_sets):
-        return self.call("evaluate_batch", program=program, input_sets=list(input_sets))["values"]
+    def map(self, fn: Callable[["Kernel", T], R], items: Iterable[T]) -> list[R]:
+        """``[fn(self, x) for x in items]``; :class:`KernelPool` overrides this to run the calls concurrently."""
+        return [fn(self, x) for x in items]
+
+# ---- pool --------------------------------------------------------------------
+
+class KernelPool(_Protocol):
+    """``size`` independent kernel processes behind the :class:`Kernel` interface.
+
+    A single ``Kernel`` serializes every request behind its lock, so loops of
+    independent calls in the parent (rescoring frontiers, scoring recognition
+    summaries, MDL accounting) run one process at a time. A pool keeps ``size``
+    processes and a thread per process; ``map(fn, items)`` evaluates
+    ``fn(pool, item)`` for each item on those threads, in input order, with the
+    first exception propagated. Python releases the GIL while a thread waits on
+    its kernel pipe, so the processes genuinely run concurrently. Every call made
+    inside ``fn`` goes to the kernel the thread borrowed for that item; a nested
+    ``map`` runs on the calling thread instead of waiting for the pool.
+
+    Calls made outside ``map`` borrow any idle process. Results are the same as
+    with one ``Kernel``: nothing is shared between processes and no call order
+    changes a response. ``size=1`` is a plain ``Kernel`` with a thread pool of one.
+
+    >>> with KernelPool(2) as pool:
+    ...     pool.map(lambda k, p: k.beta(p), [{"primitive": "zero"}, {"primitive": "one"}])
+    [{'primitive': 'zero'}, {'primitive': 'one'}]
+    """
+    protocol_version = Kernel.protocol_version
+
+    def __init__(self, size: int = 2, executable: Optional[os.PathLike | str] = None, *, target: str = DEFAULT_TARGET,
+                 auto_build: Optional[bool] = None, timeout: Optional[float] = None, restart: bool = True,
+                 trace: Optional[os.PathLike | str] = None, env: Optional[Mapping[str, str]] = None,
+                 extra_args: Sequence[str] = (), options: Optional[KernelOptions] = None):
+        if type(size) is not int or size < 1:
+            raise ValueError("KernelPool size must be a positive integer")
+        if options is None:
+            options = KernelOptions(target=target, executable=executable, auto_build=auto_build, timeout=timeout,
+                                    restart=restart, trace=trace, env=env, extra_args=tuple(extra_args))
+        if options.executable is None:  # build once, not once per process
+            options = replace(options, executable=ensure_executable(options.target, options.auto_build))
+        base_trace = Path(options.trace) if options.trace else (Path(os.environ["FAITHFUL_TRACE"]) if os.environ.get("FAITHFUL_TRACE") else None)
+        self.size = size
+        self.kernels: list[Kernel] = []
+        try:
+            for i in range(size):
+                o = replace(options, trace=str(base_trace.with_name(f"{base_trace.stem}.kernel-{i}{base_trace.suffix}"))) if base_trace else options
+                self.kernels.append(Kernel(options=o))
+        except Exception:
+            for k in self.kernels: k.close(timeout=1.)
+            raise
+        primary = self.kernels[0]
+        self.target, self.executable, self.timeout, self.restart = primary.target, primary.executable, primary.timeout, primary.restart
+        self.trace, self.env, self.extra_args = base_trace, primary.env, primary.extra_args
+        self._idle: queue.LifoQueue[Kernel] = queue.LifoQueue()
+        for k in self.kernels: self._idle.put(k)
+        self._local = threading.local()
+        self._executor: Optional[ThreadPoolExecutor] = None
+        self._lock = threading.Lock()
+
+    # -- Kernel-shaped attributes (the first process stands for the pool)
+    @property
+    def process(self): return self.kernels[0].process if self.kernels else None
+    @property
+    def pid(self) -> Optional[int]: return self.kernels[0].pid if self.kernels else None
+    @property
+    def alive(self) -> bool: return any(k.alive for k in self.kernels)
+    @property
+    def pids(self) -> list[Optional[int]]: return [k.pid for k in self.kernels]
+    @property
+    def calls(self) -> int: return sum(k.calls for k in self.kernels)
+    @property
+    def last_failure(self) -> Optional[str]:
+        return next((k.last_failure for k in self.kernels if k.last_failure), None)
+
+    def supports(self, operation: str) -> bool:
+        return operation in operations(self.target)
+
+    # -- lifecycle
+    def close(self, timeout: float = 10.) -> None:
+        with self._lock:
+            ex, self._executor = self._executor, None
+        if ex is not None: ex.shutdown(wait=True)
+        for k in self.kernels: k.close(timeout=timeout)
+    def kill(self) -> None:
+        with self._lock:
+            ex, self._executor = self._executor, None
+        if ex is not None: ex.shutdown(wait=False, cancel_futures=True)
+        for k in self.kernels: k.kill()
+    def __enter__(self): return self
+    def __exit__(self, *exc): self.close()
+    def __del__(self):
+        try: self.close(timeout=1.)
+        except Exception: pass
+
+    # -- protocol
+    def call(self, operation: str, **payload: Any) -> Any:
+        held = getattr(self._local, "kernel", None)
+        if held is not None:                    # inside map: stay on the borrowed process
+            return held.call(operation, **payload)
+        k = self._idle.get()
+        try: return k.call(operation, **payload)
+        finally: self._idle.put(k)
+
+    def map(self, fn: Callable[["KernelPool", T], R], items: Iterable[T]) -> list[R]:
+        """``[fn(self, x) for x in items]`` evaluated on up to ``size`` processes at once.
+
+        Order is preserved and every item runs even when an earlier one fails;
+        the first failure is re-raised once all have finished."""
+        items = list(items)
+        if len(items) <= 1 or self.size == 1 or getattr(self._local, "kernel", None) is not None:
+            return [fn(self, x) for x in items]
+        with self._lock:
+            if self._executor is None:
+                self._executor = ThreadPoolExecutor(max_workers=self.size, thread_name_prefix="faithful-kernel")
+            ex = self._executor
+        return list(ex.map(self._run, ((fn, x) for x in items)))
+
+    def _run(self, job):
+        fn, item = job
+        k = self._idle.get(); self._local.kernel = k
+        try: return fn(self, item)
+        finally:
+            self._local.kernel = None; self._idle.put(k)
 
 def trace_path() -> Optional[Path]:
     value = os.environ.get("FAITHFUL_TRACE")

@@ -29,8 +29,12 @@ remain separate experiment entry points and do not launch this flow.
 This learns a shared library across the listed ARC training tasks. It differs
 from ARC-TSL's task-local per-pair Wake/compression/parameter-completion method.
 The latter is not silently substituted into faithful. `--workers` parallelizes
-independent task searches, with one Kernel per worker; it does not split one
-task's search. There is no Haskell search-algorithm change.
+independent task searches, with one Kernel per worker in a pool that persists
+across rounds and the final solve; it does not split one task's search.
+`--kernel-threads N` gives the parent a `KernelPool` of N processes for the
+per-entry rescoring after each Wake, the recognition summaries and MDL
+accounting; results are identical to one process. There is no Haskell
+search-algorithm change.
 
 `--heldout-task-ids ID1,ID2` adds disjoint tasks that are excluded from all EC
 learning and dreams. At final solve, only their demonstration pairs are used to

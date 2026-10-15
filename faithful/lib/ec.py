@@ -26,9 +26,9 @@ import torch
 
 from . import ast
 from .domain import Domain, KernelEvaluator, Task
-from .kernel import Kernel, KernelError
+from .kernel import Kernel, KernelPool, KernelError
 from .compression import Compressor, OriginalCompressor
-from ..python.recognition import Recognition
+from .recognition import Recognition
 
 @dataclass
 class SearchConfig:
@@ -64,7 +64,7 @@ class ECConfig:
     dream: DreamConfig = field(default_factory=DreamConfig)
     recognition: RecognitionConfig = field(default_factory=RecognitionConfig)
     output: Optional[Path | str] = None
-    workers: int = 1          # independent task processes; budgets remain per task
+    workers: int = 1          # independent task processes (one persistent pool per driver); budgets remain per task
     def __post_init__(self):
         if type(self.workers) is not int or self.workers < 1:
             raise ValueError("workers must be a positive integer")
@@ -146,6 +146,29 @@ class ExploreCompress:
         self.model: Optional[Recognition] = None
         self.grammar: ast.Grammar = copy.deepcopy(self.base_grammar)
         self.frontiers: dict[str, ast.Frontier] = {}   # persistent frontiers by task name
+        self._pool = None                               # WakePool, created on the first parallel Wake
+
+    # -- worker pool -------------------------------------------------------------------------
+    def pool(self):
+        """The persistent task-parallel worker pool (``config.workers`` spawned processes).
+
+        Created on first use and reused by every later ``solve``/``run``; the domain and
+        wake callback are pickled once, at creation. :meth:`close` releases it."""
+        if self._pool is None or not self._pool.alive:
+            from .parallel import WakePool
+            self._pool = WakePool(self)
+        return self._pool
+
+    def close(self) -> None:
+        """Shut down the worker pool (the kernel is the caller's and stays open)."""
+        pool, self._pool = self._pool, None
+        if pool is not None: pool.close()
+
+    def __enter__(self): return self
+    def __exit__(self, *exc): self.close()
+    def __del__(self):
+        try: self.close()
+        except Exception: pass
 
     # -- components --------------------------------------------------------------------------
     def default_recognition(self, grammar: ast.Grammar) -> Recognition:
@@ -163,13 +186,21 @@ class ExploreCompress:
 
     def rescore(self, frontier: ast.Frontier, grammar: ast.Grammar, top_k: Optional[int] = None) -> ast.Frontier:
         """Recompute generative priors under ``grammar``; keep the best ``top_k`` by posterior."""
-        scored = []
-        for e in frontier["entries"]:
-            e = copy.deepcopy(e)
-            e["log_prior"] = self.kernel.score(grammar, frontier["request"], e["program"])["log_probability"]
-            scored.append(e)
-        scored.sort(key=lambda e: e["log_prior"] + e["log_likelihood"], reverse=True)
-        return ast.frontier(frontier["request"], scored[: (top_k or self.config.search.top_k)])
+        return self.rescore_all([frontier], grammar, top_k)[0]
+
+    def rescore_all(self, frontiers: Sequence[ast.Frontier], grammar: ast.Grammar, top_k: Optional[int] = None) -> list[ast.Frontier]:
+        """:meth:`rescore` for many frontiers; the entry scores go through ``kernel.map`` as one
+        flat batch, so a :class:`~faithful.lib.kernel.KernelPool` spreads them over its processes."""
+        jobs = [(i, e) for i, f in enumerate(frontiers) for e in f["entries"]]
+        priors = self.kernel.map(lambda k, job: k.score(grammar, frontiers[job[0]]["request"], job[1]["program"])["log_probability"], jobs)
+        scored: list[list[dict]] = [[] for _ in frontiers]
+        for (i, e), prior in zip(jobs, priors):
+            e = copy.deepcopy(e); e["log_prior"] = prior; scored[i].append(e)
+        out = []
+        for f, entries in zip(frontiers, scored):
+            entries.sort(key=lambda e: e["log_prior"] + e["log_likelihood"], reverse=True)
+            out.append(ast.frontier(f["request"], entries[: (top_k or self.config.search.top_k)]))
+        return out
 
     @staticmethod
     def merge(persistent: ast.Frontier, found: ast.Frontier) -> ast.Frontier:
@@ -207,10 +238,9 @@ class ExploreCompress:
         rng = random.Random(cfg.seed + first); torch.manual_seed(cfg.seed + first)
         persistent = [self.frontiers.get(t.name, ast.frontier(t.request)) for t in tasks]
         for r in range(first, first + (rounds if rounds is not None else cfg.rounds)):
-            seconds = {}; t0 = time.perf_counter(); traces = []
-            for i, (found, trace) in enumerate(self.solve(tasks)):
-                traces.append(trace)
-                persistent[i] = self.rescore(self.merge(persistent[i], found), self.grammar)
+            seconds = {}; t0 = time.perf_counter()
+            found = self.solve(tasks); traces = [trace for _, trace in found]
+            persistent = self.rescore_all([self.merge(p, f) for p, (f, _) in zip(persistent, found)], self.grammar)
             seconds["wake"] = time.perf_counter() - t0; t0 = time.perf_counter()
             solved = sum(1 for f in persistent if f["entries"])
             compression = self.compressor.compress(self.kernel, self.grammar, persistent)
@@ -254,10 +284,14 @@ class ExploreCompress:
             results.append(self.wake(task, self.grammar, sg))
         return results
 
-def explore_compress(domain: Domain, tasks: Sequence[Task], *, kernel: Optional[Kernel] = None, compressor: Optional[Compressor] = None,
-                     config: Optional[ECConfig] = None, **kwargs) -> list[RoundRecord]:
-    """One-call convenience: owns a kernel when none is given."""
+def explore_compress(domain: Domain, tasks: Sequence[Task], *, kernel: Optional[Kernel | KernelPool] = None,
+                     compressor: Optional[Compressor] = None, config: Optional[ECConfig] = None,
+                     kernel_threads: int = 1, **kwargs) -> list[RoundRecord]:
+    """One-call convenience: owns a kernel when none is given (a :class:`KernelPool` of
+    ``kernel_threads`` processes when that is above one) and releases the worker pool."""
     if kernel is not None:
-        return ExploreCompress(domain, kernel, compressor, config, **kwargs).run(tasks)
-    with Kernel() as k:
-        return ExploreCompress(domain, k, compressor, config, **kwargs).run(tasks)
+        with ExploreCompress(domain, kernel, compressor, config, **kwargs) as ec:
+            return ec.run(tasks)
+    with (KernelPool(kernel_threads) if kernel_threads > 1 else Kernel()) as k:
+        with ExploreCompress(domain, k, compressor, config, **kwargs) as ec:
+            return ec.run(tasks)

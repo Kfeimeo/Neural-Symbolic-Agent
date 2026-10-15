@@ -20,13 +20,15 @@ features and dreams come from the ``Domain``; compression is pluggable.
 from . import ast
 from .ast import (base, arrow, arrows, variable, primitive, index, application, abstraction, abstractions, invented,
                   show_program, parse_program, show_type, grammar, frontier, entry, production)
-from .kernel import (Kernel, KernelOptions, KernelError, KernelProcessError, KernelBuildError, KernelTarget,
+from .kernel import (Kernel, KernelPool, KernelOptions, KernelError, KernelProcessError, KernelBuildError, KernelTarget,
                      TARGETS, DEFAULT_TARGET, build, ensure_executable, executable_path, register_target, operations)
 from .evaluate import Interpreter, EvaluationError, curry, evaluate
 from .domain import Domain, FunctionalDomain, Primitive, Task, Evaluator, PythonEvaluator, KernelEvaluator
 from .compression import (Compressor, CompressionResult, OriginalCompressor, VersionSpaceCompressor, StitchCompressor,
                           NoCompression, make_compressor, accounting)
 from .stitch import StitchOptions, LEAF_COST
+from .parallel import WakePool
+from .recognition import Recognition
 from .ec import ExploreCompress, ECConfig, SearchConfig, DreamConfig, RecognitionConfig, RoundRecord, WakeTrace, explore_compress
 
 __all__ = [n for n in dir() if not n.startswith("_")]
