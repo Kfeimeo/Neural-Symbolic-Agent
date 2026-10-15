@@ -4,6 +4,8 @@ This opt-in extension implements finite `Grid -> Grid` programs. The original
 `base_library()` and ObjectSet-based Wake/Sleep pipeline retain their language.
 Use `grid_library()` and `search_grids()` for this extension; learned-parameter
 completion and the old multi-arm generalization runner are not yet Grid-aware.
+For full faithful DreamCoder learning and task-parallel Wake, use the separate
+[faithful adapter and runner](ARC_TSL_FAITHFUL.md).
 
 ## Values and semantics
 

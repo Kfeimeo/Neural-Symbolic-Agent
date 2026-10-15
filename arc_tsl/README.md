@@ -6,6 +6,10 @@ painting. See [Grid DSL semantics and usage](../docs/ARC_TSL_GRID_DSL.md).
 Run it with `python -m arc_tsl.experiments.run_grid --help`. The original
 ObjectSet Wake/Sleep pipeline retains its base language.
 
+For full DreamCoder EC learning with this DSL and task-parallel Wake, see
+[the faithful runner](../docs/ARC_TSL_FAITHFUL.md):
+`python -m arc_tsl.experiments.run_faithful --help`.
+
 A runnable, testable, controlled prototype for one research question:
 
 > **On fixed domain axioms, does inducing a task-specific language `TSL_τ` from

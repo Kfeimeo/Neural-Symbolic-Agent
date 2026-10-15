@@ -89,6 +89,50 @@ replace the network, `base_grammar=` to start from a learned library.
 
 ## Compressors
 
+### Task-parallel Wake and solve
+
+Set `ECConfig(workers=4)` to parallelize the task searches in both `run()` and
+`solve()`. The default remains one worker. Each spawned process owns a persistent
+Kernel for that batch; the parent computes recognition-conditioned grammars,
+merges results in input-task order, and performs compression/dream/recognition.
+Search limits remain **per task per Wake**, not per worker or per whole study.
+Parallel tasks do not share one Kernel or split a single task's search tree.
+
+`cloudpickle` (a package dependency) transports trusted local Domain definitions
+and wake callbacks, including lambda-based primitives. Models, locks and live
+Kernel handles must not be stored in Domains or captured callbacks. A custom
+wake callback gets a worker-local EC object and the explicit frozen grammars;
+it must not depend on the parent's model, history, frontiers or mutable state.
+Use the usual `if __name__ == "__main__":` guard in standalone scripts because
+the executor uses `spawn` on every platform. One-task and empty batches use the
+serial path. Pools are released after each solve / round; workers close their
+Kernels on normal shutdown. Worker failures propagate to the caller.
+
+Each worker uses one PyTorch CPU thread to avoid oversubscription. Kernel
+timeouts and executable options are inherited; trace files receive per-worker
+PID suffixes. `WakeTrace.worker_pid` and `kernel_pid` identify parallel workers.
+Launching processes has measurable overhead and increases memory consumption;
+small tasks may be slower than a serial run. This is not single-task parallelism.
+
+### ARC local-shape DSL
+
+`faithful.lib.domains.arc_shapes.ARCShapesDomain` adapts all productions from
+`arc_tsl.language.grid_library()`. Search/type inference stay in Haskell;
+execution uses the existing Python primitive semantics. Shape and ShapeId remain
+distinct types. `convert_term()` converts base ARC-TSL AST expressions; expand
+ARC-TSL inventions first and wrap the result in `ast.abstraction()` for a complete
+Grid -> Grid program. Faithful inventions use its native AST/evaluator.
+
+Recognition currently uses a simple 24-dimensional feature vector: input/output
+height, width and color proportions averaged over demonstration pairs. Dream
+inputs are sampled only from the EC training tasks, and malformed/invalid output
+grids are rejected. This is a baseline encoder, not a learned spatial encoder.
+The initial faithful grammar is uniform; it does not reproduce ARC-TSL's integer
+AST costs or its observational-equivalence pruning.
+
+See [the ARC runner](../../docs/ARC_TSL_FAITHFUL.md) for complete commands and
+evaluation boundaries.
+
 ```python
 OriginalCompressor(arity=1, iterations=3)               # frozen Haskell `compress`
 VersionSpaceCompressor(iterations=3, arity=1, top_i=300, beam_size=10**6)   # `vs_compress`

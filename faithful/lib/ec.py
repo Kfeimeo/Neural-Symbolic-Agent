@@ -64,6 +64,10 @@ class ECConfig:
     dream: DreamConfig = field(default_factory=DreamConfig)
     recognition: RecognitionConfig = field(default_factory=RecognitionConfig)
     output: Optional[Path | str] = None
+    workers: int = 1          # independent task processes; budgets remain per task
+    def __post_init__(self):
+        if type(self.workers) is not int or self.workers < 1:
+            raise ValueError("workers must be a positive integer")
     def to_dict(self) -> dict:
         d = asdict(self); d["output"] = str(self.output) if self.output else None; return d
 
@@ -76,6 +80,8 @@ class WakeTrace:
     first_solution: Optional[int]
     solutions: int
     seconds: float
+    worker_pid: Optional[int] = None
+    kernel_pid: Optional[int] = None
 
 @dataclass
 class RoundRecord:
@@ -202,8 +208,8 @@ class ExploreCompress:
         persistent = [self.frontiers.get(t.name, ast.frontier(t.request)) for t in tasks]
         for r in range(first, first + (rounds if rounds is not None else cfg.rounds)):
             seconds = {}; t0 = time.perf_counter(); traces = []
-            for i, task in enumerate(tasks):
-                found, trace = self.wake(task); traces.append(trace)
+            for i, (found, trace) in enumerate(self.solve(tasks)):
+                traces.append(trace)
                 persistent[i] = self.rescore(self.merge(persistent[i], found), self.grammar)
             seconds["wake"] = time.perf_counter() - t0; t0 = time.perf_counter()
             solved = sum(1 for f in persistent if f["entries"])
@@ -239,6 +245,9 @@ class ExploreCompress:
     # -- evaluation --------------------------------------------------------------------------------
     def solve(self, tasks: Sequence[Task], *, use_recognition: bool = True) -> list[tuple[ast.Frontier, WakeTrace]]:
         """Wake-only pass with the current library (and recognition model when present)."""
+        if self.config.workers > 1 and len(tasks) > 1:
+            from .parallel import parallel_wake
+            return parallel_wake(self, tasks, use_recognition)
         results = []
         for task in tasks:
             sg = self.search_grammar(task) if use_recognition else self.grammar
